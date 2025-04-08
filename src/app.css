@@ -1,0 +1,98 @@
+@import 'tailwindcss';
+
+@import 'highlight.js/styles/github.css' layer(base);
+
+@import 'highlight.js/styles/github-dark.css' layer(dark) (prefers-color-scheme: dark);
+
+@font-face {
+	font-family: 'NotoKufiArabic';
+	src: url('/fonts/NotoKufiArabic-VariableFont_wght.ttf') format('woff2-variations');
+	src: url('/fonts/NotoKufiArabic-VariableFont_wght.ttf') format('woff2') tech('variations');
+	font-weight: 100 1000;
+	font-stretch: 25% 151%;
+}
+
+@theme {
+	--color-primary-50: #edfff8;
+	--color-primary-100: #d5fff0;
+	--color-primary-200: #aeffe2;
+	--color-primary-300: #70ffcd;
+	--color-primary-400: #2bfdb1;
+	--color-primary-500: #00ec97;
+	--color-primary-600: #00c076;
+	--color-primary-700: #009660;
+	--color-primary-800: #06754e;
+	--color-primary-900: #076042;
+	--color-primary-950: #003724;
+
+	--color-gray-50: #e8eae9;
+	--color-gray-100: #d4d6d5;
+	--color-gray-200: #b8bcba;
+	--color-gray-300: #969a98;
+	--color-gray-400: #787c7a;
+	--color-gray-500: #5d615f;
+	--color-gray-600: #464948;
+	--color-gray-700: #313432;
+	--color-gray-800: #1e201f;
+	--color-gray-900: #111211;
+	--color-gray-950: #070807;
+}
+
+@layer utilities {
+	.bg-page {
+		@apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+	}
+	.bg-section {
+		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100;
+	}
+	.bg-inner {
+		@apply bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100;
+	}
+	.bg-header {
+		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100;
+	}
+	.bg-modal {
+		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100;
+	}
+	.bg-input {
+		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400;
+	}
+	.bg-clickable {
+		@apply bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700;
+	}
+}
+
+:root {
+	--arabic-font-family:
+		'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Kufi Arabic', 'Noto Sans Arabic',
+		'Segoe UI', Tahoma, 'Traditional Arabic', 'Arabic Typesetting', sans-serif;
+}
+
+html {
+	font-family: var(--arabic-font-family);
+}
+
+html[dir='rtl'] {
+	.placeholder-rtl::-moz-placeholder {
+		text-align: right;
+	}
+	.placeholder-rtl:-ms-input-placeholder {
+		text-align: right;
+	}
+	.placeholder-rtl::-webkit-input-placeholder {
+		text-align: right;
+	}
+	.placeholder-rtl::placeholder {
+		text-align: right;
+	}
+}
+
+html {
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
