@@ -1,0 +1,45 @@
+version: 0.2
+
+env:
+  variables:
+    # NODE_VERSION is passed from the Pipeline stack environmentVariables
+    NODE_ENV: production
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: ${NODE_VERSION:-18}
+    commands:
+      - echo "Installing dependencies..."
+      - npm ci
+
+  build:
+    commands:
+      - echo "Building SvelteKit app..."
+      - npm run build
+
+  post_build:
+    commands:
+      - echo "Preparing artifact..."
+      # Remove development dependencies from node_modules before packaging (optional, saves space)
+      # Alternatively, rely on 'npm install --production' in the AfterInstall hook
+      # - npm prune --production # This modifies node_modules in place
+
+      # Ensure deployment scripts are executable (if they exist)
+      - |
+        if [ -d scripts ]; then
+          chmod +x scripts/*.sh
+        fi
+
+artifacts:
+  files:
+    - 'build/**/*' # The compiled SvelteKit Node server and assets
+    - 'package.json'
+    - 'package-lock.json'
+    - 'appspec.yml'
+    - 'scripts/**/*'
+  discard-paths: yes
+
+cache:
+  paths:
+    - 'node_modules/**/*'
