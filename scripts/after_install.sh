@@ -9,7 +9,7 @@ cd "$APP_DIR"
 
 echo "Installing production dependencies..."
 # sudo chown -R $APP_USER:$APP_USER $APP_DIR
-sudo -u "$APP_USER" npm install --production --loglevel error
+sudo -u "$APP_USER" npm install --loglevel error
 
 echo "AfterInstall hook finished."
 exit 0
