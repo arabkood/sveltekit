@@ -11,12 +11,12 @@ phases:
       nodejs: ${NODE_VERSION:-18}
     commands:
       - echo "Installing dependencies..."
-      - npm i
+      - npm ci
 
   build:
     commands:
       - echo "Building SvelteKit app..."
-      - npm run build
+      - npm run build --verbose
 
   post_build:
     commands:
