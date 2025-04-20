@@ -15,10 +15,10 @@ hooks:
       timeout: 60
       runas: ec2-user
 
-  # BeforeInstall: # Optional: Use if you need to run commands BEFORE files are copied
-  #   - location: scripts/before_install.sh
-  #     timeout: 120
-  #     runas: root
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 120
+      runas: ec2-user
 
   AfterInstall:
     - location: scripts/after_install.sh
