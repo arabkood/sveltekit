@@ -5,6 +5,7 @@ env:
     # NODE_VERSION is passed from the Pipeline stack environmentVariables
     NODE_ENV: production
     ENV_FILE: /etc/svelte-app/app.env
+    VITE_API_URL: 3.28.204.139/api/v1
 
 phases:
   install:
