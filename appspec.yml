@@ -4,16 +4,10 @@ os: linux
 files:
   - source: /build
     destination: /opt/svelte-app/build
-  - source: /package.json
-    destination: /opt/svelte-app
-  - source: /package-lock.json
-    destination: /opt/svelte-app
-  - source: /scripts
-    destination: /opt/svelte-app/scripts
 
 hooks:
   ApplicationStop:
-    - location: /opt/svelte-app/scripts/application_stop.sh
+    - location: scripts/application_stop.sh
       timeout: 60
       runas: ec2-user
 
