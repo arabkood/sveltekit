@@ -40,4 +40,3 @@ artifacts:
     - 'package-lock.json'
     - 'appspec.yml'
     - 'scripts/**/*'
-  discard-paths: yes
