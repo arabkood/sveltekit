@@ -15,7 +15,7 @@ cd "$APP_DIR"
 sudo mkdir -p "$LOG_DIR"
 sudo chown "$APP_USER":"$APP_USER" "$LOG_DIR"
 sudo chmod 755 "$LOG_DIR"
-sudo source "$ENV_FILE"
+export $(cat "$ENV_FILE" | xargs)
 
 # Load environment variables from the file if it exists
 # PM2's systemd service *might* inherit them, but sourcing explicitly is safer
