@@ -16,6 +16,7 @@ sudo mkdir -p "$LOG_DIR"
 sudo chown "$APP_USER":"$APP_USER" "$LOG_DIR"
 sudo chmod 755 "$LOG_DIR"
 export $(cat "$ENV_FILE" | xargs)
+export VITE_API_URL="3.28.204.139:8080/api/v1"
 
 # Load environment variables from the file if it exists
 # PM2's systemd service *might* inherit them, but sourcing explicitly is safer
