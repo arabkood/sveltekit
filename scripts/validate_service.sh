@@ -20,22 +20,15 @@ fi
 echo "PM2 status OK."
 
 # 2. Check if the service is responding locally (basic health check)
-echo "Attempting to reach service on http://localhost:$PORT/ (expecting non-5xx)..."
+echo "Checking service on localhost:$PORT..."
 for ((i = 1; i <= MAX_RETRIES; i++)); do
-  # Use curl to make a request to a known healthcheck endpoint or root
-  # Adjust the path '/' if you have a specific /health or /status endpoint
-  HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" --max-time 5 http://localhost:$PORT/)
-
-  if [[ $HTTP_STATUS -ge 200 && $HTTP_STATUS -lt 500 ]]; then
-    echo "Service responded with HTTP status $HTTP_STATUS. Validation successful."
-    exit 0 # Success!
-  else
-    echo "Attempt $i/$MAX_RETRIES: Service responded with HTTP status $HTTP_STATUS or timed out."
-    if [ $i -lt $MAX_RETRIES ]; then
-      echo "Retrying in $RETRY_DELAY seconds..."
-      sleep $RETRY_DELAY
-    fi
+  if wget -q -O /dev/null --timeout=5 --server-response localhost:$PORT 2>&1 | grep -q "HTTP/1.1 [23]"; then
+    echo "Success!"
+    exit 0
   fi
+
+  echo "Attempt $i/$MAX_RETRIES failed"
+  [ $i -lt $MAX_RETRIES ] && sleep $RETRY_DELAY
 done
 
 echo "Error: Service validation failed after $MAX_RETRIES attempts."
