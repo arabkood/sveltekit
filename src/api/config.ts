@@ -1,4 +1,4 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://dev.arabkood.com:2007/api/v1';
+export const API_BASE_URL = 'http://3.28.204.139:8080/api/v1';
 
 export const API_ENDPOINTS = {
 	auth: {
