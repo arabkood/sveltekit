@@ -3,6 +3,7 @@
 import type { SelectUser } from '$lib/server/db/schema/auth';
 import type { AuthState } from '$types/auth';
 
+// for information about these interfaces
 declare global {
 	namespace App {
 		// interface Error {}
