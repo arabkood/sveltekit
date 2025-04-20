@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-APP_DIR="/opt/svelte-app/build"
+APP_DIR="/opt/svelte-app"
 APP_USER="ec2-user"
 
 echo "Running AfterInstall hook..."

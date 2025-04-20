@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-APP_DIR="/opt/svelte-app/build"
+APP_DIR="/opt/svelte-app"
 APP_NAME="svelte-app"
 APP_USER="ec2-user"
 LOG_DIR="/var/log/svelte-app"
@@ -32,7 +32,7 @@ else
   # Start the application using the built index.js
   # PM2 running as a service under $APP_USER should pick up system env vars
   # The node process itself will read from process.env (populated via ENV_FILE by systemd/shell)
-  sudo -u "$APP_USER" pm2 start "index.js" \
+  sudo -u "$APP_USER" pm2 start "build/index.js" \
     --name "$APP_NAME" \
     -i max \
     --log "$LOG_DIR/app.log" \

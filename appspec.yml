@@ -4,6 +4,10 @@ os: linux
 files:
   - source: /build
     destination: /opt/svelte-app/build
+  - source: /package.json
+    destination: /opt/svelte-app
+  - source: /package-lock.json
+    destination: /opt/svelte-app
 
 hooks:
   ApplicationStop:
