@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-APP_USER="ec2-user"
 APP_NAME="svelte-app"
+APP_USER="ec2-user"
 PORT=$(grep '^PORT=' /etc/svelte-app/app.env | cut -d '=' -f2)
 PORT=${PORT:-3000}
 
