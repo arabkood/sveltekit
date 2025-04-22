@@ -15,7 +15,7 @@ echo "Installing production dependencies..."
 # sudo chown -R $APP_USER:$APP_USER $APP_DIR
 sudo -u "$APP_USER" npm install --loglevel error
 
-sudo setcap 'cap_net_bind_service=+ep' "$APP_DIR/build/index.js"
+sudo setcap 'cap_net_bind_service=+ep' $(readlink -f $(which node))
 
 echo "AfterInstall hook finished."
 exit 0
