@@ -19,6 +19,7 @@ phases:
     commands:
       - echo "Building SvelteKit app..."
       - export $(cat "$ENV_FILE" | xargs)
+      - export PORT=80
       - npm run build --verbose
 
   post_build:
