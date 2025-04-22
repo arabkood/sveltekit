@@ -5,7 +5,6 @@ env:
     # NODE_VERSION is passed from the Pipeline stack environmentVariables
     NODE_ENV: production
     ENV_FILE: /etc/svelte-app/app.env
-    VITE_API_URL: 3.28.204.139/api/v1
 
 phases:
   install:
@@ -20,7 +19,7 @@ phases:
       - echo "Building SvelteKit app..."
       - export $(cat "$ENV_FILE" | xargs)
       - export PORT=80
-      - npm run build --verbose
+      - PORT=80 npm run build --verbose
 
   post_build:
     commands:

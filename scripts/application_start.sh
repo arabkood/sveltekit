@@ -33,7 +33,7 @@ else
   # Start the application using the built index.js
   # PM2 running as a service under $APP_USER should pick up system env vars
   # The node process itself will read from process.env (populated via ENV_FILE by systemd/shell)
-  sudo -u "$APP_USER" pm2 start "build/index.js" \
+  PORT=80 sudo -u "$APP_USER" pm2 start "build/index.js" \
     --name "$APP_NAME" \
     -i max \
     --log "$LOG_DIR/app.log" \
