@@ -3,8 +3,7 @@ set -e
 
 APP_NAME="svelte-app"
 APP_USER="ec2-user"
-PORT=$(grep '^PORT=' /etc/svelte-app/app.env | cut -d '=' -f2)
-PORT=${PORT:-3000}
+PORT=80
 
 MAX_RETRIES=5
 RETRY_DELAY=5 # seconds
