@@ -11,6 +11,7 @@ echo "Setting ownership for $APP_DIR to $APP_USER..."
 sudo chown -R "$APP_USER":"$APP_USER" "$APP_DIR"
 
 echo "Installing production dependencies..."
+
 # sudo chown -R $APP_USER:$APP_USER $APP_DIR
 sudo -u "$APP_USER" npm install --loglevel error
 
