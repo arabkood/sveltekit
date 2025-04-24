@@ -10,7 +10,8 @@ const ANONYMOUS_ROUTES = new Set([
 	'/(auth)/signup',
 	'/(auth)/forgot-password',
 	'/(auth)/reset-password/[token]',
-	'/(auth)/signup/verify-email'
+	'/(auth)/signup/verify-email',
+	'/health'
 ]);
 
 const authHandle: Handle = async ({ event, resolve }) => {
