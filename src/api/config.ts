@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://apialpha.akood.com/api/v1';
+export const API_BASE_URL = 'https://apialpha.akood.com/api/v1';
 //
 
 export const API_ENDPOINTS = {
