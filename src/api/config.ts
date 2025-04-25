@@ -14,30 +14,30 @@ export const API_ENDPOINTS = {
 	},
 	user: {
 		me: {
-			get: API_BASE_URL + '/user/me/profile',
-			put: API_BASE_URL + '/user/me/profile',
-			getStats: API_BASE_URL + '/user/me/stats'
+			// get: API_BASE_URL + '/user/me/profile',
+			put: API_BASE_URL + '/user/me/profile'
+			// getStats: API_BASE_URL + '/user/me/stats'
 		}
 	},
 	tracks: {
-		get: API_BASE_URL + `/track`,
-		list: API_BASE_URL + '/track/list',
+		// get: API_BASE_URL + `/track`,
+		// list: API_BASE_URL + '/track/list',
 		start: API_BASE_URL + '/track/start'
 	},
 	userTracks: {
-		get: (trackId: string) => API_BASE_URL + `/user_tracks/get/${trackId}`,
-		list: API_BASE_URL + '/user_tracks/list'
+		// get: (trackId: string) => API_BASE_URL + `/user_tracks/get/${trackId}`,
+		// list: API_BASE_URL + '/user_tracks/list'
 	},
 	userModules: {
-		get: (moduleId: string) => API_BASE_URL + `/user_modules/get/${moduleId}`,
-		list: (trackId: string) => API_BASE_URL + `/user_modules/list/${trackId}`,
-		run: (moduleId: string) => API_BASE_URL + `/user_modules/run/${moduleId}`
+		// get: (moduleId: string) => API_BASE_URL + `/user_modules/get/${moduleId}`,
+		// list: (trackId: string) => API_BASE_URL + `/user_modules/list/${trackId}`,
+		// run: (moduleId: string) => API_BASE_URL + `/user_modules/run/${moduleId}`
 	},
 	modules: {
 		get: (moduleSlug: string) => API_BASE_URL + `/module/${moduleSlug}`,
-		getResult: (exerciseID: string) => API_BASE_URL + `/exercise/result/${exerciseID}`,
+		// getResult: (exerciseID: string) => API_BASE_URL + `/exercise/result/${exerciseID}`,
 		attempt: (moduleId: string) => API_BASE_URL + `/module/attempt/${moduleId}`,
-		getSubmission: (moduleId: string) => API_BASE_URL + `/module/submission/${moduleId}`,
+		// getSubmission: (moduleId: string) => API_BASE_URL + `/module/submission/${moduleId}`,
 		getAttempt: (attemptId: string) => API_BASE_URL + `/module/attempt/${attemptId}`
 	}
 } as const;
