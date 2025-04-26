@@ -30,7 +30,7 @@ const authHandle: Handle = async ({ event, resolve }) => {
 	}
 
 	// Handle unauthenticated users
-	if (!authState?.authenticated || !sessionCookie) {
+	if (!authState?.authenticated) {
 		event.locals.authState = null;
 		event.locals.user = null;
 		event.cookies.delete(config.auth.authStateCookieName, { path: '/' });
