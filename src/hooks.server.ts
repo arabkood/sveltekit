@@ -59,6 +59,11 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		return redirect(302, '/');
 	}
 
+	if (authState.authenticated && !sessionCookie) {
+		// verify-email
+		return;
+	}
+
 	// Validate session and fetch user data
 	event.locals.user = await getUserBySessionToken(sessionCookie);
 
