@@ -3,7 +3,13 @@ import config from '$config';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { AuthState } from '$types/auth';
 import { getUserBySessionToken } from '$lib/server/db/helpers/auth';
-import { connectToDb, db } from '$lib/server/db';
+import { initDB } from '$lib/server/db';
+
+import type { ServerInit } from '@sveltejs/kit';
+
+export const init: ServerInit = async () => {
+	initDB();
+};
 
 // routes user can access without being authenticated
 const ANONYMOUS_ROUTES = new Set([
@@ -52,8 +58,6 @@ const authHandle: Handle = async ({ event, resolve }) => {
 	if (currentRouteId && ANONYMOUS_ROUTES.has(currentRouteId)) {
 		return redirect(302, '/');
 	}
-
-	connectToDb();
 
 	// Validate session and fetch user data
 	event.locals.user = await getUserBySessionToken(sessionCookie);
