@@ -54,14 +54,13 @@ const authHandle: Handle = async ({ event, resolve }) => {
 	// Handle authenticated users
 	event.locals.authState = authState;
 
+	if (authState.authenticated && !sessionCookie) {
+		return;
+	}
+
 	// Redirect authenticated users away from auth pages
 	if (currentRouteId && ANONYMOUS_ROUTES.has(currentRouteId)) {
 		return redirect(302, '/');
-	}
-
-	if (authState.authenticated && !sessionCookie) {
-		// verify-email
-		return;
 	}
 
 	// Validate session and fetch user data
