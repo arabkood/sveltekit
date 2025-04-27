@@ -32,7 +32,9 @@ export function initDB(): NodePgDatabase {
 			host: host,
 			password: password,
 			port: Number(port || 5432),
-			ssl: true
+			ssl: {
+				rejectUnauthorized: false
+			}
 		});
 
 		pool.on('error', (err) => {
