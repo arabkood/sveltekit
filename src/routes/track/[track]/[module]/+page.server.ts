@@ -9,10 +9,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 	}
 	try {
 		const moduleRes = await fetch(new URL(API_ENDPOINTS.modules.get(params.module)), {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json'
-			}
+			method: 'GET'
 		});
 		if (moduleRes.ok) {
 			const { module, exercise } = await moduleRes.json();
