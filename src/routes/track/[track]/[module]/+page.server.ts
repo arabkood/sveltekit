@@ -9,6 +9,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 	}
 	try {
 		const apiUrl = new URL(API_ENDPOINTS.modules.get(params.module));
+		console.log(`API Url: ${apiUrl}`);
 
 		const moduleRes = await fetch(apiUrl, {
 			method: 'GET'
