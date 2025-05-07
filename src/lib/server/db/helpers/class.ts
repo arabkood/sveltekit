@@ -1,11 +1,11 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, isNull } from 'drizzle-orm';
 import { db } from '..';
 import { modules, tracks, tracksSections } from '../schema/class';
 import { userModulesSubmission, userTracks } from '../schema/users';
 
 // FIX: ONLY FETCH NON DELETED ITEMS
 export async function getAllTracks() {
-	return await db.select().from(tracks);
+	return await db.select().from(tracks).where(isNull(tracks.deletedAt));
 }
 
 export async function getTrackBySlug(slug: string) {
