@@ -11,6 +11,7 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		error(404, 'Not found');
 	}
 	const sectionsWithModules = await getTrackContent(track.id, locals.user?.id);
+	console.log('HERE', sectionsWithModules);
 
 	let progress;
 	if (locals.user) {
