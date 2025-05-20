@@ -18,7 +18,7 @@
 		},
 		{
 			name: i18n.t('navigation.exploreTracks'),
-			href: '/explore-tracks'
+			href: '/courses'
 		},
 		{
 			name: i18n.t('navigation.upgradePlan'),

@@ -24,6 +24,8 @@
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/vite": "^4.0.0",
+		"@types/adm-zip": "^0.5.7",
+		"@types/js-yaml": "^4.0.9",
 		"@types/markdown-it": "^14.1.2",
 		"drizzle-kit": "^0.30.2",
 		"eslint": "^9.18.0",
@@ -41,9 +43,12 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.812.0",
 		"@types/pg": "^8.11.13",
+		"adm-zip": "^0.5.16",
 		"drizzle-orm": "^0.38.4",
 		"highlight.js": "^11.11.1",
+		"js-yaml": "^4.1.0",
 		"lodash-es": "^4.17.21",
 		"markdown-it": "^14.1.0",
 		"monaco-editor": "^0.52.2",

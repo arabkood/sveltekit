@@ -25,17 +25,29 @@
 	--color-primary-900: #076042;
 	--color-primary-950: #003724;
 
-	--color-gray-50: #e8eae9;
-	--color-gray-100: #d4d6d5;
-	--color-gray-200: #b8bcba;
-	--color-gray-300: #969a98;
-	--color-gray-400: #787c7a;
-	--color-gray-500: #5d615f;
-	--color-gray-600: #464948;
-	--color-gray-700: #313432;
-	--color-gray-800: #1e201f;
-	--color-gray-900: #111211;
-	--color-gray-950: #070807;
+	--color-gray-50: #f8faf9;
+	--color-gray-100: #eef0ef;
+	--color-gray-200: #e2e5e4;
+	--color-gray-300: #c8cccb;
+	--color-gray-400: #a9aeac;
+	--color-gray-500: #878d8a;
+	--color-gray-600: #676d6a;
+	--color-gray-700: #4d524f;
+	--color-gray-800: #343836;
+	--color-gray-900: #1d201f;
+	--color-gray-950: #0a0d0c;
+
+	/* --color-gray-50: #ffffff; */
+	/* --color-gray-100: #fdf6e3; */
+	/* --color-gray-200: #eae3c8; */
+	/* --color-gray-300: #9ba09f; */
+	/* --color-gray-400: #848988; */
+	/* --color-gray-500: #6d7374; */
+	/* --color-gray-600: #5c6263; */
+	/* --color-gray-700: #004141; */
+	/* --color-gray-800: #003737; */
+	/* --color-gray-900: #001c1c; */
+	/* --color-gray-950: #001c1c;  */
 }
 
 @layer utilities {
@@ -58,7 +70,7 @@
 		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400;
 	}
 	.bg-clickable {
-		@apply bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700;
+		@apply bg-gray-50 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700;
 	}
 }
 

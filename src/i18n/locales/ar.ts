@@ -2,6 +2,12 @@ export default {
 	editor: {
 		error: 'خطأ في الكود'
 	},
+	lessons: {
+		explanation: 'شرح الحل',
+		correctAnswer: 'الإجابة صحيحة',
+		falseAnswer: 'الإجابة خاطئة',
+		yourAnswerHere: 'إجابتك هنا'
+	},
 	forgotPassword: {
 		success: 'إذا كان البريد الإلكتروني صحيحاً، سنرسل لك رابطاً لإعادة تعيين كلمة المرور',
 		title: 'نسيت كلمة المرور',
@@ -82,6 +88,8 @@ export default {
 		}
 	},
 	common: {
+		copied: 'تم نسخ',
+		copy: 'نسخ',
 		locked: 'مغلق',
 		username: 'اسم المستخدم',
 		email: 'البريد الإلكتروني',

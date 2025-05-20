@@ -1,5 +1,5 @@
 import { redirect, type Handle } from '@sveltejs/kit';
-import config from '$config';
+import { auth } from '$config';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { AuthState } from '$types/auth';
 import { getUserBySessionToken } from '$lib/server/db/helpers/auth';
@@ -24,8 +24,8 @@ const PUBLIC_AUTH_FLOW_ROUTES = new Set([
 
 const authHandle: Handle = async ({ event, resolve }) => {
 	const currentRouteId = event.route.id;
-	const authCookie = event.cookies.get(config.auth.authStateCookieName);
-	const sessionCookie = event.cookies.get(config.auth.sessionCookieName);
+	const authCookie = event.cookies.get(auth.authStateCookieName);
+	const sessionCookie = event.cookies.get(auth.sessionCookieName);
 	let authState: AuthState | null = null;
 
 	// Parse and validate auth cookie
@@ -38,7 +38,7 @@ const authHandle: Handle = async ({ event, resolve }) => {
 			}
 		} catch (e) {
 			console.warn('Invalid auth state cookie:', e);
-			event.cookies.delete(config.auth.authStateCookieName, { path: '/' });
+			event.cookies.delete(auth.authStateCookieName, { path: '/' });
 			authState = null; // Ensure it's null after catching
 		}
 	}
@@ -48,8 +48,8 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		event.locals.authState = null;
 		event.locals.user = null;
 		// Clean up potentially lingering cookies
-		event.cookies.delete(config.auth.authStateCookieName, { path: '/' });
-		event.cookies.delete(config.auth.sessionCookieName, { path: '/' });
+		event.cookies.delete(auth.authStateCookieName, { path: '/' });
+		event.cookies.delete(auth.sessionCookieName, { path: '/' });
 
 		// Redirect protected routes to signup/signin
 		if (!currentRouteId || !PUBLIC_AUTH_FLOW_ROUTES.has(currentRouteId)) {
@@ -102,8 +102,8 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		console.log('Authenticated state found, but no session cookie. Clearing state.');
 		event.locals.authState = null;
 		event.locals.user = null;
-		event.cookies.delete(config.auth.authStateCookieName, { path: '/' });
-		event.cookies.delete(config.auth.sessionCookieName, { path: '/' });
+		event.cookies.delete(auth.authStateCookieName, { path: '/' });
+		event.cookies.delete(auth.sessionCookieName, { path: '/' });
 		return redirect(302, '/signin'); // Redirect to signin
 	}
 
@@ -114,8 +114,8 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		console.log('Session cookie found, but invalid/expired. Clearing state.');
 		event.locals.authState = null;
 		event.locals.user = null;
-		event.cookies.delete(config.auth.authStateCookieName, { path: '/' });
-		event.cookies.delete(config.auth.sessionCookieName, { path: '/' });
+		event.cookies.delete(auth.authStateCookieName, { path: '/' });
+		event.cookies.delete(auth.sessionCookieName, { path: '/' });
 		return redirect(302, '/signin'); // Redirect to signin
 	}
 

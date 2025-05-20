@@ -1,72 +1,91 @@
-import {
-	uuid,
-	timestamp,
-	varchar,
-	text,
-	integer,
-	boolean,
-	pgSchema,
-	jsonb
-} from 'drizzle-orm/pg-core';
-import { users } from './auth';
+import { uuid, text, timestamp, boolean, integer, pgSchema } from 'drizzle-orm/pg-core';
+import { type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
 
 export const classSchema = pgSchema('class');
 
+// Topics table definition
+export const topics = classSchema.table('topics', {
+	id: uuid('id').primaryKey().defaultRandom(),
+	created_at: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+	updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+	title: text('title').notNull(),
+	blurb: text('blurb'),
+	logo: text('logo')
+});
+
+// Tracks table definition
 export const tracks = classSchema.table('tracks', {
-	id: uuid('id').defaultRandom().notNull(),
-	title: varchar('title', { length: 255 }).notNull(),
-	slug: varchar('slug', { length: 100 }).notNull().unique(),
-	description: text('description'),
+	id: uuid('id').primaryKey().defaultRandom(),
+	topic_id: uuid('topic_id')
+		.references(() => topics.id)
+		.notNull(),
+	slug: text('slug').notNull(),
+	created_at: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+	updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+	title: text('title').notNull(),
+	blurb: text('blurb'),
 	logo: text('logo'),
-	programmingLanguages: text('programming_languages').array(),
-	difficulty: varchar('difficulty').default('beginner'),
-	premiumOnly: boolean('premium_only').default(false).notNull(),
-	skills: text('skills').array(),
-	tags: text('tags').array(),
-	totalXp: integer('total_xp').default(0).notNull(),
-	totalModules: integer('total_modules').default(0).notNull(),
-	estimatedHours: integer('estimated_hours'),
-	students: integer('students').default(0).notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-	deletedAt: timestamp('deleted_at', { withTimezone: true }),
-	outcomes: text('outcomes').array(),
-	requirements: text('requirements').array()
-});
-export type SelectTrack = typeof tracks.$inferSelect;
-
-export const tracksSections = classSchema.table('tracks_sections', {
-	id: uuid('id').defaultRandom().notNull(),
-	trackId: uuid('track_id')
-		.notNull()
-		.references(() => tracks.id, { onDelete: 'cascade' }),
-	title: varchar('title', { length: 255 }).notNull(),
-	description: text('description').notNull(),
-	orderNumber: integer('order_number').notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-	deletedAt: timestamp('deleted_at', { withTimezone: true })
+	premium_only: boolean('premium_only').default(false).notNull()
 });
 
+// Modules table definition
 export const modules = classSchema.table('modules', {
-	id: uuid('id').defaultRandom().notNull(),
-	slug: varchar('slug', { length: 100 }).notNull().unique(),
-	trackId: uuid('track_id')
-		.notNull()
-		.references(() => tracks.id, { onDelete: 'cascade' }),
-	title: varchar('title', { length: 255 }).notNull(),
-	description: text('description'),
-	orderNumber: integer('order_number'),
-	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-	xpReward: integer('xp_reward').default(0).notNull(),
-	estimatedMinutes: integer('estimated_minutes'),
-	difficulty: text('difficulty'),
-	dependencies: uuid('dependencies').array(),
-	premiumOnly: boolean('premium_only').default(false).notNull(),
-	sectionId: uuid('section_id').references(() => tracksSections.id, { onDelete: 'cascade' }),
-	type: text('type').notNull(),
-	source: text('source').notNull(),
-	deletedAt: timestamp('deleted_at', { withTimezone: true })
+	id: uuid('id').primaryKey().defaultRandom(),
+	track_id: uuid('track_id')
+		.references(() => tracks.id)
+		.notNull(),
+	created_at: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+	updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+	title: text('title').notNull(),
+	position: integer('position').notNull(),
+	premium_only: boolean('premium_only').default(false).notNull()
 });
-export type SelectModule = typeof modules.$inferSelect;
+
+// Items table definition
+export const items = classSchema.table('items', {
+	id: uuid('id').primaryKey().defaultRandom(),
+	module_id: uuid('module_id')
+		.references(() => modules.id)
+		.notNull(),
+	slug: text('slug').notNull(),
+	position: integer('position').notNull(),
+	created_at: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+	updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+	type: text('type'),
+	title: text('title').notNull(),
+	blurb: text('blurb'),
+	difficulty: text('difficulty'),
+	premium_only: boolean('premium_only').default(false).notNull(),
+	s3_path: text('s3_path'),
+	base_xp: integer('base_xp').default(1).notNull()
+});
+
+// Types for CRUD operations
+export type Topic = InferSelectModel<typeof topics>;
+export type TopicInsert = InferInsertModel<typeof topics>;
+export type TopicPartial = Partial<TopicInsert>;
+
+export type Track = InferSelectModel<typeof tracks>;
+export type TrackInsert = InferInsertModel<typeof tracks>;
+export type TrackPartial = Partial<TrackInsert>;
+
+export type Module = InferSelectModel<typeof modules>;
+export type ModuleInsert = InferInsertModel<typeof modules>;
+export type ModulePartial = Partial<ModuleInsert>;
+
+export type Item = InferSelectModel<typeof items>;
+export type ItemInsert = InferInsertModel<typeof items>;
+export type ItemPartial = Partial<ItemInsert>;
+
+// Optional: Create Zod schemas from Drizzle schemas if you need validation
+// export const insertTopicSchema = createInsertSchema(topics);
+// export const selectTopicSchema = createSelectSchema(topics);
+//
+// export const insertTrackSchema = createInsertSchema(tracks);
+// export const selectTrackSchema = createSelectSchema(tracks);
+//
+// export const insertModuleSchema = createInsertSchema(modules);
+// export const selectModuleSchema = createSelectSchema(modules);
+//
+// export const insertItemSchema = createInsertSchema(items);
+// export const selectItemSchema = createSelectSchema(items);

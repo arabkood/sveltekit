@@ -1,5 +1,5 @@
-export const API_BASE_URL = 'https://alpha.akood.com/api/v1';
-//
+// export const API_BASE_URL = 'https://alpha.akood.com/api/v1';
+export const API_BASE_URL = 'http://api.dev.arabkood.com:2007/api/v1';
 
 export const API_ENDPOINTS = {
 	auth: {
@@ -14,14 +14,10 @@ export const API_ENDPOINTS = {
 	},
 	user: {
 		me: {
-			// get: API_BASE_URL + '/user/me/profile',
 			put: API_BASE_URL + '/user/me/profile'
-			// getStats: API_BASE_URL + '/user/me/stats'
 		}
 	},
 	tracks: {
-		// get: API_BASE_URL + `/track`,
-		// list: API_BASE_URL + '/track/list',
 		start: API_BASE_URL + '/track/start'
 	},
 	userTracks: {
@@ -33,11 +29,14 @@ export const API_ENDPOINTS = {
 		// list: (trackId: string) => API_BASE_URL + `/user_modules/list/${trackId}`,
 		// run: (moduleId: string) => API_BASE_URL + `/user_modules/run/${moduleId}`
 	},
-	modules: {
-		get: (moduleSlug: string) => API_BASE_URL + `/module/${moduleSlug}`,
-		// getResult: (exerciseID: string) => API_BASE_URL + `/exercise/result/${exerciseID}`,
-		attempt: (moduleId: string) => API_BASE_URL + `/module/attempt/${moduleId}`,
-		// getSubmission: (moduleId: string) => API_BASE_URL + `/module/submission/${moduleId}`,
-		getAttempt: (attemptId: string) => API_BASE_URL + `/module/attempt/${attemptId}`
+	item: {
+		codeAttempt: (itemId: string) => API_BASE_URL + `/item/attempt/code/${itemId}`
 	}
+	// modules: {
+	// 	get: (moduleSlug: string) => API_BASE_URL + `/module/${moduleSlug}`,
+	// 	// getResult: (exerciseID: string) => API_BASE_URL + `/exercise/result/${exerciseID}`,
+	// 	attempt: (moduleId: string) => API_BASE_URL + `/module/attempt/${moduleId}`,
+	// 	// getSubmission: (moduleId: string) => API_BASE_URL + `/module/submission/${moduleId}`,
+	// 	getAttempt: (attemptId: string) => API_BASE_URL + `/module/attempt/${attemptId}`
+	// }
 } as const;

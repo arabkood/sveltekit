@@ -3,7 +3,7 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
-export let db: NodePgDatabase | null = null;
+export let db: NodePgDatabase;
 
 export function initDB(): NodePgDatabase {
 	if (db) {
@@ -20,7 +20,8 @@ export function initDB(): NodePgDatabase {
 
 	if (!dbName || !user || !host || !password) {
 		console.error(
-			'FATAL: Missing required database environment variables (DBNAME, USER, HOST, PASSWORD). Cannot initialize database.'
+			'FATAL: Missing required database environment variables (DBNAME, USER, HOST, PASSWORD). Cannot initialize database.',
+			{ dbname: !!dbName, user: !!user, host: !!host, password: !!password }
 		);
 		throw new Error('Database configuration is incomplete.');
 	}
@@ -31,10 +32,10 @@ export function initDB(): NodePgDatabase {
 			user: user,
 			host: host,
 			password: password,
-			port: Number(port || 5432),
-			ssl: {
-				rejectUnauthorized: false
-			}
+			port: Number(port || 5432)
+			// ssl: {
+			// 	rejectUnauthorized: false
+			// }
 		});
 
 		pool.on('error', (err) => {

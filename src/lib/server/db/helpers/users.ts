@@ -15,6 +15,7 @@ export async function getUserTracks(
 		includeDetails?: boolean;
 	}
 ) {
+	return [];
 	const includeDetails = options?.includeDetails ?? false;
 
 	if (includeDetails) {

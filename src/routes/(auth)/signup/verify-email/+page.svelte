@@ -6,7 +6,7 @@
 	import Icon from '$ui/common/Icon.svelte';
 	import CodeInput from '$ui/common/CodeInput.svelte';
 	import { getCookie, setCookie } from '$utils/cookies.client';
-	import config from '$config';
+	import { auth } from '$config';
 	import type { AuthState } from '$types/auth';
 	import { onMount } from 'svelte';
 
@@ -14,7 +14,7 @@
 	let submitError = $state<null | string>(null);
 	let verificationCode = $state<string[]>(Array(6).fill(''));
 
-	const cookie = getCookie(config.auth.authStateCookieName);
+	const cookie = getCookie(auth.authStateCookieName);
 	if (!cookie || cookie === '') {
 		location.href = '/';
 	}
@@ -80,7 +80,7 @@
 	const resendCode = async () => {
 		if (cooldown > 0) return;
 		try {
-			const cookie = getCookie(config.auth.authStateCookieName);
+			const cookie = getCookie(auth.authStateCookieName);
 			if (!cookie || cookie === '') {
 				location.href = '/';
 			}
@@ -101,7 +101,7 @@
 				...(await response.json())
 			};
 
-			setCookie(config.auth.authStateCookieName, data, {
+			setCookie(auth.authStateCookieName, data, {
 				path: '/',
 				sameSite: 'strict',
 				secure: false
