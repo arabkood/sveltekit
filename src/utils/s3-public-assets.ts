@@ -1,4 +1,4 @@
-import { isLocal, S3_PUBLIC_BUCKET_NAME } from '$config';
+import { AWS_REGION, isLocal, S3_PUBLIC_BUCKET_NAME } from '$config';
 
 export function toPublicUrl(path: string, bucket?: string): string {
 	if (!bucket) {
@@ -12,7 +12,7 @@ export function toPublicUrl(path: string, bucket?: string): string {
 	if (isLocal) {
 		return `http://localhost:4566/${bucket}/${key}`;
 	} else {
-		return `https://${bucket}.s3.amazonaws.com/${key}`;
+		return `https://${bucket}.s3.${AWS_REGION}.amazonaws.com/${key}`;
 	}
 }
 
@@ -24,7 +24,7 @@ export function replacePublicUrls(text: string, bucket?: string): string {
 		if (isLocal) {
 			return `http://localhost:4566/${bucket}/${key}`;
 		} else {
-			return `https://${bucket}.s3.amazonaws.com/${key}`;
+			return `https://${bucket}.s3.${AWS_REGION}.amazonaws.com/${key}`;
 		}
 	});
 }
