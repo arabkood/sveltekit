@@ -7,7 +7,7 @@
 	import type { ApiError } from '$types/api';
 	import { setCookie } from '$utils/cookies.client';
 	import Icon from '$ui/common/Icon.svelte';
-	import config from '$config';
+	import { auth } from '$config';
 	import type { AuthState } from '$types/auth';
 
 	let status = $state('idle');
@@ -56,7 +56,7 @@
 				...(await response.json())
 			};
 
-			setCookie(config.auth.authStateCookieName, data, {
+			setCookie(auth.authStateCookieName, data, {
 				path: '/',
 				sameSite: 'strict',
 				secure: false

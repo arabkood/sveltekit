@@ -12,6 +12,7 @@ export AWS_S3_TOPICS_BUCKET_NAME="hellotopics"
 export PUBLIC_APP_ENV="local"
 export PUBLIC_AWS_S3_PUBLIC_BUCKET_NAME="helloassets"
 export PUBLIC_AWS_REGION="me-central-1"
+
 export AWS_ACCESS_KEY_ID_LOCAL="test"
 export AWS_SECRET_ACCESS_KEY_LOCAL="test"
 
