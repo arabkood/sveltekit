@@ -1,24 +1,20 @@
 import { S3Client, GetObjectCommand, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import { AWS_REGION, isLocal } from '$config';
-import {
-	AWS_S3_TOPICS_BUCKET_NAME,
-	AWS_SECRET_ACCESS_KEY_LOCAL,
-	AWS_ACCESS_KEY_ID_LOCAL
-} from '$env/dynamic/private';
+import { env } from '$env/dynamic/private';
 
-if (!AWS_S3_TOPICS_BUCKET_NAME) {
-	throw new Error(
-		'Missing AWS_S3_TOPICS_BUCKET_NAME in environment variables. These should be set by your CDK infrastructure.'
-	);
-}
+// if (!env.AWS_S3_TOPICS_BUCKET_NAME) {
+// 	throw new Error(
+// 		'Missing AWS_S3_TOPICS_BUCKET_NAME in environment variables. These should be set by your CDK infrastructure.'
+// 	);
+// }
 
 let localAccessKeyId: string | undefined;
 let localSecretAccessKey: string | undefined;
 
 if (isLocal) {
-	localAccessKeyId = AWS_ACCESS_KEY_ID_LOCAL;
-	localSecretAccessKey = AWS_SECRET_ACCESS_KEY_LOCAL;
+	localAccessKeyId = env.AWS_ACCESS_KEY_ID_LOCAL;
+	localSecretAccessKey = env.AWS_SECRET_ACCESS_KEY_LOCAL;
 }
 
 let s3Client: S3Client;
@@ -166,8 +162,8 @@ export async function getS3ObjectStream(
 }
 
 export const getS3TopicObjectStream = (key: string) =>
-	getS3ObjectStream(AWS_S3_TOPICS_BUCKET_NAME, key);
+	getS3ObjectStream(env.AWS_S3_TOPICS_BUCKET_NAME!, key);
 export const getS3TopicObjectAsString = (key: string) =>
-	getS3ObjectAsString(AWS_S3_TOPICS_BUCKET_NAME, key);
+	getS3ObjectAsString(env.AWS_S3_TOPICS_BUCKET_NAME!, key);
 export const getS3TopicObjectAsBuffer = (key: string) =>
-	getS3ObjectAsBuffer(AWS_S3_TOPICS_BUCKET_NAME, key);
+	getS3ObjectAsBuffer(env.AWS_S3_TOPICS_BUCKET_NAME!, key);
