@@ -5,7 +5,7 @@ import {
 	AWS_S3_TOPICS_BUCKET_NAME,
 	AWS_SECRET_ACCESS_KEY_LOCAL,
 	AWS_ACCESS_KEY_ID_LOCAL
-} from '$env/static/private';
+} from '$env/dynamic/private';
 
 if (!AWS_S3_TOPICS_BUCKET_NAME) {
 	throw new Error(

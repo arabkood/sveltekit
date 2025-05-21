@@ -2,7 +2,7 @@ import {
 	PUBLIC_AWS_REGION,
 	PUBLIC_AWS_S3_PUBLIC_BUCKET_NAME,
 	PUBLIC_APP_ENV
-} from '$env/static/public';
+} from '$env/dynamic/public';
 
 export const APP_ENV = PUBLIC_APP_ENV || 'dev';
 export const isLocal = APP_ENV === 'local';
