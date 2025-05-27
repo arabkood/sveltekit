@@ -6,12 +6,14 @@
 	import UserTracks from '$ui/dashboard/UserTracks.svelte';
 	import Welcome from '$ui/dashboard/Welcome.svelte';
 	import type { LayoutData } from '../$types';
+
 	const {
 		data
 	}: {
 		data: LayoutData;
 	} = $props();
 	// console.debug(data);
+	//
 </script>
 
 <div class="bg-page min-h-screen">

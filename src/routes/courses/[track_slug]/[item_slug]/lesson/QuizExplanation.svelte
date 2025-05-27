@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { scale } from 'svelte/transition';
-	import { elasticOut } from 'svelte/easing';
 	import Markdown from '$ui/common/Markdown.svelte';
 	import Icon from '$ui/common/Icon.svelte';
+	import { fade } from 'svelte/transition';
 
 	let {
 		visible = false,
@@ -24,6 +23,7 @@
 		aria-modal="true"
 		aria-labelledby={title ? 'modal-title' : undefined}
 		aria-describedby="modal-description"
+		transition:fade={{ duration: 50 }}
 	>
 		<button
 			type="button"
@@ -35,8 +35,6 @@
 
 		<div
 			class="relative z-10 w-full max-w-md transform overflow-hidden rounded-xl bg-white shadow-2xl transition-all dark:bg-gray-800"
-			in:scale={{ delay: 150, duration: 500, easing: elasticOut, start: 0.8 }}
-			out:scale={{ duration: 200, start: 0.95 }}
 		>
 			<div class="px-6 py-5 sm:py-6">
 				<button

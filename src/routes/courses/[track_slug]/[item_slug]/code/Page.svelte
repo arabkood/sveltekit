@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Icon from '$ui/common/Icon.svelte';
 	import { fade } from 'svelte/transition';
-	import TopNav from '$ui/code-editor/TopNav.svelte';
 	import SplitPane from '$ui/common/SplitPane.svelte';
 	import Problem from '$ui/code-editor/Problem.svelte';
 	import CodeEditor from '$ui/code-editor/monaco.svelte';
@@ -15,6 +14,7 @@
 	import { i18n } from '$i18n/i18n';
 	import type { PageData } from './$types';
 	import type { CodeFiles, CodeResults } from '$types/code';
+	import TopNav from '$ui/exercise/TopNav.svelte';
 
 	let {
 		// code,

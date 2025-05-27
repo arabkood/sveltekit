@@ -2,17 +2,22 @@
 	import type { LessonInteractive } from '$types/lesson';
 	import CodeBlock from './CodeBlock.svelte';
 	import QuizFooter from './QuizFooter.svelte';
+	import type { Sound } from '$utils/sound';
 
 	const {
 		answer,
 		setAnswer,
 		step,
-		onNext
+		onNext,
+		successPlayer,
+		failPlayer
 	}: {
 		answer: number | null;
 		setAnswer: (a: number) => void;
 		step: LessonInteractive;
 		onNext: () => void;
+		successPlayer?: Sound;
+		failPlayer?: Sound;
 	} = $props();
 
 	let status = $state<'idle' | 'success' | 'fail'>('idle');
@@ -43,9 +48,15 @@
 		if (status === 'success' || status === 'fail') return;
 
 		setAnswer(i);
+
+		if (step.solution === answer) {
+			successPlayer?.play();
+		} else {
+			failPlayer?.play();
+		}
 	};
 
-	function getOptionDynamicClasses(optionIndex: number): string {
+	const getOptionDynamicClasses = (optionIndex: number): string => {
 		const isSelected = answer === optionIndex;
 		const isOptionCorrect = optionIndex === step.solution;
 
@@ -72,7 +83,7 @@
 			return baseNonActive;
 		}
 		return 'border-gray-300 bg-white text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200';
-	}
+	};
 </script>
 
 <main
@@ -100,7 +111,7 @@
 				{@const isOptionCorrect = step.solution === i}
 				<button
 					type="button"
-					class="focus-visible:ring-primary-500 flex w-full cursor-pointer items-center justify-between rounded-lg border p-4 text-left text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 {getOptionDynamicClasses(
+					class="focus-visible:ring-primary-500 flex w-full cursor-pointer items-center justify-between rounded-lg border p-4 text-left text-sm font-medium whitespace-pre-wrap transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 {getOptionDynamicClasses(
 						i
 					)}"
 					onclick={() => handleOptionSelect(i)}

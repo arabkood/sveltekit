@@ -20,52 +20,64 @@
 </script>
 
 <div
-	class="sticky top-0 z-10 grid grid-cols-3 border-b border-gray-300 bg-gray-200 px-2 py-1 dark:border-gray-800 dark:bg-gray-950"
+	class="bg-page sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 px-4 py-2 dark:border-gray-700"
 >
-	<div class="flex items-center space-x-2">
+	<div class="flex min-w-0 flex-1 items-center">
 		<a
 			href="/"
-			class="me-3 flex cursor-pointer items-center justify-center text-gray-950 dark:text-gray-50"
+			class="mr-3 flex shrink-0 items-center justify-center rounded-md p-1 text-gray-700 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-800"
+			aria-label="Home"
 		>
 			<Logo variant="iconOnly" size={26} />
 		</a>
 
-		<nav class="flex items-center gap-1 text-base">
+		<nav class="flex min-w-0 items-center gap-1 text-sm">
 			<a
-				class="cursor-pointer rounded-md px-2 py-1 text-gray-950/50 transition-colors hover:bg-gray-500/10 dark:text-gray-50/50"
-				href={`/courses/${track?.slug}`}>{track.title}</a
+				class="truncate rounded px-2 py-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+				href={`/courses/${track?.slug}`}
+				title={track.title}>{track.title}</a
 			>
-			<Icon class="text-gray-950/50 dark:text-gray-50/50" name="chevron-left" size={22} />
-			<span class="px-2 py-1 text-gray-950 dark:text-gray-50">{item.title}</span>
+			<Icon class="shrink-0 text-gray-400 dark:text-gray-500" name="chevron-left" size={18} />
+			<span
+				class="truncate px-2 py-1 font-medium text-gray-800 dark:text-gray-100"
+				title={item.title}>{item.title}</span
+			>
 		</nav>
 	</div>
 
-	<div class="flex items-center justify-center space-x-1">
+	<div class="flex items-center justify-center px-4">
 		{#if !!Actions}
 			{@render Actions()}
 		{/if}
 	</div>
 
-	<div class="flex items-center justify-end space-x-3">
-		<div class="flex items-center justify-center gap-2">
-			<a
-				href={`/courses/${track?.slug}/${prevSlug}`}
-				class="cursor-pointer rounded-md p-1 text-gray-950 transition-colors hover:bg-gray-500/10 dark:text-gray-50"
-				class:pointer-events-none={!prevSlug}
-				class:opacity-40={!prevSlug}
-			>
-				<Icon name="chevron-right" size={26} />
-			</a>
-			<!-- TODO: this should be a button that opens a modal for choose exercise -->
-			<span class="text-lg font-medium text-gray-950 dark:text-gray-50">24</span>
-			<a
-				class:pointer-events-none={!nextSlug}
-				class:opacity-40={!nextSlug}
-				href={`/courses/${track?.slug}/${nextSlug}`}
-				class="cursor-pointer rounded-md p-1 text-gray-950 transition-colors hover:bg-gray-500/10 dark:text-gray-50"
-			>
-				<Icon name="chevron-left" size={26} />
-			</a>
-		</div>
+	<div class="flex shrink-0 items-center justify-end gap-1.5">
+		<a
+			href={`/courses/${track?.slug}/${prevSlug}`}
+			class="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+			class:pointer-events-none={!prevSlug}
+			class:opacity-50={!prevSlug}
+			aria-label="Previous item"
+		>
+			<Icon name="chevron-right" size={22} />
+		</a>
+
+		<button
+			type="button"
+			class="flex h-9 min-w-[2.25rem] shrink-0 cursor-pointer items-center justify-center rounded-md bg-transparent px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800"
+			aria-label="Choose exercise"
+		>
+			24
+		</button>
+
+		<a
+			href={`/courses/${track?.slug}/${nextSlug}`}
+			class="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+			class:pointer-events-none={!nextSlug}
+			class:opacity-50={!nextSlug}
+			aria-label="Next item"
+		>
+			<Icon name="chevron-left" size={22} />
+		</a>
 	</div>
 </div>

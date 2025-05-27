@@ -20,6 +20,7 @@ const config = {
 			$utils: 'src/utils',
 			$i18n: 'src/i18n',
 			$types: 'src/types',
+			$assets: 'src/assets',
 			$config: 'src/config.ts'
 		}
 	}

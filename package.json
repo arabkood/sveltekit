@@ -48,6 +48,7 @@
 		"adm-zip": "^0.5.16",
 		"drizzle-orm": "^0.38.4",
 		"highlight.js": "^11.11.1",
+		"howler": "^2.2.4",
 		"js-yaml": "^4.1.0",
 		"lodash-es": "^4.17.21",
 		"markdown-it": "^14.1.0",

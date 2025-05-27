@@ -84,15 +84,12 @@
 								<div class="relative w-full">
 									<a
 										href={`/courses/${track.slug}/${item.slug}/${item.type}`}
-										class="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+										class="block w-full cursor-pointer justify-between rounded-lg border border-gray-300 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
 									>
-										<div class="flex-grow">
-											<h4 class="text-md font-semibold text-gray-900 dark:text-white">
+										<div class="flex w-full items-center gap-3">
+											<h4 class="text-md grow font-semibold text-gray-900 dark:text-white">
 												{item.title}
 											</h4>
-											<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{item.blurb}</p>
-										</div>
-										<div class="ms-4 flex flex-shrink-0 items-center gap-3">
 											<span class={getDifficultyClass(item.difficulty || undefined)}>
 												{item.difficulty || 'N/A'}
 											</span>
@@ -100,10 +97,13 @@
 												>{item.type}</span
 											>
 											<span
-												class="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+												class="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-nowrap text-gray-700 dark:bg-gray-700 dark:text-gray-200"
 												>{item.base_xp} XP</span
 											>
 										</div>
+										{#if item.blurb}
+											<p class="mt-4 text-sm text-gray-600 dark:text-gray-400">{item.blurb}</p>
+										{/if}
 									</a>
 									{#if index < module.items.length - 1}
 										<div class="flex justify-center">
