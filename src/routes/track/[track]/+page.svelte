@@ -252,7 +252,7 @@
 						</div>
 					{/if}
 					<!-- Community Stats -->
-					<!-- <div class="bg-modal rounded-2xl p-6"> -->
+					<!-- <div class="bg-section rounded-2xl p-6"> -->
 					<!-- 	<div class="mb-6"> -->
 					<!-- 		<span -->
 					<!-- 			class="mb-4 inline-flex items-center rounded-full bg-primary-50 px-4 py-1 text-sm text-primary-700" -->

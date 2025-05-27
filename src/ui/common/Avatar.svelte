@@ -2,16 +2,17 @@
 	import Icon from '$ui/common/Icon.svelte';
 	import { cn } from '$utils/classnames';
 
-	// Define size variants for quick use
 	const sizeClasses = {
 		xs: 'h-6 w-6 text-xs',
 		sm: 'h-7 w-7 text-sm',
 		md: 'h-9 w-9 text-base',
 		lg: 'h-12 w-12 text-lg',
-		xl: 'h-16 w-16 text-xl'
+		xl: 'h-16 w-16 text-xl',
+		'2xl': 'h-20 w-20 text-2xl'
 	} as const;
 
 	type SizeVariant = keyof typeof sizeClasses;
+	type StatusVariant = 'online' | 'offline' | 'away' | 'busy';
 
 	let {
 		src = '',
@@ -19,14 +20,18 @@
 		fallback = '',
 		size = 'sm' as SizeVariant,
 		className = '',
-		showFallbackIcon = false
+		showFallbackIcon = false,
+		status = null as StatusVariant | null,
+		showStatusIndicator = false,
+		loading = false
 	} = $props();
 
-	// Get user initials for fallback
 	const initials = $derived(
 		fallback
 			? fallback
-					.split(' ')
+					.trim()
+					.split(/\s+/)
+					.filter((word) => word.length > 0)
 					.map((word) => word[0])
 					.join('')
 					.toUpperCase()
@@ -35,30 +40,112 @@
 	);
 
 	let imageError = $state(false);
+	let imageLoaded = $state(false);
 
 	const handleImageError = () => {
 		imageError = true;
 	};
 
-	// Computed classes for the avatar container
-	const classes = $derived(
+	const handleImageLoad = () => {
+		imageLoaded = true;
+	};
+
+	const outerClasses = $derived(cn('relative inline-block', sizeClasses[size], className));
+
+	const innerClasses = $derived(
 		cn(
-			'inline-flex items-center justify-center rounded-full bg-primary text-primary-900',
-			sizeClasses[size],
-			className
+			'flex h-full w-full items-center justify-center rounded-full overflow-hidden',
+			'bg-gradient-to-br from-primary to-primary-600 text-primary-foreground',
+			'dark:from-slate-700 dark:to-slate-800 dark:text-slate-100',
+			'transition-all duration-200 ease-in-out'
 		)
+	);
+
+	const statusIndicatorSize = $derived(
+		(() => {
+			switch (size) {
+				case 'xs':
+					return 'h-2 w-2';
+				case 'sm':
+					return 'h-2.5 w-2.5';
+				case 'md':
+					return 'h-3 w-3';
+				case 'lg':
+					return 'h-4 w-4';
+				case 'xl':
+					return 'h-5 w-5';
+				case '2xl':
+					return 'h-6 w-6';
+				default:
+					return 'h-2.5 w-2.5';
+			}
+		})()
+	);
+
+	const statusIndicatorColor = $derived(
+		((): string => {
+			switch (status) {
+				case 'online':
+					return 'bg-green-500 dark:bg-green-400';
+				case 'offline':
+					return 'bg-gray-400 dark:bg-gray-500';
+				case 'away':
+					return 'bg-yellow-500 dark:bg-yellow-400';
+				case 'busy':
+					return 'bg-red-500 dark:bg-red-400';
+				default:
+					return 'bg-gray-400 dark:bg-gray-500';
+			}
+		})()
 	);
 </script>
 
-<div class={classes}>
-	{#if src && !imageError}
-		<img {src} {alt} onerror={handleImageError} class="h-full w-full rounded-full object-cover" />
-	{:else if fallback && !showFallbackIcon}
-		<span class="font-medium">{initials}</span>
-	{:else}
-		<Icon
-			name="user"
-			size={size === 'xs' ? 14 : size === 'sm' ? 20 : size === 'md' ? 24 : size === 'lg' ? 32 : 40}
-		/>
+<div class={outerClasses}>
+	<div class={innerClasses}>
+		{#if loading}
+			<div class="bg-primary-300 h-full w-full animate-pulse rounded-full dark:bg-slate-700"></div>
+		{:else if src && !imageError}
+			<img
+				{src}
+				{alt}
+				onerror={handleImageError}
+				onload={handleImageLoad}
+				class="h-full w-full rounded-full object-cover transition-opacity duration-200 {imageLoaded
+					? 'opacity-100'
+					: 'opacity-0'}"
+			/>
+			{#if !imageLoaded}
+				<div
+					class="bg-primary-300 absolute inset-0 animate-pulse rounded-full dark:bg-slate-700"
+				></div>
+			{/if}
+		{:else if fallback && !showFallbackIcon}
+			<span class="font-semibold tracking-tight select-none">{initials}</span>
+		{:else}
+			<Icon
+				name="user"
+				size={size === 'xs'
+					? 12
+					: size === 'sm'
+						? 16
+						: size === 'md'
+							? 20
+							: size === 'lg'
+								? 28
+								: size === 'xl'
+									? 36
+									: 44}
+				class="opacity-70"
+			/>
+		{/if}
+	</div>
+
+	{#if showStatusIndicator && status}
+		<div
+			class="absolute -right-0.5 -bottom-0.5 rounded-full border-2
+                   border-white dark:border-gray-800
+                   {statusIndicatorSize} {statusIndicatorColor}"
+			aria-label="Status: {status}"
+		></div>
 	{/if}
 </div>

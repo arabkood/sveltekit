@@ -113,7 +113,7 @@
 				{i18n.t('dashboard.start_track_prompt')}
 			</p>
 			<div class="mt-6">
-				<Button href="/explore-tracks" startIcon="search" variant="secondary">
+				<Button href="/courses" startIcon="search" variant="secondary">
 					{i18n.t('dashboard.browse_tracks')}
 				</Button>
 			</div>

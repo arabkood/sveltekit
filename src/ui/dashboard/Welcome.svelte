@@ -71,7 +71,7 @@
 				{i18n.t('dashboard.continue_learning')}
 			</Button>
 		{:else if !hasAnyTracks}
-			<Button href="/explore-tracks" startIcon="plus" variant="secondary">
+			<Button href="/courses" startIcon="plus" variant="secondary">
 				{i18n.t('dashboard.start_learning')}
 			</Button>
 		{/if}

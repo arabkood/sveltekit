@@ -71,7 +71,7 @@
 		</div>
 		<h3 class="mb-2 text-xl font-semibold">{i18n.t('dashboard.no_active_track')}</h3>
 		<p class="mb-4 opacity-60">{i18n.t('dashboard.start_track_prompt')}</p>
-		<Button href="/explore-tracks" startIcon="plus" variant="secondary">
+		<Button href="/courses" startIcon="plus" variant="secondary">
 			{i18n.t('dashboard.browse_tracks')}
 		</Button>
 	</div>

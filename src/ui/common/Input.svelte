@@ -31,7 +31,7 @@
 
 	const inputClasses = $derived(
 		cn(
-			'block w-full rounded-lg border bg-input px-2.5 py-2 text-sm dark:placeholder-gray-400 ',
+			'block w-full rounded-lg border focus:border-primary-500 focus:ring-primary-500 dark:focus:border-primary-400 dark:focus:ring-primary-400 /* Disabled states */ /* Transitions for a smoother feel */ rounded-md border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 shadow-sm transition-colors duration-150 ease-in-out focus:ring-1 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 disabled:opacity-75 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-50 dark:placeholder-gray-400 dark:disabled:bg-gray-700 dark:disabled:text-gray-500 px-2.5 py-2 text-sm dark:placeholder-gray-400 ',
 			error
 				? 'border-red-500 focus:border-red-500 focus:ring-red-500'
 				: 'border-gray-300 focus:border-primary-600 focus:ring-primary-600 dark:focus:border-primary-500 dark:focus:ring-primary-500 dark:border-gray-600',
@@ -68,7 +68,7 @@
 			<div class="absolute inset-y-0 right-0 z-10 flex items-center pr-2">
 				<button
 					type="button"
-					class="rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-primary-600"
+					class="focus:ring-primary-600 rounded-md p-1 focus:ring-2 focus:outline-none"
 					onclick={() => (showPassword = !showPassword)}
 					title={showPassword ? 'Hide password' : 'Show password'}
 				>

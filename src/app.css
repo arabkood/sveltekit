@@ -13,75 +13,80 @@
 }
 
 @theme {
-	--color-primary-50: #edfff8;
-	--color-primary-100: #d5fff0;
-	--color-primary-200: #aeffe2;
-	--color-primary-300: #70ffcd;
-	--color-primary-400: #2bfdb1;
-	--color-primary-500: #00ec97;
-	--color-primary-600: #00c076;
-	--color-primary-700: #009660;
-	--color-primary-800: #06754e;
-	--color-primary-900: #076042;
-	--color-primary-950: #003724;
+	/* --color-primary-50: #e0f2ff; */
+	/* --color-primary-100: #b3daff; */
+	/* --color-primary-200: #80c0ff; */
+	/* --color-primary-300: #4da6ff; */
+	/* --color-primary-400: #1a8cff; */
+	/* --color-primary-500: #0073e6;  */
+	/* --color-primary-600: #005bb4; */
+	/* --color-primary-700: #004080; */
+	/* --color-primary-800: #00294d; */
+	/* --color-primary-900: #001519; */
+	/* --color-primary-950: #000a0f; */
 
-	--color-gray-50: #f8faf9;
-	--color-gray-100: #eef0ef;
-	--color-gray-200: #e2e5e4;
-	--color-gray-300: #c8cccb;
-	--color-gray-400: #a9aeac;
-	--color-gray-500: #878d8a;
-	--color-gray-600: #676d6a;
-	--color-gray-700: #4d524f;
-	--color-gray-800: #343836;
-	--color-gray-900: #1d201f;
-	--color-gray-950: #0a0d0c;
+	--color-primary-50: #e6f5ee;
+	--color-primary-100: #b3e0d0;
+	--color-primary-200: #80cbb2;
+	--color-primary-300: #4db694;
+	--color-primary-400: #26a27c;
+	--color-primary-500: #008c65;
+	--color-primary-600: #007352;
+	--color-primary-700: #005c40;
+	--color-primary-800: #00452f;
+	--color-primary-900: #002e1f;
+	--color-primary-950: #001a12;
 
-	/* --color-gray-50: #ffffff; */
-	/* --color-gray-100: #fdf6e3; */
-	/* --color-gray-200: #eae3c8; */
-	/* --color-gray-300: #9ba09f; */
-	/* --color-gray-400: #848988; */
-	/* --color-gray-500: #6d7374; */
-	/* --color-gray-600: #5c6263; */
-	/* --color-gray-700: #004141; */
-	/* --color-gray-800: #003737; */
-	/* --color-gray-900: #001c1c; */
-	/* --color-gray-950: #001c1c;  */
+	--color-gray-50: #f5f7fa;
+	--color-gray-100: #e1e4e8;
+	--color-gray-200: #c3c8cf;
+	--color-gray-300: #a6abb6;
+	--color-gray-400: #8a8f9d;
+	--color-gray-500: #6f7583; /* main text */
+	--color-gray-600: #555a66;
+	--color-gray-700: #3d414b;
+	--color-gray-800: #262a31; /* background surface */
+	--color-gray-900: #121417; /* darkest bg */
+	--color-gray-950: #0a0b0d;
+
+	--font-family-arabic:
+		'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Sans Arabic', 'Segoe UI', Tahoma,
+		'Traditional Arabic', 'Arabic Typesetting', sans-serif;
 }
 
 @layer utilities {
 	.bg-page {
-		@apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+		@apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50;
 	}
-	.bg-section {
-		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100;
-	}
-	.bg-inner {
-		@apply bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100;
-	}
-	.bg-header {
-		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100;
-	}
-	.bg-modal {
-		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100;
-	}
-	.bg-input {
-		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400;
-	}
-	.bg-clickable {
-		@apply bg-gray-50 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700;
-	}
-}
 
-:root {
-	--arabic-font-family:
-		'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Kufi Arabic', 'Noto Sans Arabic',
-		'Segoe UI', Tahoma, 'Traditional Arabic', 'Arabic Typesetting', sans-serif;
+	.bg-section {
+		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-50;
+	}
+
+	.bg-inner {
+		@apply bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-50;
+	}
+
+	.bg-clickable {
+		@apply focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400 rounded-md bg-gray-50 text-gray-900 transition-colors duration-150 ease-in-out hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 focus-visible:outline-none active:bg-gray-200 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900 dark:active:bg-gray-600;
+	}
+
+	.bg-clickable-primary {
+		@apply bg-primary-500 dark:bg-primary-600 dark:text-primary-50 hover:bg-primary-600 dark:hover:bg-primary-500 active:bg-primary-700 dark:active:bg-primary-400 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-300 rounded-md px-4 py-2 text-white transition-colors duration-150 ease-in-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-gray-900;
+	}
 }
 
 html {
-	font-family: var(--arabic-font-family);
+	font-family: var(--font-family-arabic);
+	box-sizing: border-box;
+
+	scroll-behavior: smooth;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
 }
 
 html[dir='rtl'] {
@@ -97,14 +102,4 @@ html[dir='rtl'] {
 	.placeholder-rtl::placeholder {
 		text-align: right;
 	}
-}
-
-html {
-	box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-	box-sizing: inherit;
 }

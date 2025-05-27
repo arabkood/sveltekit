@@ -9,14 +9,15 @@
 	const modules = $derived(data?.modules);
 
 	function getDifficultyClass(difficulty?: string): string {
-		const colors = {
-			easy: 'text-green-800 dark:text-green-300',
-			medium: 'text-yellow-800 dark:text-yellow-300',
-			hard: 'text-red-900 dark:text-red-300'
+		const difficulties: Record<string, string> = {
+			easy: 'bg-green-100 text-green-700 dark:bg-green-700/30 dark:text-green-300',
+			medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-700/30 dark:text-yellow-300',
+			hard: 'bg-red-100 text-red-700 dark:bg-red-700/30 dark:text-red-300'
 		};
 		return (
-			colors[difficulty as keyof typeof colors] ||
-			'text-gray-800 dark:text-gray-300 bg-gray-100 dark:bg-gray-700'
+			(difficulties[difficulty?.toLowerCase() || ''] ||
+				'bg-gray-100 text-gray-700 dark:bg-gray-700/30 dark:text-gray-300') +
+			' px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
 		);
 	}
 </script>
@@ -27,31 +28,35 @@
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-3">
 			<div
-				class="sticky top-6 mb-auto flex flex-wrap gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-lg duration-300 ease-in-out md:col-span-1 dark:border-gray-700 dark:bg-gray-800"
+				class="sticky top-6 mb-auto flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-lg duration-300 ease-in-out md:col-span-1 dark:border-gray-700 dark:bg-gray-800"
 			>
 				{#if track.logo}
-					<img src={toPublicUrl(track.logo)} alt="" class="h-24 w-24 object-contain" />
+					<img
+						src={toPublicUrl(track.logo)}
+						alt="{track.title || 'Track'} logo"
+						class="h-24 w-24 rounded-md object-contain"
+					/>
 				{/if}
 
-				<div>
-					<h3 class="mb-3 text-xl font-bold text-gray-900 dark:text-white">
+				<div class="flex flex-col">
+					<h3 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">
 						{track.title}
 					</h3>
 
-					<p class="mb-6 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+					<p class="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
 						{track.blurb}
 					</p>
 
-					<div class="flex items-center gap-4 text-sm">
-						<div class="flex items-center text-gray-700 dark:text-gray-300">
-							<Icon name="book" class="me-1" />
-							<span>69 TEMPORARY</span>
-						</div>
-						{#if !track.premium_only}
+					<div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+						<!-- <div class="flex items-center text-gray-600 dark:text-gray-400"> -->
+						<!-- 	<Icon name="book" class="me-1.5 h-4 w-4" /> -->
+						<!-- 	<span>69 TEMPORARY</span> -->
+						<!-- </div> -->
+						{#if track.premium_only}
 							<span
-								class="flex items-center rounded-full bg-purple-200/50 px-3 py-1 font-medium text-violet-700 dark:bg-purple-700/30 dark:text-purple-300"
+								class="flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-sm font-medium text-purple-700 dark:bg-purple-700/30 dark:text-purple-300"
 							>
-								<Icon name="star" class="me-1.5 h-4 w-4" />
+								<Icon name="star" class="me-1 h-4 w-4" />
 								{i18n.t('common.premium_only')}
 							</span>
 						{/if}
@@ -59,18 +64,21 @@
 				</div>
 			</div>
 
-			<!-- /* Course Track */ -->
 			<div class="flex flex-col md:col-span-2">
-				<div class="flex flex-col items-center gap-16">
+				<div class="flex flex-col gap-12">
 					{#each modules as module}
 						<div class="w-full">
 							<div
-								class="bg-primary-100/50 border-primary-500/30 dark:bg-primary-700/30 dark:border-primary-500/50 mb-6 w-full rounded-xl border-2 border-b-4 p-1 text-center"
+								class="bg-primary-100/50 border-primary-500/30 dark:bg-primary-700/30 dark:border-primary-500/50 mb-6 w-full rounded-xl border-2 border-b-4 p-3 text-center"
 							>
-								<span class="text-primary-700 dark:text-primary-300 text-sm font-bold">
+								<span
+									class="text-primary-700 dark:text-primary-300 text-xs font-bold tracking-wider uppercase"
+								>
 									LEVEL {module.position}
 								</span>
-								<h3 class="text-md font-bold text-gray-900 dark:text-white">{module.title}</h3>
+								<h3 class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
+									{module.title}
+								</h3>
 							</div>
 							{#each module.items as item, index}
 								<div class="relative w-full">
@@ -78,26 +86,28 @@
 										href={`/courses/${track.slug}/${item.slug}/${item.type}`}
 										class="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
 									>
-										<div>
-											<h4 class="text-md font-bold text-gray-900 dark:text-white">{item.title}</h4>
+										<div class="flex-grow">
+											<h4 class="text-md font-semibold text-gray-900 dark:text-white">
+												{item.title}
+											</h4>
 											<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{item.blurb}</p>
 										</div>
-										<div class="flex items-center gap-4 text-xs font-medium">
+										<div class="ms-4 flex flex-shrink-0 items-center gap-3">
 											<span class={getDifficultyClass(item.difficulty || undefined)}>
-												{item.difficulty}
+												{item.difficulty || 'N/A'}
 											</span>
-											<span class="text-gray-700 dark:text-gray-300">{item.type}</span>
+											<span class="text-xs font-medium text-gray-500 capitalize dark:text-gray-400"
+												>{item.type}</span
+											>
 											<span
-												class="rounded bg-gray-100 px-2 py-0.5 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+												class="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-200"
 												>{item.base_xp} XP</span
 											>
 										</div>
 									</a>
 									{#if index < module.items.length - 1}
 										<div class="flex justify-center">
-											<div class="relative h-12 w-0.5 bg-gray-300 dark:bg-gray-600">
-												<!-- <div class="absolute top-0 left-0 h-full w-full bg-green-400"></div> -->
-											</div>
+											<div class="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
 										</div>
 									{/if}
 								</div>

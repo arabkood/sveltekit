@@ -3,16 +3,23 @@
 	import { slide } from 'svelte/transition';
 	import { i18n } from '$i18n/i18n';
 	import Avatar from '$ui/common/Avatar.svelte';
-	import type { User } from '$types/user';
+	import type { SelectUser } from '$lib/server/db/schema/auth';
 	import { API_ENDPOINTS } from '$api/config';
+	import Button from '$ui/common/Button.svelte';
+	import { tick } from 'svelte';
 
-	let { variant = 'desktop', user } = $props<{
+	let {
+		variant = 'desktop',
+		user
+	}: {
 		variant?: 'desktop' | 'mobile';
-		user: User;
-	}>();
+		user: SelectUser;
+	} = $props();
 
 	let showMenu = $state(false);
 	let menuRef = $state<HTMLDivElement | null>(null);
+	let dropdownMenuRef = $state<HTMLDivElement | null>(null);
+	let dynamicMenuClasses = $state('top-full mt-2 right-0 origin-top-right');
 
 	function handleClickOutside(event: MouseEvent) {
 		if (menuRef && !menuRef.contains(event.target as Node)) {
@@ -33,80 +40,149 @@
 	};
 
 	$effect(() => {
-		if (showMenu) {
+		if (showMenu && variant === 'desktop') {
+			const adjustPosition = async () => {
+				await tick();
+				if (!dropdownMenuRef || !menuRef) return;
+
+				const menuElRect = dropdownMenuRef.getBoundingClientRect();
+				const parentElRect = menuRef.getBoundingClientRect();
+				const viewportH = window.innerHeight;
+				const viewportW = window.innerWidth;
+
+				let vPos = 'top-full mt-2';
+				let vOrigin = 'origin-top';
+				let hPos = 'right-0';
+				let hOriginSuffix = '-right';
+
+				const spaceBelowParent = viewportH - parentElRect.bottom;
+				const spaceAboveParent = parentElRect.top;
+
+				if (menuElRect.height > spaceBelowParent && menuElRect.height <= spaceAboveParent) {
+					vPos = 'bottom-full mb-2';
+					vOrigin = 'origin-bottom';
+				}
+
+				const menuLeftIfRightAligned = parentElRect.right - menuElRect.width;
+				const menuRightIfLeftAligned = parentElRect.left + menuElRect.width;
+
+				const fitsRightAligned = menuLeftIfRightAligned >= 0 && parentElRect.right <= viewportW;
+				const fitsLeftAligned = parentElRect.left >= 0 && menuRightIfLeftAligned <= viewportW;
+
+				if (!fitsRightAligned && fitsLeftAligned) {
+					hPos = 'left-0';
+					hOriginSuffix = '-left';
+				}
+
+				dynamicMenuClasses = `${vPos} ${hPos} ${vOrigin}${hOriginSuffix}`;
+			};
+
+			adjustPosition();
+			document.addEventListener('click', handleClickOutside);
+			window.addEventListener('resize', adjustPosition);
+
+			return () => {
+				document.removeEventListener('click', handleClickOutside);
+				window.removeEventListener('resize', adjustPosition);
+			};
+		} else if (showMenu && variant === 'mobile') {
 			document.addEventListener('click', handleClickOutside);
 			return () => {
 				document.removeEventListener('click', handleClickOutside);
 			};
+		} else {
+			dynamicMenuClasses = 'top-full mt-2 right-0 origin-top-right';
 		}
 	});
 </script>
 
 {#if variant === 'mobile'}
-	<li>
-		<a
-			href="/settings"
-			class="bg-clickable flex gap-2 px-4 py-2 text-right text-sm"
-			onclick={() => (showMenu = false)}
-		>
-			<Icon name="cog" size={20} />
-
-			{i18n.t('navigation.settings')}
-		</a>
-	</li>
-	<li>
-		<button
-			class="bg-clickable flex w-full gap-2 px-4 py-2 text-right text-sm"
-			onclick={() => signOut()}
-		>
-			<Icon name="exit" size={20} />
-			{i18n.t('navigation.signout')}
-		</button>
-	</li>
+	<ul class="list-none">
+		<li>
+			<Button
+				href={'/settings'}
+				variant={'link-pill'}
+				size="sm"
+				class="w-full"
+				rounded={false}
+				onclick={() => (showMenu = false)}
+				startIcon={'cog'}
+				iconSize={20}
+			>
+				{i18n.t('navigation.settings')}
+			</Button>
+		</li>
+		<li>
+			<Button
+				variant={'link-pill'}
+				size="sm"
+				class="w-full"
+				rounded={false}
+				onclick={() => signOut()}
+				startIcon="exit"
+				iconSize={20}
+			>
+				{i18n.t('navigation.signout')}
+			</Button>
+		</li>
+	</ul>
 {:else}
 	<div class="relative" bind:this={menuRef}>
-		<!-- Toggle Button -->
-		<button
-			onclick={(e) => {
+		<Button
+			variant="link-pill"
+			onclick={(e: MouseEvent) => {
 				e.stopPropagation();
-				if (showMenu) {
-					showMenu = false;
-				} else {
-					showMenu = true;
-				}
+				showMenu = !showMenu;
 			}}
+			aria-expanded={showMenu}
+			aria-haspopup="true"
+			aria-controls="user-menu"
+			size="sm"
 		>
 			<Avatar
-				src={user?.Avatar || undefined}
-				alt={user?.Username}
-				fallback={user?.Username}
+				src={user.avatar || undefined}
+				alt={user.username}
+				fallback={user.username}
+				showStatusIndicator={true}
+				status="online"
 				size="sm"
+				className="me-1"
 			/>
-		</button>
+			{user.username}
+		</Button>
 
-		<!-- Dropdown Menu -->
 		{#if showMenu}
 			<div
-				class="bg-modal ring-opacity-5 absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md py-1 shadow-lg ring-1 ring-black"
+				bind:this={dropdownMenuRef}
+				id="user-menu"
+				class="absolute z-50 w-56 rounded-lg bg-white py-1.5 shadow-xl ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-white/10 {dynamicMenuClasses}"
 				transition:slide={{ duration: 200 }}
 			>
-				<ul class="divide-y divide-gray-200 dark:divide-gray-600">
+				<ul class="divide-y divide-gray-100 dark:divide-gray-700">
 					<li>
 						<a
 							href="/settings"
-							class="flex gap-2 px-4 py-2 text-right text-sm"
+							class="group flex items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
 							onclick={() => (showMenu = false)}
 						>
-							<Icon name="cog" size={20} />
+							<Icon
+								name="cog"
+								size={20}
+								class="text-gray-400 transition-colors duration-150 ease-in-out group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400"
+							/>
 							{i18n.t('navigation.settings')}
 						</a>
 					</li>
 					<li>
 						<button
-							class="flex w-full gap-2 px-4 py-2 text-right text-sm"
+							class="group flex w-full items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
 							onclick={() => signOut()}
 						>
-							<Icon name="exit" size={20} />
+							<Icon
+								name="exit"
+								size={20}
+								class="text-gray-400 transition-colors duration-150 ease-in-out group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400"
+							/>
 							{i18n.t('navigation.signout')}
 						</button>
 					</li>
