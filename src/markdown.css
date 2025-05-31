@@ -1,29 +1,6 @@
-.markdown-body .code-block {
-	position: relative;
-	margin: 1.5em 0;
-	background-color: #f6f8fa;
-	border: 1px solid #d0d7de;
-	border-radius: 6px;
-	overflow: hidden;
-}
-
-.markdown-body .code-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 0.5em 1em;
-	background-color: #f0f2f5;
-	border-bottom: 1px solid #d0d7de;
-	font-size: 0.8em;
-	color: #57606a;
-	font-weight: 500;
-}
-
 .markdown-body .code-body {
 	padding: 1em;
 	overflow: auto;
-	background-color: #f6f8fa;
-	color: #1f2328;
 	font-size: 0.875em;
 	line-height: 1.5;
 }
@@ -40,6 +17,57 @@
 .markdown-body .code-body > code > span {
 	/* This will fix the Arabic BiDi problem, however since users may copy the code to their own editors which most likely doesn't support BiDi, it's better to avoid this */
 	/* unicode-bidi: isolate; */
+}
+
+.markdown-body .code-block {
+	position: relative;
+	margin: 1.5em 0;
+	background-color: var(--color-slate-50);
+	border: 1px solid var(--color-slate-200);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.markdown-body .code-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5em 1em;
+	background-color: var(--color-slate-100);
+	border-bottom: 1px solid var(--color-slate-200);
+	font-size: 0.8em;
+	font-weight: 500;
+}
+
+.markdown-body code:not(pre code) {
+	padding: 0.2em 0.4em;
+	margin: 0 0.1em;
+	font-size: 85%;
+	font-family: var(--font-mono);
+	font-weight: bold;
+	background-color: var(--color-slate-100);
+	border-radius: 6px;
+	unicode-bidi: embed;
+	direction: inherit;
+}
+
+.markdown-body code[data-glossary]:not(pre code) {
+	color: var(--color-primary-500);
+}
+
+@media (prefers-color-scheme: dark) {
+	.markdown-body code:not(pre code) {
+		background-color: var(--color-slate-700);
+	}
+
+	.markdown-body .code-block {
+		background-color: var(--color-slate-800);
+		border-color: var(--color-slate-700);
+	}
+	.markdown-body .code-header {
+		background-color: var(--color-slate-700);
+		border-bottom-color: var(--color-slate-600);
+	}
 }
 
 .markdown-body h1,

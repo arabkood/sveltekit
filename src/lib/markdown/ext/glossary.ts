@@ -14,7 +14,7 @@ export const glossary = (options = {}): MarkedExtension => {
 			}
 			const item = dict[key as keyof typeof dict];
 
-			return `<code data-glossary-k="${key}" data-glossary-t="${item.t}" data-glossary-d="${item.d}">${key}</code>`;
+			return `<code data-glossary="${key}" data-glossary-t="${item.t}" data-glossary-d="${item.d}">${key}</code>`;
 		}
 	};
 
