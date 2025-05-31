@@ -4,6 +4,8 @@
 
 @import 'highlight.js/styles/github-dark.css' layer(dark) (prefers-color-scheme: dark);
 
+@import './markdown.css';
+
 @font-face {
 	font-family: 'NotoKufiArabic';
 	src: url('/fonts/NotoKufiArabic-VariableFont_wght.ttf') format('woff2-variations');
