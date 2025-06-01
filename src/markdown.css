@@ -1,4 +1,5 @@
 .markdown-body .code-body {
+	position: relative;
 	padding: 1em;
 	overflow: auto;
 	font-size: 0.875em;

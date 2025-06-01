@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CodeBlockWrapper from '$ui/wrappers/CodeBlockWrapper.svelte';
 	import GlossaryWrapper from '$ui/wrappers/GlossaryWrapper.svelte';
 	import type { Snippet } from 'svelte';
 
@@ -9,6 +10,8 @@
 	} = $props();
 </script>
 
-<GlossaryWrapper>
-	{@render children()}
-</GlossaryWrapper>
+<CodeBlockWrapper>
+	<GlossaryWrapper>
+		{@render children()}
+	</GlossaryWrapper>
+</CodeBlockWrapper>
