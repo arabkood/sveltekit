@@ -20,23 +20,28 @@
 		}
 	}
 
-	function showTooltip(target: Element, title: string, description?: string): void {
+	function showTooltip(target: Element, title?: string, description?: string): void {
 		if (!BROWSER || !popperCreateFn || !target) return;
 
 		if (!tooltipNode) {
 			tooltipNode = document.createElement('div');
 			tooltipNode.setAttribute('role', 'tooltip');
 			tooltipNode.className =
-				'p-2 px-3 rounded-md shadow-lg text-sm \
-                                    bg-white text-slate-700 \
-                                    dark:bg-slate-800 dark:text-slate-200 \
-                                    pointer-events-none z-[10000] max-w-xs';
+				'px-3 py-2 rounded-lg shadow-xl text-sm \
+            bg-white text-slate-700 \
+            dark:bg-neutral-800 dark:text-neutral-300 \
+            border border-slate-200 dark:border-neutral-700 \
+            pointer-events-none z-[10000] max-w-xs';
 			document.body.appendChild(tooltipNode);
 		}
 
-		let contentHTML = `<strong dir="auto" class="font-semibold block text-slate-900 dark:text-white">${title}</strong>`;
+		let contentHTML = '';
+
+		if (title) {
+			contentHTML += `<strong dir="auto" class="font-semibold mb-1 block text-slate-900 dark:text-neutral-100">${title}</strong>`;
+		}
 		if (description) {
-			contentHTML += `<span dir="auto" class="block mt-1 text-slate-600 dark:text-slate-300">${description}</span>`;
+			contentHTML += `<span dir="auto" class="block text-slate-600 dark:text-neutral-400">${description}</span>`;
 		}
 		tooltipNode.innerHTML = contentHTML;
 		tooltipNode.style.display = 'block';
@@ -50,7 +55,7 @@
 			modifiers: [
 				{ name: 'offset', options: { offset: [0, 10] } },
 				{ name: 'preventOverflow', options: { padding: 10 } },
-				{ name: 'arrow', options: { padding: 5 } } // Optional: if you add an arrow element
+				{ name: 'arrow', options: { padding: 5 } }
 			]
 		};
 		popperInstance = popperCreateFn(target, tooltipNode, popperOptions);
@@ -79,7 +84,7 @@
 			const title = target.dataset.glossaryT;
 			const description = target.dataset.glossaryD;
 
-			if (title) {
+			if (title || description) {
 				if (target === currentTargetElement) return;
 				if (currentTargetElement) hideTooltip();
 				showTooltip(target, title, description);

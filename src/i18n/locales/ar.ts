@@ -6,7 +6,8 @@ export default {
 		explanation: 'شرح الحل',
 		correctAnswer: 'الإجابة صحيحة',
 		falseAnswer: 'الإجابة خاطئة',
-		yourAnswerHere: 'إجابتك هنا'
+		yourAnswerHere: 'إجابتك هنا',
+		chooseAnswer: 'اختر الإجابة الصحيحة'
 	},
 	forgotPassword: {
 		success: 'إذا كان البريد الإلكتروني صحيحاً، سنرسل لك رابطاً لإعادة تعيين كلمة المرور',

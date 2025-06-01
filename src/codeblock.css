@@ -1,0 +1,20 @@
+.cb-container .code-body {
+	position: relative;
+	margin: 1.5em 0;
+	border: 1px solid var(--color-slate-200);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.cb-container .code-body code {
+	background-color: var(--color-slate-100);
+}
+
+@media (prefers-color-scheme: dark) {
+	.cb-container .code-body {
+		border-color: var(--color-gray-600);
+	}
+	.cb-container .code-body code {
+		background-color: var(--color-slate-800);
+	}
+}

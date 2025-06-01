@@ -6,15 +6,15 @@ export const glossary = (options = {}): MarkedExtension => {
 	const renderer: RendererObject = {
 		codespan(token) {
 			if (!token.text.startsWith(':', 0)) {
-				return `<code>${token.text}</code>`;
+				return `<code dir="auto">${token.text}</code>`;
 			}
 			const key = token.text.substring(1);
 			if (!Object.hasOwn(dict, key)) {
-				return `<code>${token.text}</code>`;
+				return `<code dir="auto">${token.text}</code>`;
 			}
 			const item = dict[key as keyof typeof dict];
 
-			return `<code data-glossary="${key}" data-glossary-t="${item.t}" data-glossary-d="${item.d}">${key}</code>`;
+			return `<code dir="ltr" data-glossary="${key}"${item.t ? ` data-glossary-t="${item.t}"` : ''}${item.d ? ` data-glossary-d="${item.d}"` : ''}>${key}</code>`;
 		}
 	};
 

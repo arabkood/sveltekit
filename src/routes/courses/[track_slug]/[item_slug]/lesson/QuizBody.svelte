@@ -3,6 +3,8 @@
 	import CodeBlock from './CodeBlock.svelte';
 	import QuizFooter from './QuizFooter.svelte';
 	import type { Sound } from '$utils/sound';
+	import { i18n } from '$i18n/i18n';
+	import Markdown from '$ui/common/Markdown.svelte';
 
 	const {
 		answer,
@@ -104,23 +106,22 @@
 	{#if step.options && step.options.length > 0}
 		<fieldset class="space-y-3">
 			<legend class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
-				>Choose the correct option:</legend
+				>{i18n.t('lessons.chooseAnswer')}</legend
 			>
 			{#each step.options as option, i}
 				{@const isSelected = answer === i}
 				{@const isOptionCorrect = step.solution === i}
 				<button
 					type="button"
-					class="focus-visible:ring-primary-500 flex w-full cursor-pointer items-center justify-between rounded-lg border p-4 text-left text-sm font-medium whitespace-pre-wrap transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 {getOptionDynamicClasses(
+					class="focus-visible:ring-primary-500 flex w-full cursor-pointer items-center justify-between rounded-lg border p-4 text-left text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 {getOptionDynamicClasses(
 						i
 					)}"
 					onclick={() => handleOptionSelect(i)}
 					disabled={status === 'success' || status === 'fail'}
-					dir="ltr"
 				>
-					<span class="font-mono tracking-tight">{option}</span>
+					<Markdown inline={true} markdown={option} />
 					{#if status === 'success' && isSelected && isOptionCorrect}
-						<span class="text-primary-500 dark:text-primary-400 ml-3 text-xl">
+						<span class="text-primary-500 dark:text-primary-400 ms-3 text-xl">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="22"
@@ -139,7 +140,7 @@
 						</span>
 					{:else if status === 'fail'}
 						{#if isSelected && !isOptionCorrect}
-							<span class="ml-3 text-xl text-red-500 dark:text-red-400">
+							<span class="ms-3 text-xl text-red-500 dark:text-red-400">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="22"
@@ -157,7 +158,7 @@
 								</svg>
 							</span>
 						{:else if isOptionCorrect}
-							<span class="ml-3 text-xl text-green-500 dark:text-green-400">
+							<span class="ms-3 text-xl text-green-500 dark:text-green-400">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="22"
