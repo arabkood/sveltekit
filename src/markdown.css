@@ -253,6 +253,10 @@
 	margin-inline: 0;
 }
 
+.markdown-body.markdown-inline p {
+	white-space: pre;
+}
+
 .markdown-body.markdown-inline h1,
 .markdown-body.markdown-inline h2 {
 	padding-bottom: 0;
