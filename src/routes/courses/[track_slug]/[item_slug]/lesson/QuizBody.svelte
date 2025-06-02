@@ -92,7 +92,7 @@
 	class="shadow-card-lg w-full max-w-lg space-y-6 overflow-hidden rounded-xl bg-white p-6 dark:bg-gray-800"
 >
 	<div>
-		<p class="text-gray-600 dark:text-gray-300">{step.question}</p>
+		<Markdown inline={true} markdown={step.question} />
 	</div>
 
 	{#if step.code}
