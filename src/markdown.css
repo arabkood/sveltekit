@@ -254,7 +254,8 @@
 }
 
 .markdown-body.markdown-inline p {
-	white-space: pre;
+	white-space: preserve;
+	text-align: start;
 }
 
 .markdown-body.markdown-inline h1,
