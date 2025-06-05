@@ -27,7 +27,8 @@
 	const handleNext = () => {
 		if (currentStepIndex == lesson.steps.length - 1) {
 			if (next) {
-				goto(`/courses/${track.slug}/${next.slug}/${next.type}`);
+				// goto(`/courses/${track.slug}/${next.slug}/${next.type}`);
+				goto(`/courses/${track.slug}`);
 			} else {
 				goto(`/courses/${track.slug}`);
 			}
