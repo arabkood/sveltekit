@@ -4,14 +4,15 @@
 	import Header from './Header.svelte';
 	import QuizBody from './QuizBody.svelte';
 	import LessonBody from './LessonBody.svelte';
-	import { goto } from '$app/navigation';
 	import type { Sound } from '$utils/sound';
+	import SuccessPopup from '$ui/success-popup/SuccessPopup.svelte';
 
 	let {
 		data,
 		successPlayer,
-		failPlayer
-	}: { data: PageData; successPlayer?: Sound; failPlayer?: Sound } = $props();
+		failPlayer,
+		finishPlayer
+	}: { data: PageData; successPlayer?: Sound; failPlayer?: Sound; finishPlayer?: Sound } = $props();
 	const { lesson, track, item } = data;
 
 	let next = $derived(data.nextItemIdx !== null ? data.module.items[data.nextItemIdx] : null);
@@ -23,15 +24,16 @@
 	let answers = $state<any[]>([]);
 	const answer = $derived(answers[currentStepIndex]);
 
+	let result = $state({
+		showPopup: false,
+		xp: item.base_xp
+	});
+
 	const setAnswer = (a: any) => (answers[currentStepIndex] = a);
 	const handleNext = () => {
 		if (currentStepIndex == lesson.steps.length - 1) {
-			if (next) {
-				// goto(`/courses/${track.slug}/${next.slug}/${next.type}`);
-				goto(`/courses/${track.slug}`);
-			} else {
-				goto(`/courses/${track.slug}`);
-			}
+			result.showPopup = true;
+			return;
 		}
 		goToStep(currentStepIndex + 1);
 		setTimeout(() => {
@@ -39,6 +41,15 @@
 		}, 50);
 	};
 </script>
+
+{#if result.showPopup}
+	<SuccessPopup
+		onClose={() => (result.showPopup = false)}
+		nextHref={`/courses/${track.slug}`}
+		sound={finishPlayer}
+		score={result.xp}
+	/>
+{/if}
 
 <div class="bg-page flex min-h-screen flex-col">
 	<TopNav nextSlug={next?.slug} prevSlug={prev?.slug} {track} {item} />

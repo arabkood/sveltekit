@@ -46,6 +46,8 @@ export class Sound {
 
 		this.howl = new Howl({
 			src: this.src,
+			autoSuspend: false,
+			html5: true,
 			...this.howlConfig
 		});
 	}

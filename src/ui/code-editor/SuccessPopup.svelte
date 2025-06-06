@@ -2,23 +2,32 @@
 	import { scale } from 'svelte/transition';
 	import { elasticOut } from 'svelte/easing';
 	import Button from '$ui/common/Button.svelte';
+	import type { Sound } from '$utils/sound';
 
 	let {
 		visible = false,
 		onClose = () => {},
 		nextHref,
 		score = 100,
-		message = 'لقد اجتزت جميع الاختبارات بنجاح'
+		message = 'لقد اجتزت جميع الاختبارات بنجاح',
+		sound
 	} = $props<{
 		visible: boolean;
 		onClose: () => void;
 		nextHref?: string;
 		score?: number;
 		message?: string;
+		sound?: Sound;
 	}>();
 
 	let showConfetti = $state(false);
 	let scoreCount = $state(0);
+
+	$effect(() => {
+		if (visible && sound) {
+			sound.play();
+		}
+	});
 
 	// Reactive effect to trigger animations
 	$effect(() => {
@@ -213,6 +222,17 @@
 			</div>
 		</div>
 	</div>
+	{#each Array(10) as _, i}
+		<div
+			class="floating-emoji"
+			style="--emoji-top: {Math.random() * 100}%; --emoji-left: {Math.random() * 100}%;"
+		>
+			<svg class="star star-5" width="20" height="20" viewBox="0 0 24 24">
+				<polygon fill="#FFD700" points="12,0 15,9 24,9 18,15 21,24 12,18 3,24 6,15 0,9 9,9"
+				></polygon>
+			</svg>
+		</div>
+	{/each}
 {/if}
 
 <style>
@@ -231,6 +251,25 @@
 		height: 200px;
 		width: 200px;
 		margin: 0 auto;
+	}
+
+	.floating-emoji {
+		position: absolute;
+		z-index: 1000;
+		top: var(--emoji-top);
+		left: var(--emoji-left);
+		font-size: 1.5rem;
+		animation: floatEmoji 4s ease-in-out infinite alternate;
+		opacity: 0.7;
+	}
+
+	@keyframes floatEmoji {
+		from {
+			transform: translateY(0) scale(1);
+		}
+		to {
+			transform: translateY(-20px) scale(1.1);
+		}
 	}
 
 	/* Explosion effects with more dynamic timing */
