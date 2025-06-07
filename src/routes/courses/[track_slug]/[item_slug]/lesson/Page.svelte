@@ -84,7 +84,7 @@
 	}
 
 	const handleFinish = () => {
-		if (!submission) {
+		if (!submission || submission.status !== 'pass') {
 			submit();
 		} else {
 			goto(`/courses/${track.slug}`);
