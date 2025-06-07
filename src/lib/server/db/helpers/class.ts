@@ -11,6 +11,7 @@ import {
 	type Item
 } from '../schema/class';
 import { userModulesSubmission, userTracks } from '../schema/users';
+import { submissions } from '../schema/users';
 
 // FIX: ONLY FETCH NON DELETED ITEMS
 export async function getAllTracks() {
@@ -36,31 +37,67 @@ export async function getAllCourses() {
 	return result;
 }
 
-export async function getTrackBySlug(slug: string) {
+export async function getTrackBySlug(slug: string, userId: string) {
 	const rows = await db
-		.select()
+		.select({
+			tracks,
+			modules,
+			items,
+			submissions: {
+				id: submissions.id,
+				status: submissions.status,
+				xp_reward: submissions.xp_reward,
+				attempts: submissions.attempts,
+				created_at: submissions.created_at,
+				updated_at: submissions.updated_at
+			}
+		})
 		.from(tracks)
 		.where(eq(tracks.slug, slug))
 		.innerJoin(modules, eq(tracks.id, modules.track_id))
-		.innerJoin(items, eq(modules.id, items.module_id));
+		.innerJoin(items, eq(modules.id, items.module_id))
+		.leftJoin(submissions, and(eq(submissions.item_id, items.id), eq(submissions.user_id, userId)));
+
+	console.log(rows);
+
+	type ItemWithSubmission = Item & {
+		submission?: {
+			id: string;
+			status: string;
+			xp_reward: number;
+			attempts: number;
+			created_at: Date;
+			updated_at: Date;
+		} | null;
+	};
 
 	type ModulesWithItems = Record<
 		string,
 		Module & {
-			items: Item[];
+			items: ItemWithSubmission[];
 		}
 	>;
+
 	const result = rows.reduce<{ track: Track; modules: ModulesWithItems }>(
 		(acc, row) => {
 			const module = row.modules;
 			const item = row.items;
+			const submission = row.submissions;
+
 			if (!acc.modules[module.id]) {
 				acc.modules[module.id] = {
 					...module,
 					items: []
 				};
 			}
-			acc.modules[module.id].items.push(item);
+
+			// Create item with submission data
+			const itemWithSubmission: ItemWithSubmission = {
+				...item,
+				submission: submission?.id ? submission : null
+			};
+
+			acc.modules[module.id].items.push(itemWithSubmission);
 			return acc;
 		},
 		{

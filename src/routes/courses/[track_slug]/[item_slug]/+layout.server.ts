@@ -1,8 +1,9 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { Item, Module } from '$lib/server/db/schema/class';
 import type { LayoutServerLoad } from './$types';
+import { getItemSubmission } from '$lib/server/db/helpers/submission';
 
-export const load: LayoutServerLoad = async ({ params, url, parent }) => {
+export const load: LayoutServerLoad = async ({ locals, params, url, parent }) => {
 	if (!params.track_slug || !params.item_slug) {
 		error(404, 'Not found');
 	}
@@ -41,9 +42,13 @@ export const load: LayoutServerLoad = async ({ params, url, parent }) => {
 		redirect(308, `/courses/${parentData.track.slug}/${item.slug}/${item.type}`);
 	}
 
+	console.log('ORORORORO----------------');
+	const submission = locals.user ? await getItemSubmission(locals.user.id, item.id) : null;
+
 	return {
 		item,
 		module,
+		submission,
 		prevItemIdx,
 		nextItemIdx
 	};

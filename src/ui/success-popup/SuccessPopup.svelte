@@ -248,6 +248,7 @@
 					onclick={onClose}
 					variant="continue"
 					class="transform transition-transform duration-150 ease-in-out hover:scale-[1.03] active:scale-[0.98]"
+					data-sveltekit-reload
 				>
 					{continueButtonText}
 				</Button>

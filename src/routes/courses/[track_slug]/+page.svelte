@@ -20,6 +20,52 @@
 			' px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
 		);
 	}
+
+	function getStatusIcon(status?: string): string {
+		switch (status) {
+			case 'pass':
+				return 'check-circle';
+			case 'fail':
+				return 'x-circle';
+			case 'wait':
+				return 'clock';
+			default:
+				return '';
+		}
+	}
+
+	function getStatusClass(status?: string): string {
+		switch (status) {
+			case 'pass':
+				return 'text-green-600 dark:text-green-400';
+			case 'fail':
+				return 'text-red-600 dark:text-red-400';
+			case 'wait':
+				return 'text-yellow-600 dark:text-yellow-400';
+			default:
+				return 'text-gray-400 dark:text-gray-500';
+		}
+	}
+
+	function getItemClass(status?: string): string {
+		const baseClass =
+			'block w-full cursor-pointer justify-between rounded-lg border p-4 shadow-sm transition-all hover:shadow-md';
+
+		switch (status) {
+			case 'pass':
+				return (
+					baseClass + ' border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-900/20'
+				);
+			case 'fail':
+				return baseClass + ' border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900/20';
+			case 'wait':
+				return (
+					baseClass + ' border-yellow-300 bg-yellow-50 dark:border-yellow-700 dark:bg-yellow-900/20'
+				);
+			default:
+				return baseClass + ' border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-800';
+		}
+	}
 </script>
 
 <main
@@ -48,10 +94,6 @@
 					</p>
 
 					<div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-						<!-- <div class="flex items-center text-gray-600 dark:text-gray-400"> -->
-						<!-- 	<Icon name="book" class="me-1.5 h-4 w-4" /> -->
-						<!-- 	<span>69 TEMPORARY</span> -->
-						<!-- </div> -->
 						{#if track.premium_only}
 							<span
 								class="flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-sm font-medium text-purple-700 dark:bg-purple-700/30 dark:text-purple-300"
@@ -84,9 +126,17 @@
 								<div class="relative w-full">
 									<a
 										href={`/courses/${track.slug}/${item.slug}/${item.type}`}
-										class="block w-full cursor-pointer justify-between rounded-lg border border-gray-300 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+										class={getItemClass(item.submission?.status)}
 									>
 										<div class="flex w-full items-center gap-3">
+											{#if item.submission?.status}
+												<div class="flex-shrink-0">
+													<Icon
+														name={getStatusIcon(item.submission.status)}
+														class="h-5 w-5 {getStatusClass(item.submission.status)}"
+													/>
+												</div>
+											{/if}
 											<h4 class="text-md grow font-semibold text-gray-900 dark:text-white">
 												{item.title}
 											</h4>

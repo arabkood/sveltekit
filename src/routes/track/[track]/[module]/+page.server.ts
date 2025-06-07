@@ -9,13 +9,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	}
 	try {
 		const apiUrl = new URL(API_ENDPOINTS.modules.get(params.module));
-		console.log(`API Url: ${apiUrl}`);
 
 		const moduleRes = await fetch(apiUrl, {
 			method: 'GET'
 		});
-
-		console.log(`API Response Status: ${moduleRes.status}`);
 
 		if (moduleRes.ok) {
 			const { module, exercise } = await moduleRes.json();

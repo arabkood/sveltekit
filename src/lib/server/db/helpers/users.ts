@@ -1,6 +1,11 @@
 import { and, eq } from 'drizzle-orm';
 import { db } from '..';
-import { userModulesAttempt, userModulesSubmission, usersStats, userTracks } from '../schema/users';
+import {
+	userModulesAttempt,
+	userModulesSubmission,
+	usersStats,
+	userTracks
+} from '../schema/users2';
 import { tracks } from '../schema/class';
 
 export async function getUserStats(userId: string) {

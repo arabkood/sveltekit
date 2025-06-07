@@ -6,6 +6,9 @@
 	import LessonBody from './LessonBody.svelte';
 	import type { Sound } from '$utils/sound';
 	import SuccessPopup from '$ui/success-popup/SuccessPopup.svelte';
+	import { API_ENDPOINTS } from '$api/config';
+	import type { ApiError } from '$types/api';
+	import { goto } from '$app/navigation';
 
 	let {
 		data,
@@ -13,7 +16,7 @@
 		failPlayer,
 		finishPlayer
 	}: { data: PageData; successPlayer?: Sound; failPlayer?: Sound; finishPlayer?: Sound } = $props();
-	const { lesson, track, item } = data;
+	const { lesson, track, item, submission } = data;
 
 	let next = $derived(data.nextItemIdx !== null ? data.module.items[data.nextItemIdx] : null);
 	let prev = $derived(data.prevItemIdx !== null ? data.module.items[data.prevItemIdx] : null);
@@ -21,7 +24,8 @@
 	let currentStepIndex = $state(0);
 	const goToStep = (i: number) => (currentStepIndex = i);
 	const currentStep = $derived(lesson.steps[currentStepIndex]);
-	let answers = $state<any[]>([]);
+
+	let answers = $state<any[]>((submission?.data?.answers as any[]) || []);
 	const answer = $derived(answers[currentStepIndex]);
 
 	let result = $state({
@@ -30,9 +34,65 @@
 	});
 
 	const setAnswer = (a: any) => (answers[currentStepIndex] = a);
+
+	let percentCorrect = $derived(
+		(() => {
+			const correct = lesson.steps.reduce((prev, currV, currI) => {
+				if (typeof currV === 'string') {
+					return prev + 1;
+				}
+				if (Object.hasOwn(currV, 'solution')) {
+					if (currV.solution == answers[currI]) {
+						return prev + 1;
+					}
+				}
+				return prev;
+			}, 0);
+			return correct > 0 ? Math.min(Math.round((correct / lesson.steps.length) * 100), 100) : 0;
+		})()
+	);
+	let gainedXp = $derived((percentCorrect / 100) * item.base_xp);
+
+	async function submit() {
+		if (!item.id || currentStepIndex < lesson.steps.length - 1) {
+			return;
+		}
+
+		const dataToSend = {
+			score: percentCorrect,
+			_$: btoa(Math.round(percentCorrect * 69).toString()),
+			answers
+		};
+		const response = await fetch(API_ENDPOINTS.item.submit(data.item.id), {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ data: dataToSend }),
+			credentials: 'include'
+		});
+
+		if (!response.ok) {
+			const error: ApiError = await response.json();
+			console.error('KOOD', error);
+			return;
+		}
+
+		const res = await response.json();
+
+		result.showPopup = true;
+		result.xp = res.submission.xp_reward;
+	}
+
+	const handleFinish = () => {
+		if (!submission) {
+			submit();
+		} else {
+			goto(`/courses/${track.slug}`);
+		}
+	};
+
 	const handleNext = () => {
 		if (currentStepIndex == lesson.steps.length - 1) {
-			result.showPopup = true;
+			handleFinish();
 			return;
 		}
 		goToStep(currentStepIndex + 1);
@@ -47,7 +107,7 @@
 		onClose={() => (result.showPopup = false)}
 		nextHref={`/courses/${track.slug}`}
 		sound={finishPlayer}
-		score={result.xp}
+		score={gainedXp}
 	/>
 {/if}
 
