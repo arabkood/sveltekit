@@ -11,7 +11,7 @@ import {
 	type Item
 } from '../schema/class';
 import { userModulesSubmission, userTracks } from '../schema/users';
-import { submissions } from '../schema/users';
+import { submissions } from '../schema/submission';
 
 // FIX: ONLY FETCH NON DELETED ITEMS
 export async function getAllTracks() {

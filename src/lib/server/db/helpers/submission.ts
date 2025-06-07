@@ -1,6 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import { db } from '..';
-import { submissions } from '../schema/users';
+import { submissions } from '../schema/submission';
 
 export async function getItemSubmission(userId: string, itemId: string) {
 	const rows = await db
