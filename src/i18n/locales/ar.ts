@@ -89,6 +89,8 @@ export default {
 		}
 	},
 	common: {
+		your_progress: 'تقدّمك',
+		continue_learning: 'متابعة التعلم',
 		copied: 'تم نسخ',
 		copy: 'نسخ',
 		locked: 'مغلق',

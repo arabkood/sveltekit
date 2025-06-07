@@ -1,23 +1,44 @@
 <script lang="ts">
 	import { i18n } from '$i18n/i18n';
+	import Button from '$ui/common/Button.svelte';
 	import Icon from '$ui/common/Icon.svelte';
 	import { toPublicUrl } from '$utils/s3-public-assets';
+	import { onMount } from 'svelte';
 	import type { LayoutServerData } from './$types';
 
 	let { data }: { data: LayoutServerData } = $props();
 	const track = $derived(data?.track);
 	const modules = $derived(data?.modules);
 
+	let nextItemElement: HTMLElement | undefined = $state();
+
+	onMount(() => {
+		setTimeout(() => {
+			if (nextItemElement) {
+				const rect = nextItemElement.getBoundingClientRect();
+				const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+
+				if (!isVisible) {
+					nextItemElement.scrollIntoView({
+						behavior: 'smooth',
+						block: 'center'
+					});
+				}
+			}
+		}, 100);
+	});
+
 	function getDifficultyClass(difficulty?: string): string {
 		const difficulties: Record<string, string> = {
-			easy: 'bg-green-100 text-green-700 dark:bg-green-700/30 dark:text-green-300',
-			medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-700/30 dark:text-yellow-300',
-			hard: 'bg-red-100 text-red-700 dark:bg-red-700/30 dark:text-red-300'
+			easy: 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700/50',
+			medium:
+				'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700/50',
+			hard: 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700/50'
 		};
 		return (
 			(difficulties[difficulty?.toLowerCase() || ''] ||
-				'bg-gray-100 text-gray-700 dark:bg-gray-700/30 dark:text-gray-300') +
-			' px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+				'bg-slate-50 text-slate-700 border border-slate-200 dark:bg-slate-900/30 dark:text-slate-300 dark:border-slate-700/50') +
+			' px-3 py-1 rounded-full text-xs font-semibold capitalize shadow-sm'
 		);
 	}
 
@@ -30,134 +51,348 @@
 			case 'wait':
 				return 'clock';
 			default:
-				return '';
+				return 'circle';
 		}
 	}
 
 	function getStatusClass(status?: string): string {
 		switch (status) {
 			case 'pass':
-				return 'text-green-600 dark:text-green-400';
+				return 'text-emerald-500 dark:text-emerald-400';
 			case 'fail':
-				return 'text-red-600 dark:text-red-400';
+				return 'text-rose-500 dark:text-rose-400';
 			case 'wait':
-				return 'text-yellow-600 dark:text-yellow-400';
+				return 'text-amber-500 dark:text-amber-400 animate-pulse';
 			default:
-				return 'text-gray-400 dark:text-gray-500';
+				return 'text-slate-400 dark:text-slate-600';
 		}
 	}
 
-	function getItemClass(status?: string): string {
+	function getItemClass(status?: string, isNext?: boolean): string {
 		const baseClass =
-			'block w-full cursor-pointer justify-between rounded-lg border p-4 shadow-sm transition-all hover:shadow-md';
+			'group block w-full cursor-pointer justify-between rounded-2xl border-2 p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-500/20 active:scale-[0.98]';
 
+		// HICK'S LAW: Make the next item unmistakably the primary choice
+		if (isNext) {
+			return (
+				baseClass +
+				' border-blue-400 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:border-blue-500/70 dark:from-blue-900/40 dark:via-indigo-900/20 dark:to-purple-900/20 hover:border-blue-500 dark:hover:border-blue-400 ring-4 ring-blue-200/60 dark:ring-blue-500/30 animate-gentle-pulse shadow-blue-200/50 dark:shadow-blue-900/30'
+			);
+		}
+
+		// VISUAL HIERARCHY: Completed items are muted to reduce distraction
 		switch (status) {
 			case 'pass':
 				return (
-					baseClass + ' border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-900/20'
+					baseClass +
+					' border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50 dark:border-emerald-700/50 dark:from-emerald-900/20 dark:to-green-900/10 hover:border-emerald-200 dark:hover:border-emerald-600/70 opacity-70 hover:opacity-85'
 				);
 			case 'fail':
-				return baseClass + ' border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900/20';
+				return (
+					baseClass +
+					' border-rose-100 bg-gradient-to-br from-rose-50 to-pink-50 dark:border-rose-700/50 dark:from-rose-900/20 dark:to-pink-900/10 hover:border-rose-200 dark:hover:border-rose-600/70 opacity-70 hover:opacity-85'
+				);
 			case 'wait':
 				return (
-					baseClass + ' border-yellow-300 bg-yellow-50 dark:border-yellow-700 dark:bg-yellow-900/20'
+					baseClass +
+					' border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50 dark:border-amber-700/50 dark:from-amber-900/20 dark:to-orange-900/10 hover:border-amber-200 dark:hover:border-amber-600/70 opacity-75 hover:opacity-90'
 				);
 			default:
-				return baseClass + ' border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-800';
+				return (
+					baseClass +
+					' border-slate-100 bg-white dark:border-slate-700 dark:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-600 hover:bg-gradient-to-br hover:from-slate-50 hover:to-gray-50 dark:hover:from-slate-900/10 dark:hover:to-gray-900/5 opacity-60 hover:opacity-80'
+				);
 		}
 	}
+
+	function getProgressPercentage(): number {
+		if (!modules) return 0;
+		const totalItems = modules.reduce((acc, module) => acc + module.items.length, 0);
+		const completedItems = modules.reduce(
+			(acc, module) =>
+				acc + module.items.filter((item) => item.submission?.status === 'pass').length,
+			0
+		);
+		return Math.round((completedItems / totalItems) * 100);
+	}
+
+	function getNextItem() {
+		if (!modules) return null;
+		for (const module of modules) {
+			for (const item of module.items) {
+				if (!item.submission?.status || item.submission.status !== 'pass') {
+					return { module, item };
+				}
+			}
+		}
+		return null;
+	}
+
+	// EMOTIONAL DESIGN: Progress-based motivational messaging
+	function getMotivationalMessage(progress: number): string {
+		if (progress === 0) return 'هل أنت مستعد لبدء رحلتك التعليمية؟ 🚀';
+		if (progress < 25) return 'بداية رائعة! استمر في هذا الزخم! 💪';
+		if (progress < 50) return 'أحرزت تقدمًا ممتازًا! 🔥';
+		if (progress < 75) return 'أوشكت على الوصول! أنت رائع! ⭐';
+		if (progress < 100) return 'قريب جدًا من الإتقان! دفعة أخيرة! 🎯';
+		return 'أنهيت المسار! أنت لا يمكن إيقافك! 🏆';
+	}
+
+	const progressPercentage = $derived(getProgressPercentage());
+	const nextItem = $derived(getNextItem());
+	const motivationalMessage = $derived(getMotivationalMessage(progressPercentage));
 </script>
 
 <main
-	class="bg-page min-h-screen bg-gradient-to-b from-white to-gray-50 px-4 py-12 sm:px-6 lg:px-8 dark:from-gray-900 dark:to-gray-800"
+	class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 px-4 py-8 sm:px-6 lg:px-8 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"
 >
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+			<!-- PSYCHOLOGICAL PRINCIPLE: Sticky sidebar for consistent motivation -->
 			<div
-				class="sticky top-6 mb-auto flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-lg duration-300 ease-in-out md:col-span-1 dark:border-gray-700 dark:bg-gray-800"
+				class="sticky top-6 mb-auto flex flex-col gap-6 rounded-3xl border border-white/80 bg-white/95 p-8 shadow-xl backdrop-blur-sm duration-300 ease-in-out lg:col-span-1 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-slate-900/30"
 			>
+				<div class="mt-auto flex flex-wrap items-center justify-center gap-4 text-sm">
+					{#if track.premium_only}
+						<span
+							class="flex items-center rounded-full border border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50 px-4 py-2 text-sm font-semibold text-purple-700 shadow-sm dark:border-purple-700/50 dark:from-purple-900/30 dark:to-indigo-900/30 dark:text-purple-300"
+						>
+							<Icon name="star" class="me-2 h-4 w-4" />
+							{i18n.t('common.premium_only')}
+						</span>
+					{/if}
+				</div>
+
 				{#if track.logo}
-					<img
-						src={toPublicUrl(track.logo)}
-						alt="{track.title || 'Track'} logo"
-						class="h-24 w-24 rounded-md object-contain"
-					/>
+					<div class="flex justify-center">
+						<img
+							src={toPublicUrl(track.logo)}
+							alt="{track.title || 'Track'} logo"
+							class="h-32 w-32 rounded-3xl object-contain transition-all duration-300 hover:scale-105 dark:ring-slate-700/50"
+						/>
+					</div>
 				{/if}
 
-				<div class="flex flex-col">
-					<h3 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+				<div class="flex flex-col text-center">
+					<h1 class="mb-2 text-2xl font-bold text-slate-800 dark:text-white">
 						{track.title}
-					</h3>
+					</h1>
 
-					<p class="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+					<p class="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
 						{track.blurb}
 					</p>
 
-					<div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-						{#if track.premium_only}
-							<span
-								class="flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-sm font-medium text-purple-700 dark:bg-purple-700/30 dark:text-purple-300"
-							>
-								<Icon name="star" class="me-1 h-4 w-4" />
-								{i18n.t('common.premium_only')}
-							</span>
-						{/if}
+					<!-- EMOTIONAL DESIGN: Motivational messaging with emoji for dopamine trigger -->
+					<div
+						class="mb-4 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-lime-50 p-4 dark:border-emerald-800/50 dark:from-emerald-900/30 dark:to-lime-900/30"
+					>
+						<p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+							{motivationalMessage}
+						</p>
 					</div>
+
+					<!-- PROGRESS PSYCHOLOGY: Visual progress with color-coded feedback -->
+					<div class="mb-8">
+						<div class="mb-2 flex items-center justify-between text-sm font-semibold">
+							<span class="text-slate-700 dark:text-slate-300"
+								>{i18n.t('common.your_progress')}</span
+							>
+							<span class="text-emerald-600 dark:text-emerald-400">{progressPercentage}%</span>
+						</div>
+
+						<div
+							class="relative h-4 w-full overflow-hidden rounded-full border border-slate-200 bg-slate-100 dark:border-slate-600 dark:bg-slate-700"
+						>
+							<div
+								class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-lime-500 shadow-inner transition-all duration-700 ease-out"
+								style="width: {progressPercentage}%"
+							></div>
+						</div>
+					</div>
+
+					<!-- CALL-TO-ACTION: Single, clear next step (Hick's Law) -->
+					{#if nextItem}
+						<Button
+							variant="attention"
+							startIcon="play"
+							size={'lg'}
+							href={`/courses/${track.slug}/${nextItem.item.slug}/${nextItem.item.type}`}
+						>
+							{i18n.t('common.continue_learning')}
+						</Button>
+					{:else if progressPercentage === 100}
+						<div
+							class="mb-6 flex items-center justify-center gap-3 px-6 py-4 text-start font-semibold text-emerald-700 dark:text-emerald-300"
+							role="alert"
+							aria-live="polite"
+						>
+							<Icon name="star" class="h-9 w-9 text-yellow-400" />
+							<span class="text-md">تهانينا! تم إتقان المسار بالكامل!</span>
+						</div>
+					{/if}
 				</div>
 			</div>
 
-			<div class="flex flex-col md:col-span-2">
-				<div class="flex flex-col gap-12">
-					{#each modules as module}
+			<!-- CONTENT HIERARCHY: Clear visual separation and flow -->
+			<div class="flex flex-col lg:col-span-2">
+				<div class="flex flex-col gap-16">
+					<!-- CELEBRATION PSYCHOLOGY: Achievement recognition -->
+					{#if progressPercentage === 100}
+						<div
+							class="rounded-3xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 via-blue-50 to-purple-50 p-10 text-center shadow-xl dark:border-emerald-700/50 dark:from-emerald-900/30 dark:via-blue-900/30 dark:to-purple-900/30"
+						>
+							<div class="animate-bounce-slow mb-6 text-8xl">🎉</div>
+							<h3 class="mb-4 text-4xl font-bold text-emerald-700 dark:text-emerald-300">
+								عمل رائع، أنجزت الكثير!
+							</h3>
+							<p class="mb-4 text-xl text-emerald-600 dark:text-emerald-400">
+								انتهيت من هذا المسار بنجاح — جهدك واضح، وتستحق كل التقدير. خُطوة مهمة في طريقك، تابع
+								بثقة.
+							</p>
+						</div>
+					{/if}
+
+					{#each modules as module, moduleIndex}
 						<div class="w-full">
+							<!-- MODULE HEADERS: Clear sectioning with improved contrast -->
 							<div
-								class="bg-primary-100/50 border-primary-500/30 dark:bg-primary-700/30 dark:border-primary-500/50 mb-6 w-full rounded-xl border-2 border-b-4 p-3 text-center"
+								class="mb-10 w-full rounded-3xl border border-lime-200 bg-gradient-to-r from-lime-600 via-lime-500 to-lime-600 p-8 text-center shadow-lg dark:border-slate-600 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800"
 							>
-								<span
-									class="text-primary-700 dark:text-primary-300 text-xs font-bold tracking-wider uppercase"
-								>
-									LEVEL {module.position}
-								</span>
-								<h3 class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
-									{module.title}
-								</h3>
+								<div class="mb-4 flex items-center justify-center gap-4">
+									<div
+										class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-slate-100 to-lime-100 text-lg font-bold text-emerald-700 shadow-lg ring-4 ring-white/30 dark:from-lime-600 dark:to-emerald-600 dark:text-white"
+									>
+										{module.position}
+									</div>
+
+									<h2 class="text-2xl font-bold text-white drop-shadow-sm">
+										{module.title}
+									</h2>
+								</div>
+								<!-- MODULE PROGRESS: Visual feedback for section completion -->
+								{#if module.items}
+									{@const moduleCompleted = module.items.filter(
+										(item) => item.submission?.status === 'pass'
+									).length}
+									{@const moduleTotal = module.items.length}
+									{@const moduleProgress = (moduleCompleted / moduleTotal) * 100}
+									<div class="flex items-center justify-center gap-4">
+										<div
+											class="h-3 w-32 overflow-hidden rounded-full border border-white/30 bg-white/20"
+										>
+											<div
+												class="h-3 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-inner transition-all duration-500 dark:from-emerald-400 dark:to-lime-400"
+												style="width: {moduleProgress}%"
+											></div>
+										</div>
+										<span
+											class="rounded-full border border-white/20 bg-white/15 px-3 py-1 text-sm font-bold text-white dark:text-slate-100"
+											>{moduleCompleted}/{moduleTotal}</span
+										>
+									</div>
+								{/if}
 							</div>
+
+							<!-- VISUAL HIERARCHY: Items with clear priority system -->
 							{#each module.items as item, index}
+								{@const isNextItem = nextItem && nextItem.item.slug === item.slug}
 								<div class="relative w-full">
 									<a
+										bind:this={
+											() => nextItemElement,
+											(v) => {
+												if (isNextItem) {
+													nextItemElement = v;
+												}
+											}
+										}
 										href={`/courses/${track.slug}/${item.slug}/${item.type}`}
-										class={getItemClass(item.submission?.status)}
+										class={getItemClass(item.submission?.status, isNextItem || undefined)}
 									>
-										<div class="flex w-full items-center gap-3">
-											{#if item.submission?.status}
-												<div class="flex-shrink-0">
+										<div class="flex w-full items-center gap-6">
+											<!-- STATUS ICONS: Clear visual feedback -->
+											<div class="flex-shrink-0">
+												<div
+													class={`rounded-full p-2 ${isNextItem ? 'bg-blue-100 ring-2 ring-blue-200 dark:bg-blue-900/50 dark:ring-blue-800' : ''}`}
+												>
 													<Icon
-														name={getStatusIcon(item.submission.status)}
-														class="h-5 w-5 {getStatusClass(item.submission.status)}"
+														name={getStatusIcon(item.submission?.status)}
+														class="h-7 w-7 {getStatusClass(
+															item.submission?.status
+														)} transition-all duration-200 group-hover:scale-110"
 													/>
 												</div>
+											</div>
+
+											<div class="min-w-0 grow">
+												<h3
+													class="mb-2 text-xl font-bold text-slate-800 transition-colors duration-200 group-hover:text-green-600 dark:text-white dark:group-hover:text-green-400 {isNextItem
+														? 'text-blue-700 dark:text-blue-300'
+														: ''}"
+												>
+													{item.title}
+												</h3>
+												{#if item.blurb}
+													<p
+														class="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400"
+													>
+														{item.blurb}
+													</p>
+												{/if}
+											</div>
+
+											<!-- NEXT ITEM INDICATOR: Clear visual priority -->
+											{#if isNextItem}
+												<div
+													class="animate-gentle-pulse absolute top-3 -right-3 flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold tracking-wider text-white uppercase shadow-lg"
+												>
+													<span>{i18n.t('common.next')}</span>
+													<Icon name="arrow-left" class="h-4 w-4" />
+												</div>
 											{/if}
-											<h4 class="text-md grow font-semibold text-gray-900 dark:text-white">
-												{item.title}
-											</h4>
-											<span class={getDifficultyClass(item.difficulty || undefined)}>
-												{item.difficulty || 'N/A'}
-											</span>
-											<span class="text-xs font-medium text-gray-500 capitalize dark:text-gray-400"
-												>{item.type}</span
-											>
-											<span
-												class="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-nowrap text-gray-700 dark:bg-gray-700 dark:text-gray-200"
-												>{item.base_xp} XP</span
-											>
+
+											<!-- METADATA BADGES: Reduced visual noise -->
+											<div class="flex flex-col items-end gap-3">
+												<div class="flex items-center gap-3">
+													<span
+														class={`${getDifficultyClass(item.difficulty || undefined)} 
+        min-w-[48px] rounded-full px-3 py-1.5 text-center
+        text-xs font-semibold
+        shadow-sm
+        transition-colors duration-200 ease-in-out`}
+													>
+														{item.difficulty || 'N/A'}
+													</span>
+													<span
+														class="min-w-[48px] rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-center text-xs
+        font-semibold text-slate-700 shadow-sm
+        transition-colors duration-200
+        ease-in-out
+        dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
+													>
+														{item.type}
+													</span>
+												</div>
+												<!-- GAMIFICATION: XP as reward indicator -->
+												<span
+													class={`min-w-[48px] rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1.5 text-center text-xs
+      font-semibold text-amber-700 shadow-sm transition-transform
+      duration-700 ease-in-out
+      dark:border-amber-700/50
+      dark:from-amber-900/30 dark:to-orange-900/30 dark:text-amber-300`}
+												>
+													{item.base_xp} XP
+												</span>
+											</div>
 										</div>
-										{#if item.blurb}
-											<p class="mt-4 text-sm text-gray-600 dark:text-gray-400">{item.blurb}</p>
-										{/if}
 									</a>
+
+									<!-- VISUAL FLOW: Connection between items -->
 									{#if index < module.items.length - 1}
-										<div class="flex justify-center">
-											<div class="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+										<div class="flex justify-center py-4">
+											<div
+												class="h-10 w-1 rounded-full bg-gradient-to-b from-slate-200 via-slate-100 to-slate-200 dark:from-slate-600 dark:via-slate-700 dark:to-slate-600"
+											></div>
 										</div>
 									{/if}
 								</div>
@@ -169,3 +404,33 @@
 		</div>
 	</div>
 </main>
+
+<style>
+	@keyframes gentle-pulse {
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.02);
+		}
+	}
+
+	@keyframes bounce-slow {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-20px);
+		}
+	}
+
+	.animate-gentle-pulse {
+		animation: gentle-pulse 3s infinite;
+	}
+
+	.animate-bounce-slow {
+		animation: bounce-slow 2s infinite;
+	}
+</style>

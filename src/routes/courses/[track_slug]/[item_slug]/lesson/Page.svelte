@@ -9,6 +9,7 @@
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let {
 		data,
@@ -25,7 +26,7 @@
 	const goToStep = (i: number) => (currentStepIndex = i);
 	const currentStep = $derived(lesson.steps[currentStepIndex]);
 
-	let answers = $state<any[]>((submission?.data?.answers as any[]) || []);
+	let answers = $state<any[]>(((submission?.data as any)?.answers as any[]) || []);
 	const answer = $derived(answers[currentStepIndex]);
 
 	let result = $state({
@@ -100,6 +101,12 @@
 			window.scrollTo(0, 0);
 		}, 50);
 	};
+
+	onMount(() => {
+		setTimeout(() => {
+			window.scrollTo(0, 0);
+		}, 100);
+	});
 </script>
 
 {#if result.showPopup}
@@ -111,7 +118,9 @@
 	/>
 {/if}
 
-<div class="bg-page flex min-h-screen flex-col">
+<div
+	class="flex min-h-screen flex-col bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
+>
 	<TopNav nextSlug={next?.slug} prevSlug={prev?.slug} {track} {item} />
 
 	<Header currentStep={currentStepIndex} totalSteps={lesson.steps.length} {goToStep} />

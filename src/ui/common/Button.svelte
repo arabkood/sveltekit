@@ -13,7 +13,8 @@
 		| 'link'
 		| 'link-pill'
 		| 'link-pill-active'
-		| 'continue';
+		| 'continue'
+		| 'attention';
 
 	type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
@@ -122,6 +123,17 @@
     disabled:bg-lime-300 disabled:text-white/70 disabled:shadow-none
     dark:bg-lime-600 dark:hover:bg-lime-500 dark:shadow-lime-900/50
     dark:focus:ring-lime-400
+  `,
+		attention: `
+    text-white rounded-2xl
+    bg-gradient-to-r from-lime-600 via-emerald-600 to-cyan-600
+    shadow-xl shadow-emerald-500/30
+    transition-all duration-300 transform-gpu
+    hover:-translate-y-1 hover:shadow-2xl 
+    hover:from-lime-700 hover:via-emerald-700 hover:to-cyan-700
+    focus:outline-none focus:ring-4 focus:ring-lime-500/50
+    active:scale-95
+    disabled:transform-none disabled:shadow-none
   `
 	};
 
