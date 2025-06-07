@@ -30,7 +30,8 @@ export const API_ENDPOINTS = {
 		// run: (moduleId: string) => API_BASE_URL + `/user_modules/run/${moduleId}`
 	},
 	item: {
-		codeAttempt: (itemId: string) => API_BASE_URL + `/item/code/attempt/${itemId}`
+		codeAttempt: (itemId: string) => API_BASE_URL + `/item/code/attempt/${itemId}`,
+		submit: (itemId: string) => API_BASE_URL + `/item/submit/${itemId}`
 	}
 	// modules: {
 	// 	get: (moduleSlug: string) => API_BASE_URL + `/module/${moduleSlug}`,
