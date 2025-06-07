@@ -26,7 +26,13 @@
 	const goToStep = (i: number) => (currentStepIndex = i);
 	const currentStep = $derived(lesson.steps[currentStepIndex]);
 
-	let answers = $state<any[]>(((submission?.data as any)?.answers as any[]) || []);
+	const getInitialAnswers = () => {
+		if (submission?.status === 'pass') {
+			return (submission?.data as any).answers as any[];
+		}
+		return [];
+	};
+	let answers = $state<any[]>(getInitialAnswers());
 	const answer = $derived(answers[currentStepIndex]);
 
 	let result = $state({
