@@ -149,7 +149,7 @@
 	});
 
 	const handleKeydown = (event: KeyboardEvent) => {
-		if (event.key === 'Escape') onClose?.();
+		// if (event.key === 'Escape') onClose?.();
 	};
 
 	const mainModalTransition = (node: Element, { delay = 0, duration = 400 }) => {
@@ -178,7 +178,7 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div
 		class="absolute inset-0 bg-white/10 backdrop-blur-sm dark:bg-black/50"
-		onclick={onClose}
+		onclick={false && onClose}
 		role="button"
 		tabindex="-1"
 		aria-label="Close dialog"

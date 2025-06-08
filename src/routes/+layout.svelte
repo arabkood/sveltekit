@@ -25,7 +25,7 @@
 </script>
 
 {#if !disableNavbar}
-	<Navbar user={data.user!} />
+	<Navbar user={data.user!} userStats={data.userStats!} />
 {/if}
 {@render children()}
 

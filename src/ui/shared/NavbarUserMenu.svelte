@@ -4,9 +4,9 @@
 	import { i18n } from '$i18n/i18n';
 	import Avatar from '$ui/common/Avatar.svelte';
 	import type { SelectUser } from '$lib/server/db/schema/auth';
-	import { API_ENDPOINTS } from '$api/config';
 	import Button from '$ui/common/Button.svelte';
 	import { tick } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	let {
 		variant = 'desktop',
@@ -28,15 +28,7 @@
 	}
 
 	const signOut = async () => {
-		await fetch(API_ENDPOINTS.auth.signout, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			credentials: 'include'
-		}).then(() => {
-			location.reload();
-		});
+		goto('/signout');
 	};
 
 	$effect(() => {
@@ -162,7 +154,7 @@
 					<li>
 						<a
 							href="/settings"
-							class="group flex items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+							class="group flex cursor-pointer items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
 							onclick={() => (showMenu = false)}
 						>
 							<Icon
@@ -175,7 +167,7 @@
 					</li>
 					<li>
 						<button
-							class="group flex w-full items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+							class="group flex w-full cursor-pointer items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
 							onclick={() => signOut()}
 						>
 							<Icon

@@ -2,13 +2,18 @@
 	import { page } from '$app/state';
 	import { i18n } from '$i18n/i18n';
 	import type { SelectUser } from '$lib/server/db/schema/auth';
+	import type { SelectUsersStats } from '$lib/server/db/schema/users';
 	import Button from '$ui/common/Button.svelte';
 	import Icon from '$ui/common/Icon.svelte';
 	import Logo from '$ui/common/Logo.svelte';
 	import NavbarUserMenu from './NavbarUserMenu.svelte';
 	import { slide } from 'svelte/transition';
 
-	let { user, transition = true }: { user: SelectUser; transition?: boolean } = $props();
+	let {
+		user,
+		userStats,
+		transition = true
+	}: { user: SelectUser; userStats: SelectUsersStats; transition?: boolean } = $props();
 
 	let isOpen = $state(false);
 
@@ -83,7 +88,7 @@
 					aria-label="User XP"
 				>
 					<Icon name="star" size={14} class="text-amber-500 dark:text-amber-300" />
-					0 XP
+					{userStats.totalXp} XP
 				</div>
 				<NavbarUserMenu {user} />
 			</div>
@@ -121,7 +126,7 @@
 						dir="ltr"
 					>
 						<Icon name="star" size={16} class="text-amber-500 dark:text-amber-300" />
-						XP
+						{userStats.totalXp} XP
 					</div>
 				</div>
 			</div>

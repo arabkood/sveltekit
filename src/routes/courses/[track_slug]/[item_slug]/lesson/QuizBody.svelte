@@ -89,7 +89,7 @@
 </script>
 
 <main
-	class="shadow-card-lg w-full max-w-lg space-y-6 overflow-hidden rounded-xl bg-white p-6 dark:bg-gray-800"
+	class="shadow-card-lg w-full max-w-lg space-y-6 overflow-hidden rounded-xl border border-gray-700/20 bg-white p-6 dark:border-gray-100/20 dark:bg-gray-800"
 >
 	<div>
 		<Markdown inline={true} markdown={step.question} />

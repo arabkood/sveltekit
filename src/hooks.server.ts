@@ -102,8 +102,14 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		console.log('Authenticated state found, but no session cookie. Clearing state.');
 		event.locals.authState = null;
 		event.locals.user = null;
-		event.cookies.delete(auth.authStateCookieName, { path: '/' });
-		event.cookies.delete(auth.sessionCookieName, { path: '/' });
+		event.cookies.delete(auth.authStateCookieName, {
+			path: '/',
+			secure: event.url.protocol === 'https:'
+		});
+		event.cookies.delete(auth.sessionCookieName, {
+			path: '/',
+			secure: event.url.protocol === 'https:'
+		});
 		return redirect(302, '/signin'); // Redirect to signin
 	}
 
@@ -114,8 +120,14 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		console.log('Session cookie found, but invalid/expired. Clearing state.');
 		event.locals.authState = null;
 		event.locals.user = null;
-		event.cookies.delete(auth.authStateCookieName, { path: '/' });
-		event.cookies.delete(auth.sessionCookieName, { path: '/' });
+		event.cookies.delete(auth.authStateCookieName, {
+			path: '/',
+			secure: event.url.protocol === 'https:'
+		});
+		event.cookies.delete(auth.sessionCookieName, {
+			path: '/',
+			secure: event.url.protocol === 'https:'
+		});
 		return redirect(302, '/signin'); // Redirect to signin
 	}
 
