@@ -10,6 +10,7 @@
 	import type { ApiError } from '$types/api';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import FailPopup from '$ui/success-popup/FailPopup.svelte';
 
 	let {
 		data,
@@ -37,7 +38,8 @@
 
 	let result = $state({
 		showPopup: false,
-		xp: item.base_xp
+		xp: item.base_xp,
+		status: 'wait'
 	});
 
 	const setAnswer = (a: any) => (answers[currentStepIndex] = a);
@@ -87,6 +89,7 @@
 
 		result.showPopup = true;
 		result.xp = res.submission.xp_reward;
+		result.status = res.submission.status;
 	}
 
 	const handleFinish = () => {
@@ -116,12 +119,19 @@
 </script>
 
 {#if result.showPopup}
-	<SuccessPopup
-		onClose={() => (result.showPopup = false)}
-		nextHref={`/courses/${track.slug}`}
-		sound={finishPlayer}
-		score={gainedXp}
-	/>
+	{#if result.status === 'pass'}
+		<SuccessPopup
+			onClose={() => (result.showPopup = false)}
+			nextHref={`/courses/${track.slug}`}
+			sound={finishPlayer}
+			score={gainedXp}
+		/>
+	{:else}
+		<FailPopup
+			continueHref={`/courses/${track.slug}`}
+			retryHref={`/courses/${track.slug}/${item.slug}/lesson`}
+		/>
+	{/if}
 {/if}
 
 <div

@@ -152,16 +152,48 @@
 			<div
 				class="sticky top-6 mb-auto flex flex-col gap-6 rounded-3xl border border-white/80 bg-white/95 p-8 shadow-xl backdrop-blur-sm duration-300 ease-in-out lg:col-span-1 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-slate-900/30"
 			>
-				<div class="mt-auto flex flex-wrap items-center justify-center gap-4 text-sm">
-					{#if track.premium_only}
+				<!-- EMOTIONAL DESIGN: Motivational messaging with emoji for dopamine trigger -->
+				{#if progressPercentage > 0}
+					<div
+						class="mb-4 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-lime-50 p-4 dark:border-emerald-800/50 dark:from-emerald-900/30 dark:to-lime-900/30"
+					>
+						<p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+							{motivationalMessage}
+						</p>
+					</div>
+				{/if}
+
+				<!-- PROGRESS PSYCHOLOGY: Visual progress with color-coded feedback -->
+				{#if progressPercentage > 0}
+					<div class="mb-2">
+						<div class="mb-2 flex items-center justify-between text-sm font-semibold">
+							<span class="text-slate-700 dark:text-slate-300"
+								>{i18n.t('common.your_progress')}</span
+							>
+							<span class="text-emerald-600 dark:text-emerald-400">{progressPercentage}%</span>
+						</div>
+
+						<div
+							class="relative h-4 w-full overflow-hidden rounded-full border border-slate-200 bg-slate-100 dark:border-slate-600 dark:bg-slate-700"
+						>
+							<div
+								class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-lime-500 shadow-inner transition-all duration-700 ease-out"
+								style="width: {progressPercentage}%"
+							></div>
+						</div>
+					</div>
+				{/if}
+
+				{#if track.premium_only}
+					<div class="flex flex-wrap items-center justify-center gap-4 text-sm">
 						<span
 							class="flex items-center rounded-full border border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50 px-4 py-2 text-sm font-semibold text-purple-700 shadow-sm dark:border-purple-700/50 dark:from-purple-900/30 dark:to-indigo-900/30 dark:text-purple-300"
 						>
 							<Icon name="star" class="me-2 h-4 w-4" />
 							{i18n.t('common.premium_only')}
 						</span>
-					{/if}
-				</div>
+					</div>
+				{/if}
 
 				{#if track.logo}
 					<div class="flex justify-center">
@@ -181,55 +213,6 @@
 					<p class="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
 						{track.blurb}
 					</p>
-
-					<!-- EMOTIONAL DESIGN: Motivational messaging with emoji for dopamine trigger -->
-					<div
-						class="mb-4 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-lime-50 p-4 dark:border-emerald-800/50 dark:from-emerald-900/30 dark:to-lime-900/30"
-					>
-						<p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-							{motivationalMessage}
-						</p>
-					</div>
-
-					<!-- PROGRESS PSYCHOLOGY: Visual progress with color-coded feedback -->
-					<div class="mb-8">
-						<div class="mb-2 flex items-center justify-between text-sm font-semibold">
-							<span class="text-slate-700 dark:text-slate-300"
-								>{i18n.t('common.your_progress')}</span
-							>
-							<span class="text-emerald-600 dark:text-emerald-400">{progressPercentage}%</span>
-						</div>
-
-						<div
-							class="relative h-4 w-full overflow-hidden rounded-full border border-slate-200 bg-slate-100 dark:border-slate-600 dark:bg-slate-700"
-						>
-							<div
-								class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-lime-500 shadow-inner transition-all duration-700 ease-out"
-								style="width: {progressPercentage}%"
-							></div>
-						</div>
-					</div>
-
-					<!-- CALL-TO-ACTION: Single, clear next step (Hick's Law) -->
-					{#if nextItem}
-						<Button
-							variant="attention"
-							startIcon="play"
-							size={'lg'}
-							href={`/courses/${track.slug}/${nextItem.item.slug}/${nextItem.item.type}`}
-						>
-							{i18n.t('common.continue_learning')}
-						</Button>
-					{:else if progressPercentage === 100}
-						<div
-							class="mb-6 flex items-center justify-center gap-3 px-6 py-4 text-start font-semibold text-emerald-700 dark:text-emerald-300"
-							role="alert"
-							aria-live="polite"
-						>
-							<Icon name="star" class="h-9 w-9 text-yellow-400" />
-							<span class="text-md">تهانينا! تم إتقان المسار بالكامل!</span>
-						</div>
-					{/if}
 				</div>
 			</div>
 
@@ -245,14 +228,17 @@
 							<h3 class="mb-4 text-4xl font-bold text-emerald-700 dark:text-emerald-300">
 								عمل رائع، أنجزت الكثير!
 							</h3>
-							<p class="mb-4 text-xl text-emerald-600 dark:text-emerald-400">
+							<p class="mb-6 text-xl text-emerald-600 dark:text-emerald-400">
 								انتهيت من هذا المسار بنجاح — جهدك واضح، وتستحق كل التقدير. خُطوة مهمة في طريقك، تابع
 								بثقة.
 							</p>
+							<Button variant="attention" endIcon="arrow-left" size={'lg'} href={`/courses`}>
+								{i18n.t('common.find_other_tracks')}
+							</Button>
 						</div>
 					{/if}
 
-					{#each modules as module, moduleIndex}
+					{#each modules as module}
 						<div class="w-full">
 							<!-- MODULE HEADERS: Clear sectioning with improved contrast -->
 							<div

@@ -14,7 +14,8 @@
 		| 'link-pill'
 		| 'link-pill-active'
 		| 'continue'
-		| 'attention';
+		| 'attention'
+		| 'fire';
 
 	type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
@@ -93,10 +94,10 @@
   `,
 		ghost: `
     text-neutral-700 
-    hover:bg-neutral-100 hover:text-neutral-900 
-    focus:ring-2 focus:ring-primary-500 focus:ring-offset-0
-    disabled:text-neutral-400 disabled:hover:bg-transparent
-    dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100
+    hover:bg-neutral-100/30 hover:text-neutral-900 
+    focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 focus:outline-none
+    disabled:text-neutral-400 disabled:hover:bg-transparent disabled:cursor-not-allowed
+    dark:text-neutral-300 dark:hover:bg-neutral-700/30 dark:hover:text-neutral-100 dark:disabled:text-neutral-600
   `,
 		link: `
     text-primary-600 underline-offset-4 
@@ -134,6 +135,16 @@
     focus:outline-none focus:ring-4 focus:ring-lime-500/50
     active:scale-95
     disabled:transform-none disabled:shadow-none
+  `,
+		fire: `
+    bg-orange-500 text-white shadow-lg shadow-orange-500/25
+    hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-600/30
+    active:bg-orange-700 active:shadow-lg
+    focus:ring-2 focus:ring-orange-500 focus:ring-offset-2
+    transition-all duration-200 ease-out
+    disabled:bg-orange-300 disabled:text-white/70 disabled:shadow-none
+    dark:bg-orange-600 dark:hover:bg-orange-500 dark:active:bg-orange-700
+    dark:shadow-orange-700/40 dark:hover:shadow-orange-600/50
   `
 	};
 

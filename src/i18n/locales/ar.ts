@@ -89,6 +89,7 @@ export default {
 		}
 	},
 	common: {
+		find_other_tracks: 'استكشف مسارات أخرى',
 		your_progress: 'تقدّمك',
 		continue_learning: 'متابعة التعلم',
 		copied: 'تم نسخ',
