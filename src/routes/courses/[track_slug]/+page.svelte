@@ -148,11 +148,9 @@
 >
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-			<!-- PSYCHOLOGICAL PRINCIPLE: Sticky sidebar for consistent motivation -->
 			<div
 				class="sticky top-6 mb-auto flex flex-col gap-6 rounded-3xl border border-white/80 bg-white/95 p-8 shadow-xl backdrop-blur-sm duration-300 ease-in-out lg:col-span-1 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-slate-900/30"
 			>
-				<!-- EMOTIONAL DESIGN: Motivational messaging with emoji for dopamine trigger -->
 				{#if progressPercentage > 0}
 					<div
 						class="mb-4 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-lime-50 p-4 dark:border-emerald-800/50 dark:from-emerald-900/30 dark:to-lime-900/30"
@@ -163,7 +161,6 @@
 					</div>
 				{/if}
 
-				<!-- PROGRESS PSYCHOLOGY: Visual progress with color-coded feedback -->
 				{#if progressPercentage > 0}
 					<div class="mb-2">
 						<div class="mb-2 flex items-center justify-between text-sm font-semibold">
@@ -216,10 +213,8 @@
 				</div>
 			</div>
 
-			<!-- CONTENT HIERARCHY: Clear visual separation and flow -->
 			<div class="flex flex-col lg:col-span-2">
 				<div class="flex flex-col gap-16">
-					<!-- CELEBRATION PSYCHOLOGY: Achievement recognition -->
 					{#if progressPercentage === 100}
 						<div
 							class="rounded-3xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 via-blue-50 to-purple-50 p-10 text-center shadow-xl dark:border-emerald-700/50 dark:from-emerald-900/30 dark:via-blue-900/30 dark:to-purple-900/30"
@@ -240,7 +235,6 @@
 
 					{#each modules as module}
 						<div class="w-full">
-							<!-- MODULE HEADERS: Clear sectioning with improved contrast -->
 							<div
 								class="mb-10 w-full rounded-3xl border border-lime-200 bg-gradient-to-r from-lime-600 via-lime-500 to-lime-600 p-8 text-center shadow-lg dark:border-slate-600 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800"
 							>
@@ -255,7 +249,6 @@
 										{module.title}
 									</h2>
 								</div>
-								<!-- MODULE PROGRESS: Visual feedback for section completion -->
 								{#if module.items}
 									{@const moduleCompleted = module.items.filter(
 										(item) => item.submission?.status === 'pass'
@@ -279,7 +272,6 @@
 								{/if}
 							</div>
 
-							<!-- VISUAL HIERARCHY: Items with clear priority system -->
 							{#each module.items as item, index}
 								{@const isNextItem = nextItem && nextItem.item.slug === item.slug}
 								<div class="relative w-full">
@@ -296,18 +288,23 @@
 										class={getItemClass(item.submission?.status, isNextItem || undefined)}
 									>
 										<div class="flex w-full items-center gap-6">
-											<!-- STATUS ICONS: Clear visual feedback -->
-											<div class="flex-shrink-0">
-												<div
-													class={`rounded-full p-2 ${isNextItem ? 'bg-blue-100 ring-2 ring-blue-200 dark:bg-blue-900/50 dark:ring-blue-800' : ''}`}
-												>
-													<Icon
-														name={getStatusIcon(item.submission?.status)}
-														class="h-7 w-7 {getStatusClass(
-															item.submission?.status
-														)} transition-all duration-200 group-hover:scale-110"
-													/>
-												</div>
+											<div
+												class={`relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 transition-colors duration-200 dark:bg-slate-700/50 
+          ${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-blue-800' : ''}`}
+											>
+												<Icon
+													name={item.type === 'lesson' ? 'book-open' : 'code'}
+													class="h-7 w-7 {getStatusClass(
+														item.submission?.status
+													)} transition-all duration-200 group-hover:scale-110"
+												/>
+												{#if item.submission?.status === 'pass'}
+													<div
+														class="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-800"
+													>
+														<Icon name="check" class="h-3 w-3 text-white" />
+													</div>
+												{/if}
 											</div>
 
 											<div class="min-w-0 grow">
@@ -327,7 +324,6 @@
 												{/if}
 											</div>
 
-											<!-- NEXT ITEM INDICATOR: Clear visual priority -->
 											{#if isNextItem}
 												<div
 													class="animate-gentle-pulse absolute top-3 -right-3 flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold tracking-wider text-white uppercase shadow-lg"
@@ -337,43 +333,34 @@
 												</div>
 											{/if}
 
-											<!-- METADATA BADGES: Reduced visual noise -->
 											<div class="flex flex-col items-end gap-3">
-												<div class="flex items-center gap-3">
-													<span
-														class={`${getDifficultyClass(item.difficulty || undefined)} 
-        min-w-[48px] rounded-full px-3 py-1.5 text-center
-        text-xs font-semibold
-        shadow-sm
-        transition-colors duration-200 ease-in-out`}
-													>
-														{item.difficulty || 'N/A'}
-													</span>
-													<span
-														class="min-w-[48px] rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-center text-xs
-        font-semibold text-slate-700 shadow-sm
-        transition-colors duration-200
-        ease-in-out
-        dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
-													>
-														{item.type}
-													</span>
-												</div>
-												<!-- GAMIFICATION: XP as reward indicator -->
 												<span
-													class={`min-w-[48px] rounded-full border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1.5 text-center text-xs
-      font-semibold text-amber-700 shadow-sm transition-transform
-      duration-700 ease-in-out
-      dark:border-amber-700/50
-      dark:from-amber-900/30 dark:to-orange-900/30 dark:text-amber-300`}
+													class={`${getDifficultyClass(item.difficulty || undefined)} 
+														min-w-[48px] rounded-full px-3 py-1.5 text-center
+														text-xs font-semibold
+														shadow-sm
+														transition-colors duration-200 ease-in-out`}
 												>
-													{item.base_xp} XP
+													{item.difficulty || 'N/A'}
+												</span>
+												<span
+													class={`min-w-[48px] rounded-full border px-3 py-1.5 text-center text-xs font-semibold text-nowrap shadow-sm transition-transform duration-700 ease-in-out
+    ${
+			!item.submission?.xp_reward
+				? 'border-slate-300 bg-gradient-to-r from-slate-100 to-gray-100 text-slate-600 dark:border-slate-600 dark:from-slate-800/50 dark:to-slate-700/50 dark:text-slate-400'
+				: 'border-blue-200 bg-gradient-to-r from-blue-50 to-violet-50 text-blue-700 dark:border-blue-700/50 dark:from-blue-900/30 dark:to-violet-900/30 dark:text-blue-300'
+		}`}
+												>
+													{!item.submission?.xp_reward
+														? `${item.base_xp} XP`
+														: item.submission?.xp_reward >= item.base_xp
+															? `${item.submission?.xp_reward} XP`
+															: `${item.submission?.xp_reward}/${item.base_xp} XP`}
 												</span>
 											</div>
 										</div>
 									</a>
 
-									<!-- VISUAL FLOW: Connection between items -->
 									{#if index < module.items.length - 1}
 										<div class="flex justify-center py-4">
 											<div
