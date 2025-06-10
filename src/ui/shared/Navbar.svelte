@@ -115,7 +115,7 @@
 
 	const rankInfo = $derived(RANKS.find((r) => currentLevel >= r.minLevel)!);
 	const links = [
-		{ name: i18n.t('navigation.dashboard'), href: '/dashboard', icon: 'home' },
+		{ name: i18n.t('navigation.dashboard'), href: '/dashboard', icon: 'dashboard' },
 		{ name: i18n.t('navigation.exploreTracks'), href: '/courses', icon: 'book-open' }
 	];
 	const activePath = $derived(page.url.pathname);
@@ -145,7 +145,7 @@
 <svelte:window on:click={handleOutsideClick} on:keydown={handleKeyDown} on:scroll={handleScroll} />
 
 <nav
-	class="fixed top-0 right-0 left-0 z-50 border-b border-gray-200/50 bg-white/90 shadow-lg backdrop-blur-xl transition-all duration-300 dark:border-gray-800/50 dark:bg-gray-900/90 {isScrolled
+	class="fixed top-0 right-0 left-0 z-50 border-b border-gray-200/50 bg-white/90 shadow-xs backdrop-blur-xl transition-all duration-300 dark:border-gray-800/50 dark:bg-gray-900/90 {isScrolled
 		? 'bg-white/95 shadow-xl dark:bg-gray-900/95'
 		: ''} {navbarVisible ? 'translate-y-0' : '-translate-y-full'}"
 	transition:slide={{ duration: transition ? 500 : 0 }}

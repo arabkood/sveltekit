@@ -146,7 +146,7 @@
 <main
 	class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 px-4 py-8 sm:px-6 lg:px-8 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"
 >
-	<div class="mx-auto max-w-7xl p-6 lg:p-8">
+	<div class="mx-auto max-w-7xl">
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 			<div
 				class="sticky top-6 mb-auto flex flex-col gap-6 rounded-3xl border border-white/80 bg-white/95 p-8 shadow-xl backdrop-blur-sm duration-300 ease-in-out lg:col-span-1 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-slate-900/30"
