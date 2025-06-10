@@ -5,26 +5,24 @@
 	import type { ApiError } from '$types/api';
 	import Icon from '$ui/common/Icon.svelte';
 	import CodeInput from '$ui/common/CodeInput.svelte';
-	import { getCookie, setCookie } from '$utils/cookies.client';
-	import { auth } from '$config';
-	import type { AuthState } from '$types/auth';
 	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
 
 	let status = $state('idle');
 	let submitError = $state<null | string>(null);
 	let verificationCode = $state<string[]>(Array(6).fill(''));
 
-	const cookie = getCookie(auth.authStateCookieName);
-	if (!cookie || cookie === '') {
+	const { data }: { data: PageData } = $props();
+	const { user } = data;
+
+	if (!user || user.emailVerified) {
 		location.href = '/';
+		goto('/', {
+			invalidateAll: true
+		});
 	}
-	const cookieObj: AuthState = JSON.parse(cookie!);
-	if (!cookieObj.authenticated || !cookieObj.id || cookieObj.emailVerified) {
-		location.href = '/';
-	}
-	let cooldown = $state<number>(
-		cookieObj.canResendCodeAt ? Math.floor((cookieObj.canResendCodeAt - Date.now()) / 1000) : 0
-	);
+	let cooldown = $state<number>(30);
 
 	onMount(() => {
 		const i = setInterval(() => {
@@ -51,7 +49,7 @@
 			const response = await fetch(API_ENDPOINTS.auth.verifyEmail, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ code: code, email: cookieObj.email }),
+				body: JSON.stringify({ code: code, email: user.email }),
 				credentials: 'include'
 			});
 
@@ -80,34 +78,14 @@
 	const resendCode = async () => {
 		if (cooldown > 0) return;
 		try {
-			const cookie = getCookie(auth.authStateCookieName);
-			if (!cookie || cookie === '') {
-				location.href = '/';
-			}
-			const cookieObj: AuthState = JSON.parse(cookie!);
-			if (!cookieObj.authenticated || !cookieObj.id || cookieObj.emailVerified) {
-				location.href = '/';
-			}
-
-			const response = await fetch(API_ENDPOINTS.auth.resendEmailVerification, {
+			await fetch(API_ENDPOINTS.auth.resendEmailVerification, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email: cookieObj.email })
+				body: JSON.stringify({ email: user.email })
 			});
 
-			const data: AuthState = {
-				...cookieObj,
-				canResendCodeAt: Date.now() + 60 * 1000,
-				...(await response.json())
-			};
-
-			setCookie(auth.authStateCookieName, data, {
-				path: '/',
-				sameSite: 'strict',
-				secure: false
-			});
-
-			cooldown = data.canResendCodeAt ? Math.floor((data.canResendCodeAt - Date.now()) / 1000) : 0;
+			const canResendCodeAt = Date.now() + 60 * 1000;
+			cooldown = Math.floor((canResendCodeAt - Date.now()) / 1000);
 		} catch {
 			// Handle error silently
 		}

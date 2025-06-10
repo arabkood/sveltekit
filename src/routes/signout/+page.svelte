@@ -5,22 +5,13 @@
 
 	async function handleSignOut() {
 		try {
-			const [signoutResponse, logResponse] = await Promise.all([
-				fetch(API_ENDPOINTS.auth.signout, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					credentials: 'include'
-				}),
-				fetch('/signout', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					credentials: 'include'
-				})
-			]);
+			const signoutResponse = await fetch(API_ENDPOINTS.auth.signout, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include'
+			});
 
 			if (signoutResponse.ok) {
 				await invalidateAll();

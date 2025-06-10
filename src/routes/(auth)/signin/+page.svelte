@@ -5,9 +5,7 @@
 	import { createForm, z } from '$utils/createForm.svelte';
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';
-	import { setCookie } from '$utils/cookies.client';
 	import Icon from '$ui/common/Icon.svelte';
-	import { auth } from '$config';
 	import type { AuthState } from '$types/auth';
 
 	let status = $state('idle');
@@ -55,12 +53,6 @@
 				authenticated: true,
 				...(await response.json())
 			};
-
-			setCookie(auth.authStateCookieName, data, {
-				path: '/',
-				sameSite: 'strict',
-				secure: false
-			});
 
 			status = 'success';
 

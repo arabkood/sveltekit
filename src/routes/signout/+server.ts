@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 
-export function POST({ cookies }) {
+export function POST({ cookies, url }) {
 	// 1. Get all cookies from the incoming request.
 	const allCookies = cookies.getAll();
 
@@ -8,7 +8,7 @@ export function POST({ cookies }) {
 	for (const cookie of allCookies) {
 		const cookieName = cookie.name;
 
-		cookies.delete(cookieName, { path: '/' });
+		cookies.delete(cookieName, { path: '/', secure: url.protocol === 'https:' });
 	}
 
 	// 3. Respond with a success message.

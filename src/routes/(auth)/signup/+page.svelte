@@ -6,9 +6,7 @@
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';
 	import type { AuthState } from '$types/auth';
-	import { setCookie } from '$utils/cookies.client';
 	import Icon from '$ui/common/Icon.svelte';
-	import { auth } from '$config';
 
 	let status = $state('idle');
 	let submitError = $state<null | string>(null);
@@ -69,12 +67,6 @@
 				canResendCodeAt: Date.now() + 60 * 1000,
 				...(await response.json())
 			};
-
-			setCookie(auth.authStateCookieName, data, {
-				path: '/',
-				sameSite: 'strict',
-				secure: false
-			});
 
 			status = 'success';
 

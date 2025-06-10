@@ -1,6 +1,6 @@
 import { and, eq, gt } from 'drizzle-orm';
 import { db } from '..';
-import { sessionTokens, users } from '../schema/auth';
+import { sessionTokens, users, type SelectUser } from '../schema/auth';
 
 export async function getUserBySessionToken(token: string) {
 	const now = new Date();
@@ -20,5 +20,5 @@ export async function getUserBySessionToken(token: string) {
 		.limit(1);
 
 	// Return the user if found, otherwise null
-	return result.length > 0 ? result[0] : null;
+	return result.length > 0 ? (result[0] as SelectUser) : null;
 }
