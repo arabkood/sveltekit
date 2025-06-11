@@ -9,6 +9,7 @@
 	import NavbarUserMenu from './NavbarUserMenu.svelte';
 	import { slide, fly, scale } from 'svelte/transition';
 	import { quintOut, backOut } from 'svelte/easing';
+	import { useXp } from '$utils/xp';
 
 	let {
 		user,
@@ -44,11 +45,10 @@
 	};
 
 	const XP_PER_LEVEL = 1000;
-	const calculateLevel = (xp: number) => Math.floor(xp / XP_PER_LEVEL) + 1;
-	const getXpToNextLevel = (xp: number) => XP_PER_LEVEL - (xp % XP_PER_LEVEL);
-	const progressPercent = $derived(((userStats.totalXp % XP_PER_LEVEL) / XP_PER_LEVEL) * 100);
 
-	const currentLevel = $derived(calculateLevel(userStats.totalXp));
+	const xp = $derived(useXp(userStats.totalXp));
+	const currentLevel = $derived(xp.currentLevel);
+	const progressPercent = $derived(xp.progressPercent);
 
 	const RANKS = [
 		{
@@ -142,7 +142,7 @@
 	};
 </script>
 
-<svelte:window on:click={handleOutsideClick} on:keydown={handleKeyDown} on:scroll={handleScroll} />
+<svelte:window onclick={handleOutsideClick} onkeydown={handleKeyDown} onscroll={handleScroll} />
 
 <nav
 	class="fixed top-0 right-0 left-0 z-50 border-b border-gray-200/50 bg-white/90 shadow-xs backdrop-blur-xl transition-all duration-300 dark:border-gray-800/50 dark:bg-gray-900/90 {isScrolled
@@ -233,7 +233,7 @@
 				aria-label="View level progress details"
 			>
 				<button
-					class="flex h-10 cursor-pointer items-center gap-3 rounded-xl bg-gradient-to-r from-gray-200/60 to-gray-300/60 px-4 text-black ring-1 ring-gray-300 transition-all duration-300 hover:shadow-xl hover:ring-gray-400 dark:from-gray-800/60 dark:to-gray-900/60 dark:text-white dark:ring-gray-700/50 dark:hover:ring-gray-600 {rankInfo.glow} {isLevelAnimating
+					class="flex h-10 cursor-pointer items-center gap-3 rounded-xl bg-gradient-to-r from-gray-200/60 to-gray-300/60 ps-2 pe-3 text-black ring-1 ring-gray-300 transition-all duration-300 hover:shadow-xl hover:ring-gray-400 dark:from-gray-800/60 dark:to-gray-900/60 dark:text-white dark:ring-gray-700/50 dark:hover:ring-gray-600 {rankInfo.glow} {isLevelAnimating
 						? 'scale-105 animate-pulse'
 						: ''} backdrop-blur-sm"
 				>
@@ -241,7 +241,7 @@
 					<div class="flex items-center gap-2">
 						<!-- Level badge with better design -->
 						<div
-							class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.color} px-2 py-1 shadow-lg"
+							class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} px-2 py-1 shadow-lg"
 						>
 							<span class="text-xs font-bold text-white">مستوى</span>
 							<span class="text-sm font-bold text-white">{currentLevel}</span>
@@ -288,7 +288,7 @@
 								<p class="text-sm text-gray-700 dark:text-gray-400">المستوى {currentLevel}</p>
 							</div>
 							<div
-								class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.color} px-3 py-2 shadow-lg"
+								class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} {rankInfo.border} px-3 py-2 shadow-lg"
 							>
 								<span class="text-xs font-bold text-white">مستوى</span>
 								<span class="text-lg font-bold text-white">{currentLevel}</span>
@@ -327,7 +327,7 @@
 								class="rounded-xl border border-gray-300/50 bg-gray-100 p-4 text-center dark:border-gray-700/50 dark:bg-gray-800/60"
 							>
 								<div class="mb-1 text-2xl font-bold text-cyan-600 dark:text-cyan-400">
-									{getXpToNextLevel(userStats.totalXp).toLocaleString()}
+									{xp.xpLeftForNextLevel.toLocaleString()}
 								</div>
 								<div class="text-xs font-medium text-gray-700 dark:text-gray-400">
 									XP للمستوى التالي
@@ -378,7 +378,7 @@
 		>
 			<div class="px-4 py-4">
 				<!-- Navigation links -->
-				<nav class="space-y-2" role="navigation" aria-label="Mobile navigation">
+				<nav class="space-y-2" aria-label="Mobile navigation">
 					{#each links as link}
 						{@const isActive = activePath === link.href}
 						<Button
