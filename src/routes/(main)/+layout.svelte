@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.css';
+	import '../../app.css';
 	import Navbar from '$ui/shared/Navbar.svelte';
 	import SvgSprite from '$ui/shared/SvgSprite.svelte';
 	import type { Snippet } from 'svelte';
