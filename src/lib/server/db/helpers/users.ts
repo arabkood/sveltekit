@@ -1,7 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import { db } from '..';
 import { userModulesAttempt, userModulesSubmission, usersStats, userTracks } from '../schema/users';
-import { tracks } from '../schema/class';
 
 export async function getUserStats(userId: string) {
 	const result = await db.select().from(usersStats).where(eq(usersStats.userId, userId)).limit(1);
@@ -9,31 +8,8 @@ export async function getUserStats(userId: string) {
 	return result.length > 0 ? result[0] : null;
 }
 
-export async function getUserTracks(
-	userId: string,
-	options?: {
-		includeDetails?: boolean;
-	}
-) {
-	return [];
-	const includeDetails = options?.includeDetails ?? false;
-
-	if (includeDetails) {
-		const results = await db
-			.select({
-				userTrack: userTracks,
-				track: tracks
-			})
-			.from(userTracks)
-			.where(eq(userTracks.userId, userId))
-			.innerJoin(tracks, eq(userTracks.trackId, tracks.id));
-
-		return results;
-	} else {
-		const results = await db.select().from(userTracks).where(eq(userTracks.userId, userId));
-
-		return results;
-	}
+export async function getUserTracks(userId: string) {
+	return await db.select().from(userTracks).where(eq(userTracks.userId, userId));
 }
 
 export async function getUserModule(userId: string, moduleId: string) {

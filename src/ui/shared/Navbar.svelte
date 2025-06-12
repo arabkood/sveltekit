@@ -44,8 +44,6 @@
 		lastScrollY = currentScrollY;
 	};
 
-	const XP_PER_LEVEL = 1000;
-
 	const xp = $derived(useXp(userStats.totalXp));
 	const currentLevel = $derived(xp.currentLevel);
 	const progressPercent = $derived(xp.progressPercent);
@@ -288,7 +286,7 @@
 								<p class="text-sm text-gray-700 dark:text-gray-400">المستوى {currentLevel}</p>
 							</div>
 							<div
-								class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} {rankInfo.border} px-3 py-2 shadow-lg"
+								class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} px-3 py-2 shadow-lg"
 							>
 								<span class="text-xs font-bold text-white">مستوى</span>
 								<span class="text-lg font-bold text-white">{currentLevel}</span>
@@ -430,7 +428,7 @@
 							<div class="space-y-2">
 								<div class="flex justify-between text-xs text-white/80">
 									<span>التقدم: {Math.floor(progressPercent)}%</span>
-									<span>{getXpToNextLevel(userStats.totalXp)} للمستوى التالي</span>
+									<span>{xp.xpLeftForNextLevel} للمستوى التالي</span>
 								</div>
 								<div class="h-2 overflow-hidden rounded-full bg-white/20">
 									<div

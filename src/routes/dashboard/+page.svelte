@@ -5,15 +5,14 @@
 	import Stats from '$ui/dashboard/Stats.svelte';
 	import UserTracks from '$ui/dashboard/UserTracks.svelte';
 	import Welcome from '$ui/dashboard/Welcome.svelte';
-	import type { LayoutData } from '../$types';
+	import type { PageData } from '../settings/$types';
 
 	const {
 		data
 	}: {
-		data: LayoutData;
+		data: PageData;
 	} = $props();
-	// console.debug(data);
-	//
+	console.debug(data);
 </script>
 
 <div class="bg-page min-h-screen">
@@ -33,7 +32,7 @@
 		<div>
 			<div>
 				{#if data.userTracks!.length > 0}
-					<UserTracks userTracks={data.userTracks!} />
+					<UserTracks userTracks={data.userTracks!} courses={data.courses!} />
 				{:else}
 					<ActiveTrack userTracks={[]} />
 				{/if}

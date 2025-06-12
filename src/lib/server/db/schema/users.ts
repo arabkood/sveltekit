@@ -32,9 +32,9 @@ export const userTracks = usersSchema.table('track', {
 	trackId: uuid('track_id')
 		.notNull()
 		.references(() => tracks.id, { onDelete: 'cascade' }),
-	completedModules: integer('completed_modules').notNull().default(0),
-	lastActivityAt: timestamp('last_activity_at', { withTimezone: true }).notNull().defaultNow(),
+	completedItems: integer('completed_items').notNull().default(0),
 	startedAt: timestamp('started_at', { withTimezone: true }).notNull().defaultNow(),
+	lastActivityAt: timestamp('last_activity_at', { withTimezone: true }).notNull().defaultNow(),
 	completedAt: timestamp('completed_at', { withTimezone: true })
 });
 export type SelectUserTracks = typeof userTracks.$inferSelect;
