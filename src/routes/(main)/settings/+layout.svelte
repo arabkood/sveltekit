@@ -11,8 +11,8 @@
 	};
 
 	const tabs: Tab[] = [
-		{ label: i18n.t('settings.account.title'), href: '/settings/account' },
-		{ label: i18n.t('settings.billing.title'), href: '/settings/billing' }
+		{ label: i18n.t('settings.account.title'), href: '/settings/account' }
+		// { label: i18n.t('settings.billing.title'), href: '/settings/billing' }
 	];
 </script>
 
