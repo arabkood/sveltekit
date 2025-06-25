@@ -17,7 +17,7 @@
 	}
 
 	// --- Configuration for the input placeholder ---
-	const INPUT_PLACEHOLDER_REGEX = /__@@INPUT@@__/g;
+	const INPUT_PLACEHOLDER_REGEX = /@@INPUT@@/g;
 	const UNIQUE_INPUT_START_MARKER_PREFIX = '___UISTART_';
 	const UNIQUE_INPUT_END_MARKER_PREFIX = '___UIEND_';
 	const EMPTY_SLOT_TEXT_MARKER = '___EMPTYSLOTTEXT___';

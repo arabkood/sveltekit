@@ -11,6 +11,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import FailPopup from '$ui/success-popup/FailPopup.svelte';
+	import Icon from '$ui/common/Icon.svelte';
 
 	let {
 		data,
@@ -137,9 +138,15 @@
 <div
 	class="flex min-h-screen flex-col bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
 >
-	<TopNav nextSlug={next?.slug} prevSlug={prev?.slug} {track} {item} />
+	<!-- <TopNav nextSlug={next?.slug} prevSlug={prev?.slug} {track} {item} /> -->
 
-	<Header currentStep={currentStepIndex} totalSteps={lesson.steps.length} {goToStep} />
+	<Header
+		{track}
+		{item}
+		currentStep={currentStepIndex}
+		totalSteps={lesson.steps.length}
+		{goToStep}
+	/>
 	<div class="flex flex-1 flex-col items-center justify-center p-4">
 		{#if typeof currentStep !== 'string'}
 			{#key currentStep}

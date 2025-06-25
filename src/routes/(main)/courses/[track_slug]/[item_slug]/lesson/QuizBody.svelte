@@ -119,7 +119,7 @@
 					onclick={() => handleOptionSelect(i)}
 					disabled={status === 'success' || status === 'fail'}
 				>
-					<Markdown inline={true} markdown={option} />
+					<Markdown inline={true} markdown={String(option)} />
 					{#if status === 'success' && isSelected && isOptionCorrect}
 						<span class="text-primary-500 dark:text-primary-400 ms-3 text-xl">
 							<svg
