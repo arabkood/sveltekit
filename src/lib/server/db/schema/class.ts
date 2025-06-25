@@ -10,6 +10,7 @@ export const topics = classSchema.table('topics', {
 	updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 	title: text('title').notNull(),
 	blurb: text('blurb'),
+	hash: text('hash'),
 	logo: text('logo')
 });
 
@@ -25,6 +26,7 @@ export const tracks = classSchema.table('tracks', {
 	title: text('title').notNull(),
 	blurb: text('blurb'),
 	logo: text('logo'),
+	hash: text('hash'),
 	premium_only: boolean('premium_only').default(false).notNull()
 });
 
@@ -38,6 +40,7 @@ export const modules = classSchema.table('modules', {
 	updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 	title: text('title').notNull(),
 	position: integer('position').notNull(),
+	hash: text('hash'),
 	premium_only: boolean('premium_only').default(false).notNull()
 });
 
@@ -57,6 +60,7 @@ export const items = classSchema.table('items', {
 	difficulty: text('difficulty'),
 	premium_only: boolean('premium_only').default(false).notNull(),
 	s3_path: text('s3_path'),
+	hash: text('hash'),
 	base_xp: integer('base_xp').default(1).notNull()
 });
 
