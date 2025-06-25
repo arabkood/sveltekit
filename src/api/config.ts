@@ -1,4 +1,6 @@
-export const API_BASE_URL = 'https://alpha.akood.com/api/v1';
+import { ARABKOOD_API_BASE_URL } from '$config';
+
+export const API_BASE_URL = ARABKOOD_API_BASE_URL;
 // export const API_BASE_URL = 'http://api.dev.arabkood.com:2007/api/v1';
 
 export const API_ENDPOINTS = {

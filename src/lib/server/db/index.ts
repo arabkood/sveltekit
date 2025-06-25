@@ -17,6 +17,7 @@ export function initDB(): NodePgDatabase {
 	const host = process.env.ARABKOOD_DATABASE_HOST;
 	const password = process.env.ARABKOOD_DATABASE_PASSWORD;
 	const port = process.env.ARABKOOD_DATABASE_PORT;
+	const ssl = process.env.ARABKOOD_DATABASE_SSL;
 
 	if (!dbName || !user || !host || !password) {
 		console.error(
@@ -33,9 +34,12 @@ export function initDB(): NodePgDatabase {
 			host: host,
 			password: password,
 			port: Number(port || 5432),
-			ssl: {
-				rejectUnauthorized: false
-			}
+			ssl:
+				ssl === 'none'
+					? undefined
+					: {
+							rejectUnauthorized: false
+						}
 		});
 
 		pool.on('error', (err) => {

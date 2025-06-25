@@ -16,4 +16,4 @@ export PUBLIC_AWS_REGION="me-central-1"
 export AWS_ACCESS_KEY_ID_LOCAL="test"
 export AWS_SECRET_ACCESS_KEY_LOCAL="test"
 
-bun dev -- --open --host --port 80
+pnpm dev -- --open --host --port 80
