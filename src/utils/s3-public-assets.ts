@@ -10,7 +10,7 @@ export function toPublicUrl(path: string, bucket?: string): string {
 	const key = path.replace('public://', '');
 
 	if (isLocal) {
-		return `http://localhost:4566/${bucket}/${key}`;
+		return `https://dev.arabkood.com/s3/${bucket}/${key}`;
 	} else {
 		return `https://${bucket}.s3.${AWS_REGION}.amazonaws.com/${key}`;
 	}
@@ -22,7 +22,7 @@ export function replacePublicUrls(text: string, bucket?: string): string {
 	}
 	return text.replace(/public:\/\/([\w./-]+)/g, (_, key) => {
 		if (isLocal) {
-			return `http://localhost:4566/${bucket}/${key}`;
+			return `https://dev.arabkood.com/s3/${bucket}/${key}`;
 		} else {
 			return `https://${bucket}.s3.${AWS_REGION}.amazonaws.com/${key}`;
 		}
