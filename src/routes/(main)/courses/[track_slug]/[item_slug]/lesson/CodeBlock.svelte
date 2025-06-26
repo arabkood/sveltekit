@@ -58,7 +58,8 @@
 			const markerSuffix = inputIndex + '___';
 			const startMarker = UNIQUE_INPUT_START_MARKER_PREFIX + markerSuffix;
 			const endMarker = UNIQUE_INPUT_END_MARKER_PREFIX + markerSuffix;
-			const currentUserInput = pUserInputs[inputIndex];
+			const currentUserInput =
+				pUserInputs[inputIndex] !== undefined ? String(pUserInputs[inputIndex]) : undefined;
 			const isEmpty = !(currentUserInput !== undefined && currentUserInput.trim() !== '');
 
 			inputSlotData.push({ markerSuffix, isEmpty });

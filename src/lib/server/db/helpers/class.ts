@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import { db } from '..';
 import {
 	modules,
@@ -13,7 +13,11 @@ import {
 import { submissions } from '../schema/submission';
 
 export async function getAllCourses() {
-	const rows = await db.select().from(topics).leftJoin(tracks, eq(topics.id, tracks.topic_id));
+	const rows = await db
+		.select()
+		.from(topics)
+		.leftJoin(tracks, eq(topics.id, tracks.topic_id))
+		.orderBy(topics.id, asc(tracks.position));
 
 	const result = rows.reduce<Record<string, { topic: Topic; tracks: Track[] }>>((acc, row) => {
 		const topic = row.topics;
@@ -26,7 +30,6 @@ export async function getAllCourses() {
 		}
 		return acc;
 	}, {});
-
 	return result;
 }
 export type GetAllCourses = Record<
