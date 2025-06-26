@@ -89,6 +89,7 @@ export default {
 		}
 	},
 	common: {
+		coming_soon: 'قريباً',
 		find_other_tracks: 'استكشف مسارات أخرى',
 		your_progress: 'تقدّمك',
 		continue_learning: 'متابعة التعلم',

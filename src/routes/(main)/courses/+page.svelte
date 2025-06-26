@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { i18n } from '$i18n/i18n';
 	import { toPublicUrl } from '$utils/s3-public-assets';
-	import type { PageServerData } from './$types';
+	import type { PageData } from './$types';
 
-	let { data }: { data: PageServerData } = $props();
+	let { data }: { data: PageData } = $props();
 	const courses = $derived(Object.values(data.courses));
 </script>
 
@@ -46,39 +46,106 @@
 						class="scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-400 dark:hover:scrollbar-thumb-slate-500 scrollbar-track-transparent scrollbar-thumb-rounded-full flex space-x-3 space-x-reverse overflow-x-auto px-4 py-6 sm:space-x-4"
 					>
 						{#each course.tracks as track}
-							<a
-								href={'courses/' + track.slug}
-								title={track.title}
-								class="group block h-full w-[160px] flex-shrink-0 sm:w-[180px]"
+							<svelte:element
+								this={track.coming_soon ? 'div' : 'a'}
+								href={track.coming_soon ? undefined : 'courses/' + track.slug}
+								title={track.coming_soon
+									? track.title + ' - ' + i18n.t('common.coming_soon')
+									: track.title}
+								class="group block h-[240px] w-[220px] flex-shrink-0 {track.coming_soon
+									? 'cursor-not-allowed'
+									: ''}"
 							>
 								<div
-									class="group-hover:border-primary-500 dark:group-hover:border-primary-500 mb-4 flex h-full flex-col items-center rounded-xl border-2 border-b-4 border-gray-200 bg-white p-3.5 text-center transition-all duration-300 ease-in-out group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-gray-300/40 sm:p-4 dark:border-gray-700 dark:border-b-gray-600 dark:bg-gray-400 dark:group-hover:shadow-black/30"
+									class="relative flex h-full flex-col overflow-hidden rounded-2xl border backdrop-blur-sm transition-all duration-500 ease-out {track.coming_soon
+										? 'border-gray-200/40 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:border-gray-700/30 dark:from-gray-800/50 dark:to-gray-900/50'
+										: 'border-gray-200/60 bg-gradient-to-br from-white to-gray-50/50 group-hover:-translate-y-2 group-hover:scale-[1.02] dark:border-gray-700/50 dark:from-gray-800 dark:to-gray-900/80'}"
 								>
-									<div class="relative">
-										{#if track.logo}
-											<img
-												src={toPublicUrl(track.logo)}
-												alt=""
-												class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-												height="151"
-												width="151"
-											/>
-										{/if}
-										{#if track.premium_only}
+									{#if track.coming_soon}
+										<div class="absolute top-3 left-3 z-10">
 											<span
-												class="absolute start-0 top-0 rounded-full bg-purple-200 px-2.5 py-1 text-[10px] font-bold whitespace-nowrap text-purple-900 shadow-sm dark:bg-purple-700 dark:text-purple-100"
+												class="inline-flex items-center gap-1 rounded-full border border-orange-200/50 bg-gradient-to-r from-orange-400 to-amber-500 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm"
 											>
+												<svg class="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
+													<path
+														fill-rule="evenodd"
+														d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+														clip-rule="evenodd"
+													/>
+												</svg>
+												{i18n.t('common.coming_soon')}
+											</span>
+										</div>
+									{/if}
+
+									{#if track.premium_only}
+										<div class="absolute top-3 z-10 {track.coming_soon ? 'right-3' : 'left-3'}">
+											<span
+												class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm {track.coming_soon
+													? 'border-white/10 bg-gradient-to-r from-purple-400/70 to-pink-400/70 opacity-60'
+													: 'border-white/20 bg-gradient-to-r from-purple-500 to-pink-500'}"
+											>
+												<svg class="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
+													<path
+														d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+													/>
+												</svg>
 												{i18n.t('common.premium_only')}
 											</span>
+										</div>
+									{/if}
+
+									<div class="relative flex flex-1 items-center justify-center p-6">
+										{#if track.logo}
+											<div class="group/image relative">
+												<img
+													src={toPublicUrl(track.logo)}
+													alt=""
+													class="max-h-[120px] max-w-[120px] object-contain transition-all duration-500 {track.coming_soon
+														? 'opacity-40 grayscale filter'
+														: 'group-hover:scale-110 group-hover:brightness-110'}"
+													height="120"
+													width="120"
+												/>
+												{#if track.coming_soon}
+													<div class="absolute inset-0 flex items-center justify-center">
+														<div class="rounded-full bg-white/80 p-3 shadow-lg dark:bg-gray-800/80">
+															<svg
+																class="h-6 w-6 text-orange-500"
+																fill="none"
+																stroke="currentColor"
+																viewBox="0 0 24 24"
+															>
+																<path
+																	stroke-linecap="round"
+																	stroke-linejoin="round"
+																	stroke-width="2"
+																	d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+																/>
+															</svg>
+														</div>
+													</div>
+												{/if}
+											</div>
 										{/if}
 									</div>
+
+									<div class="px-4 pb-5">
+										<h3
+											class="text-center text-sm leading-tight font-semibold {track.coming_soon
+												? 'text-gray-500 dark:text-gray-400'
+												: 'group-hover:text-primary-600 dark:group-hover:text-primary-400 text-gray-900 transition-colors duration-300 dark:text-white'}"
+										>
+											{track.title}
+										</h3>
+										<div
+											class="mx-auto mt-2 h-0.5 rounded-full {track.coming_soon
+												? 'w-8 bg-gradient-to-r from-orange-400 to-amber-500 opacity-60'
+												: 'from-primary-500 w-0 bg-gradient-to-r to-purple-500 transition-all duration-500 group-hover:w-12'}"
+										></div>
+									</div>
 								</div>
-								<p
-									class="flex-grow text-center text-sm font-semibold text-gray-700 dark:text-gray-300"
-								>
-									{track.title}
-								</p>
-							</a>
+							</svelte:element>
 						{/each}
 					</div>
 				</div>
