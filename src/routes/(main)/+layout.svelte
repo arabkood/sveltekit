@@ -15,9 +15,8 @@
 	} = $props();
 
 	const hideNavbarFor = new Set([
-		'/track/[track]/[module]',
-		'/courses/[track_slug]/[item_slug]/lesson',
-		'/courses/[track_slug]/[item_slug]/code'
+		// '/(main)/courses/[track_slug]/[item_slug]/lesson',
+		'/(main)/courses/[track_slug]/[item_slug]/code'
 	]);
 	const disableNavbar = $derived(
 		!page.route.id || page.route.id.startsWith('/(auth)') || hideNavbarFor.has(page.route.id)

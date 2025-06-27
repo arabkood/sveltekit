@@ -18,9 +18,9 @@
 </script>
 
 <header
-	class="flex items-center justify-end border-b border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
+	class="flex items-center justify-between border-b border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
 >
-	<nav class="me-auto flex min-w-0 items-center gap-1 text-sm">
+	<nav class="hidden min-w-0 items-center gap-1 text-sm md:flex">
 		<a
 			class="truncate rounded px-2 py-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
 			href={`/courses/${track?.slug}`}
@@ -32,7 +32,24 @@
 		>
 	</nav>
 
-	<div class="flex items-center space-x-2">
+	<div class="flex min-w-0 items-center md:hidden">
+		<a
+			href={`/courses/${track?.slug}`}
+			class="me-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600"
+			aria-label="Back to track"
+			title={track.title}
+		>
+			<Icon name="arrow-right" size={20} />
+		</a>
+		<span
+			class="truncate text-sm font-medium text-slate-800 dark:text-slate-100"
+			title={item.title}
+		>
+			{item.title}
+		</span>
+	</div>
+
+	<div class="hidden items-center space-x-2 md:flex">
 		{#each { length: totalSteps } as _, i}
 			{@const stepNumber = i + 1}
 			<button
@@ -54,10 +71,12 @@
 				<span class="sr-only">
 					{i < currentStep ? `Go to step ${stepNumber}` : `Step ${stepNumber}`}
 					{i === currentStep ? ' (Current)' : ''}
-					{i < currentStep ? ' (Completed)' : ''}
-					{i > currentStep ? ' (Upcoming)' : ''}
 				</span>
 			</button>
 		{/each}
+	</div>
+
+	<div class="text-sm font-medium text-slate-500 md:hidden dark:text-slate-400">
+		{currentStep + 1} / {totalSteps}
 	</div>
 </header>

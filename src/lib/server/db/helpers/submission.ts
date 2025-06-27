@@ -11,3 +11,14 @@ export async function getItemSubmission(userId: string, itemId: string) {
 
 	return rows.length > 0 ? rows[0] : null;
 }
+
+export async function getSubmission(userId: string, subId: string) {
+	const rows = await db
+		.select()
+		.from(submissions)
+		.where(and(eq(submissions.user_id, userId), eq(submissions.id, subId)))
+		.limit(1);
+	console.log(userId, subId, rows);
+
+	return rows.length > 0 ? rows[0] : null;
+}

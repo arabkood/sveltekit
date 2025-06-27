@@ -1,5 +1,4 @@
 <script lang="ts">
-	import TopNav from '$ui/exercise/TopNav.svelte';
 	import type { PageData } from './$types';
 	import Header from './Header.svelte';
 	import QuizBody from './QuizBody.svelte';
@@ -11,7 +10,6 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import FailPopup from '$ui/success-popup/FailPopup.svelte';
-	import Icon from '$ui/common/Icon.svelte';
 
 	let {
 		data,
@@ -20,9 +18,6 @@
 		finishPlayer
 	}: { data: PageData; successPlayer?: Sound; failPlayer?: Sound; finishPlayer?: Sound } = $props();
 	const { lesson, track, item, submission } = data;
-
-	let next = $derived(data.nextItemIdx !== null ? data.module.items[data.nextItemIdx] : null);
-	let prev = $derived(data.prevItemIdx !== null ? data.module.items[data.prevItemIdx] : null);
 
 	let currentStepIndex = $state(0);
 	const goToStep = (i: number) => (currentStepIndex = i);
@@ -138,8 +133,6 @@
 <div
 	class="flex min-h-screen flex-col bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
 >
-	<!-- <TopNav nextSlug={next?.slug} prevSlug={prev?.slug} {track} {item} /> -->
-
 	<Header
 		{track}
 		{item}
