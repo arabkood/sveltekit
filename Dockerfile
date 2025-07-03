@@ -1,17 +1,22 @@
 FROM node:18-alpine AS build
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+COPY pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY . .
 
 ENV PUBLIC_APP_ENV=dev
 
-RUN npm run build
+RUN pnpm run build
 
 FROM node:18-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/package*.json ./
+COPY --from=build /app/pnpm-lock.yaml ./
 COPY --from=build /app/build ./build
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/.svelte-kit ./.svelte-kit

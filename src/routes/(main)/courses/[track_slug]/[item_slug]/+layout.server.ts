@@ -42,7 +42,6 @@ export const load: LayoutServerLoad = async ({ locals, params, url, parent }) =>
 		redirect(308, `/courses/${parentData.track.slug}/${item.slug}/${item.type}`);
 	}
 
-	console.log('ORORORORO----------------');
 	const submission = locals.user ? await getItemSubmission(locals.user.id, item.id) : null;
 
 	return {

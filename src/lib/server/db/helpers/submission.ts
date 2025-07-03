@@ -18,7 +18,6 @@ export async function getSubmission(userId: string, subId: string) {
 		.from(submissions)
 		.where(and(eq(submissions.user_id, userId), eq(submissions.id, subId)))
 		.limit(1);
-	console.log(userId, subId, rows);
 
 	return rows.length > 0 ? rows[0] : null;
 }

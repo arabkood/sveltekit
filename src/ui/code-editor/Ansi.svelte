@@ -5,9 +5,9 @@
 
 	const fancyAnsi = new FancyAnsi();
 
-	let { output = 'hello world' } = $props<{ output?: string }>();
+	let { text = 'hello world' }: { text?: string } = $props();
 
-	const colored = fancyAnsi.toHtml(output);
+	const colored = fancyAnsi.toHtml(text);
 </script>
 
 <pre dir="ltr" class="max-h-80 overflow-auto p-4 font-mono text-sm"><code

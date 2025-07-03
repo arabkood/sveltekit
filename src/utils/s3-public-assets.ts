@@ -1,30 +1,14 @@
-import { AWS_REGION, isLocal, S3_PUBLIC_BUCKET_NAME } from '$config';
-
-export function toPublicUrl(path: string, bucket?: string): string {
-	if (!bucket) {
-		bucket = S3_PUBLIC_BUCKET_NAME;
-	}
+export function toPublicUrl(path: string): string {
 	if (!path.startsWith('public://')) {
 		return path;
 	}
 	const key = path.replace('public://', '');
 
-	if (isLocal) {
-		return `https://dev.arabkood.com/s3/${bucket}/${key}`;
-	} else {
-		return `https://${bucket}.s3.${AWS_REGION}.amazonaws.com/${key}`;
-	}
+	return `https://dev.akood.com/s3/${key}`;
 }
 
-export function replacePublicUrls(text: string, bucket?: string): string {
-	if (!bucket) {
-		bucket = S3_PUBLIC_BUCKET_NAME;
-	}
+export function replacePublicUrls(text: string): string {
 	return text.replace(/public:\/\/([\w./-]+)/g, (_, key) => {
-		if (isLocal) {
-			return `https://dev.arabkood.com/s3/${bucket}/${key}`;
-		} else {
-			return `https://${bucket}.s3.${AWS_REGION}.amazonaws.com/${key}`;
-		}
+		return `https://dev.akood.com/s3/${key}`;
 	});
 }

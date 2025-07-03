@@ -2,9 +2,10 @@
 	import '../../app.css';
 	import Navbar from '$ui/shared/Navbar.svelte';
 	import SvgSprite from '$ui/shared/SvgSprite.svelte';
-	import type { Snippet } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 	import { page } from '$app/state';
 	import type { LayoutData } from './$types';
+	import { browser } from '$app/environment';
 
 	let {
 		data,
@@ -13,6 +14,17 @@
 		data: LayoutData;
 		children: Snippet;
 	} = $props();
+
+	onMount(() => {
+		setTimeout(() => {
+			if (data.user && browser) {
+				// @ts-expect-error any
+				window.posthog.identify(data.user.email, {
+					email: data.user.email
+				});
+			}
+		}, 500);
+	});
 
 	const hideNavbarFor = new Set([
 		// '/(main)/courses/[track_slug]/[item_slug]/lesson',

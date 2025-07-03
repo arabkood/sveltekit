@@ -12,7 +12,7 @@
 	}: {
 		data: PageData;
 	} = $props();
-	console.debug(data);
+	// console.debug(data);
 </script>
 
 <div class="bg-page min-h-screen">

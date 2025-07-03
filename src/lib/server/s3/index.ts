@@ -1,39 +1,27 @@
 import { S3Client, GetObjectCommand, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
-import { AWS_REGION, isLocal } from '$config';
-import { env } from '$env/dynamic/private';
+import { s3 } from '../config';
+import path from 'node:path';
 
-// if (!env.AWS_S3_TOPICS_BUCKET_NAME) {
-// 	throw new Error(
-// 		'Missing AWS_S3_TOPICS_BUCKET_NAME in environment variables. These should be set by your CDK infrastructure.'
-// 	);
-// }
+console.log('Initializing S3Client.');
 
-let localAccessKeyId: string | undefined;
-let localSecretAccessKey: string | undefined;
-
-if (isLocal) {
-	localAccessKeyId = env.AWS_ACCESS_KEY_ID_LOCAL;
-	localSecretAccessKey = env.AWS_SECRET_ACCESS_KEY_LOCAL;
+function ensureUrlHasScheme(url: string) {
+	if (!/^https?:\/\//i.test(url)) {
+		return 'https://' + url;
+	}
+	return url;
 }
 
-let s3Client: S3Client;
-
-if (isLocal && localAccessKeyId && localSecretAccessKey) {
-	console.log('Initializing S3Client with local development credentials.');
-	s3Client = new S3Client({
-		endpoint: 'http://172.17.0.1:4566',
-		region: AWS_REGION,
-		credentials: {
-			accessKeyId: localAccessKeyId,
-			secretAccessKey: localSecretAccessKey
-		}
-	});
-} else {
-	console.log('Initializing S3Client for production (expecting IAM role credentials).');
-	// The SDK will automatically use credentials from the IAM Role
-	s3Client = new S3Client({ region: AWS_REGION });
-}
+const s3Opts = {
+	endpoint: s3.Endpoint ? ensureUrlHasScheme(s3.Endpoint) : undefined,
+	region: s3.Region,
+	credentials: {
+		accessKeyId: s3.AccessKeyId,
+		secretAccessKey: s3.SecretAccessKey
+	},
+	forcePathStyle: true
+};
+const s3Client = new S3Client(s3Opts);
 
 /**
  * Helper function to convert a Node.js Readable stream to a string.
@@ -64,8 +52,9 @@ async function streamToBuffer(stream: Readable): Promise<Buffer> {
 }
 
 /**
- * Reads an object from S3 and returns its content as a string.
- * @param key The key of the object in S3.
+ * Reads an object from Object Storage and returns its content as a string.
+ * @param bucketName The name of the bucket
+ * @param key The key of the object in the bucket.
  * @returns The object content as a string, or null if not found or an error occurs.
  */
 export async function getS3ObjectAsString(bucketName: string, key: string): Promise<string | null> {
@@ -79,23 +68,24 @@ export async function getS3ObjectAsString(bucketName: string, key: string): Prom
 		if (output.Body instanceof Readable) {
 			return await streamToString(output.Body);
 		} else {
-			console.error('S3 GetObjectCommand did not return a readable stream for key:', key);
-			return null; // Or throw an error
+			console.error('GetObjectCommand did not return a readable stream for key:', key);
+			return null;
 		}
 	} catch (error: any) {
 		if (error.name === 'NoSuchKey') {
-			console.warn(`S3 object not found for key: ${key}`);
+			console.warn(`Object not found for key: ${key}`);
 			return null;
 		}
-		console.error('Error getting object from S3:', error);
+		console.error('Error getting object from Object Storage:', error);
 		return null;
 	}
 }
 
 /**
- * Reads an object from S3 and returns its content as a Buffer.
+ * Reads an object from Object Storage and returns its content as a Buffer.
  * Useful for binary files like images, PDFs, etc.
- * @param key The key of the object in S3.
+ * @param bucketName The name of the bucket
+ * @param key The key of the object in the bucket.
  * @returns The object content as a Buffer, or null if not found or an error occurs.
  */
 export async function getS3ObjectAsBuffer(bucketName: string, key: string): Promise<Buffer | null> {
@@ -109,15 +99,15 @@ export async function getS3ObjectAsBuffer(bucketName: string, key: string): Prom
 		if (output.Body instanceof Readable) {
 			return await streamToBuffer(output.Body);
 		} else {
-			console.error('S3 GetObjectCommand did not return a readable stream for key:', key);
+			console.error('GetObjectCommand did not return a readable stream for key:', key);
 			return null;
 		}
 	} catch (error: any) {
 		if (error.name === 'NoSuchKey') {
-			console.warn(`S3 object not found for key: ${key}`);
+			console.warn(`Object not found for key: ${key}`);
 			return null;
 		}
-		console.error('Error getting object from S3:', error);
+		console.error('Error getting object from Object Storage:', error);
 		return null;
 	}
 }
@@ -128,10 +118,12 @@ export interface S3StreamResult {
 	contentLength?: number;
 	eTag?: string;
 }
+
 /**
  * For very large files, you might want to stream the response directly
  * if you're building an API endpoint.
- * @param key The key of the object in S3.
+ * @param bucketName The name of the bucket
+ * @param key The key of the object in the bucket.
  * @returns An object containing the readable stream and content type, or null.
  */
 export async function getS3ObjectStream(
@@ -149,21 +141,22 @@ export async function getS3ObjectStream(
 		if (Body instanceof Readable) {
 			return { stream: Body, contentType: ContentType, contentLength: ContentLength, eTag: ETag };
 		}
-		console.error('S3 GetObjectCommand did not return a readable stream for key:', key);
+		console.error('GetObjectCommand did not return a readable stream for key:', key);
 		return null;
 	} catch (error: any) {
 		if (error.name === 'NoSuchKey') {
-			console.warn(`S3 object not found for key: ${key}`);
+			console.warn(`Object not found for key: ${key}`);
 			return null;
 		}
-		console.error('Error getting object stream from S3:', error);
+		console.error('Error getting object stream from Object Storage:', error);
 		return null;
 	}
 }
 
+// Helper functions using the topics bucket
 export const getS3TopicObjectStream = (key: string) =>
-	getS3ObjectStream(env.AWS_S3_TOPICS_BUCKET_NAME!, key);
+	getS3ObjectStream(s3.PvBucketName, path.normalize(path.join('topics', key)));
 export const getS3TopicObjectAsString = (key: string) =>
-	getS3ObjectAsString(env.AWS_S3_TOPICS_BUCKET_NAME!, key);
+	getS3ObjectAsString(s3.PvBucketName, path.normalize(path.join('topics', key)));
 export const getS3TopicObjectAsBuffer = (key: string) =>
-	getS3ObjectAsBuffer(env.AWS_S3_TOPICS_BUCKET_NAME!, key);
+	getS3ObjectAsBuffer(s3.PvBucketName, path.normalize(path.join('topics', key)));

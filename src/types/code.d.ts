@@ -24,8 +24,9 @@ export type CodeFiles = Record<string, string>;
 
 export type TestResult = {
 	name: string;
-	status: 'pass' | 'fail';
+	status: 'error' | 'pass' | 'fail';
 	message?: string;
+	output?: string;
 	test_code?: string;
 };
 
@@ -37,4 +38,11 @@ export type CodeResults = {
 		tests: TestResult[];
 		message?: string;
 	};
+};
+
+export type JobResult = {
+	stdout: string;
+	stderr: string;
+	error: string;
+	exit_code: number;
 };

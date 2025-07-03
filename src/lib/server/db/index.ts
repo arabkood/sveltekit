@@ -1,4 +1,5 @@
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { env } from '$env/dynamic/private';
 import pg from 'pg';
 
 const { Pool } = pg;
@@ -12,34 +13,16 @@ export function initDB(): NodePgDatabase {
 
 	console.log('Initializing new database connection...');
 
-	const dbName = process.env.ARABKOOD_DATABASE_DBNAME;
-	const user = process.env.ARABKOOD_DATABASE_USER;
-	const host = process.env.ARABKOOD_DATABASE_HOST;
-	const password = process.env.ARABKOOD_DATABASE_PASSWORD;
-	const port = process.env.ARABKOOD_DATABASE_PORT;
-	const ssl = process.env.ARABKOOD_DATABASE_SSL;
+	const dbURL = env.DATABASE_URL;
 
-	if (!dbName || !user || !host || !password) {
-		console.error(
-			'FATAL: Missing required database environment variables (DBNAME, USER, HOST, PASSWORD). Cannot initialize database.',
-			{ dbname: !!dbName, user: !!user, host: !!host, password: !!password }
-		);
-		throw new Error('Database configuration is incomplete.');
+	if (!dbURL) {
+		console.error('FATAL: Missing required database environment variables DATABASE_URL');
+		// throw new Error('Database configuration is incomplete.');
 	}
 
 	try {
 		const pool = new Pool({
-			database: dbName,
-			user: user,
-			host: host,
-			password: password,
-			port: Number(port || 5432),
-			ssl:
-				ssl === 'none'
-					? undefined
-					: {
-							rejectUnauthorized: false
-						}
+			connectionString: dbURL
 		});
 
 		pool.on('error', (err) => {

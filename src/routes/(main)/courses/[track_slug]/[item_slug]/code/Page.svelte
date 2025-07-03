@@ -1,139 +1,142 @@
 <script lang="ts">
-	import Icon from '$ui/common/Icon.svelte';
+	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import { cn } from '$utils/classnames';
+	import { API_ENDPOINTS } from '$api/config';
+
+	import Icon from '$ui/common/Icon.svelte';
+	import Logo from '$ui/common/Logo.svelte';
 	import SplitPane from '$ui/common/SplitPane.svelte';
 	import Problem from '$ui/code-editor/Problem.svelte';
 	import CodeEditor from '$ui/code-editor/monaco.svelte';
 	import Loading from '$ui/code-editor/Loading.svelte';
 	import ResultsPanel from '$ui/code-editor/ResultsPanel.svelte';
-	import { API_ENDPOINTS } from '$api/config';
-	import type { ApiError } from '$types/api';
 	import SuccessPopup from '$ui/code-editor/SuccessPopup.svelte';
-	import { onMount } from 'svelte';
-	import { cn } from '$utils/classnames';
+
 	import type { PageData } from './$types';
-	import type { CodeFiles, CodeResults } from '$types/code';
-	import Logo from '$ui/common/Logo.svelte';
+	import type { ApiError } from '$types/api';
+	import { i18n } from '$i18n/i18n';
+	import type { Submission } from '$lib/server/db/schema/submission';
 
-	let {
-		submission,
-		data
-	}: { submission?: { files: CodeFiles; results: CodeResults }; data: PageData } = $props();
+	// --- Constants ---
+	const ATTEMPT_COOLDOWN_SECONDS = 3;
+	const POLLING_INITIAL_DELAY_MS = 1000;
+	const POLLING_BACKOFF_FACTOR = 1.5;
+	const POLLING_MAX_DELAY_MS = 4000;
+	const POLLING_MAX_ATTEMPTS = 20;
 
-	const ATTEMPT_COOLDOWN = 2;
+	// --- Props ---
+	let { data }: { data: PageData } = $props();
 
-	let status: 'idle' | 'loading' | 'end' = $state('idle');
-	let files = $state<CodeFiles>(data.code.files);
-	let results = $state<CodeResults>();
-	let submissionRes = $state();
+	// --- State ---
+	let status: 'idle' | 'loading' | 'success' | 'error' = $state('idle');
+	let error = $state<string | null>(null);
 	let showSuccessPopup = $state(false);
 	let cooldown = $state(0);
 	let isMobile = $state(false);
 	let activeView: 'problem' | 'code' | 'output' = $state('problem');
+	let newSubmission = $state<Submission>();
 
-	let next = $derived(data.nextItemIdx ? data.module.items[data.nextItemIdx] : null);
-	let prev = $derived(data.prevItemIdx ? data.module.items[data.prevItemIdx] : null);
+	// --- Derived State ---
+	let files = $derived((data.submission?.data as any)?.files ?? data.code.files);
+	let nextItem = $derived(data.nextItemIdx ? data.module.items[data.nextItemIdx] : null);
+	let prevItem = $derived(data.prevItemIdx ? data.module.items[data.prevItemIdx] : null);
+	let submission: Submission | undefined = $derived(
+		newSubmission ? newSubmission : data.submission ? data.submission : undefined
+	);
+	let canSubmit = $derived(submission?.status !== 'pass');
 
-	$effect(() => {
-		if (submission) {
-			files = submission.files;
-		}
-	});
-
-	$effect(() => {
-		if (submission?.results) {
-			results = submission.results;
-		} else {
-			results = undefined;
-		}
-	});
-
+	// --- Lifecycle ---
 	onMount(() => {
-		const i = setInterval(() => {
-			if (cooldown >= 0) {
-				if (!(cooldown == 0 && status !== 'idle')) {
-					cooldown--;
-				}
+		const timer = setInterval(() => {
+			if (cooldown > 0) {
+				cooldown--;
 			}
 		}, 1000);
 
 		const mediaQuery = window.matchMedia('(max-width: 1023px)');
 		isMobile = mediaQuery.matches;
+
 		const updateIsMobile = (e: MediaQueryListEvent) => (isMobile = e.matches);
 		mediaQuery.addEventListener('change', updateIsMobile);
 
 		return () => {
-			clearInterval(i);
+			clearInterval(timer);
 			mediaQuery.removeEventListener('change', updateIsMobile);
 		};
 	});
 
-	async function attempt() {
-		if (!data.item.id || cooldown >= 0) {
-			return;
-		}
+	// --- Logic ---
+	async function runSubmission() {
+		if (status === 'loading' || cooldown > 0) return;
+
 		status = 'loading';
+		error = null;
 		if (isMobile) {
 			activeView = 'output';
 		}
-		cooldown = ATTEMPT_COOLDOWN;
-		const response = await fetch(API_ENDPOINTS.item.submit(data.item.id), {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ data: { files } }),
-			credentials: 'include'
-		});
+		cooldown = ATTEMPT_COOLDOWN_SECONDS;
 
-		if (!response.ok) {
-			const error: ApiError = await response.json();
-			alert('Something went wrong, check console for details');
-			console.error('KOOD', error);
-			return;
+		try {
+			const initialResponse = await fetch(API_ENDPOINTS.item.submit(data.item.id), {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ data: { files } }),
+				credentials: 'include'
+			});
+
+			if (!initialResponse.ok) {
+				const apiError: ApiError = await initialResponse.json();
+				throw new Error(i18n.error(apiError.error) || 'Failed to submit solution.');
+			}
+
+			const res1 = await initialResponse.json();
+			const res2 = await pollForResult(res1.submission.id);
+
+			newSubmission = res2;
+
+			status = 'success';
+
+			const allTestsPassed =
+				res2.results?.tests?.every((test: any) => test.status === 'pass') ?? false;
+			if (allTestsPassed) {
+				showSuccessPopup = true;
+			}
+		} catch (e) {
+			console.error('Submission failed:', e);
+			error = (e as Error).message || 'INTERNAL_ERROR';
+			status = 'error';
+		} finally {
+			if (status !== 'loading') {
+				status = 'idle';
+			}
 		}
-
-		const { submission: res } = await response.json();
-		submissionRes = res;
-		setTimeout(() => {
-			checkSubmission(res.id);
-		}, 2000);
 	}
 
-	const checkSubmission = async (subId: string, attempts = 0) => {
-		if (!subId) {
-			return;
+	async function pollForResult(submissionId: string, attempt = 0): Promise<any> {
+		if (attempt >= POLLING_MAX_ATTEMPTS) {
+			throw new Error('Submission timed out. Please try again.');
 		}
-		const response = await fetch(`/server/submission?id=${encodeURIComponent(subId)}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-		const { submission: res } = await response.json();
-		submissionRes = res;
 
-		if (res?.status === 'wait') {
-			const delay = Math.min(Math.pow(1.5, attempts) * 1000, 5000);
+		const delay = Math.min(
+			POLLING_INITIAL_DELAY_MS * Math.pow(POLLING_BACKOFF_FACTOR, attempt),
+			POLLING_MAX_DELAY_MS
+		);
+		await new Promise((resolve) => setTimeout(resolve, delay));
 
-			if (attempts < 30) {
-				setTimeout(() => checkSubmission(subId, attempts + 1), delay);
-			} else {
-				throw new Error('Submission timeout');
-			}
-		} else {
-			status = 'end';
-			setTimeout(() => {
-				status = 'idle';
-				const testCases = res?.results?.tests || [];
-				const allTestsPassed =
-					testCases.length > 0 && testCases.every((test) => test.status === 'pass');
-
-				if (allTestsPassed) {
-					showSuccessPopup = true;
-				}
-			}, 500);
-			return res;
+		const response = await fetch(`/server/submission?id=${encodeURIComponent(submissionId)}`);
+		if (!response.ok) {
+			throw new Error('Could not fetch submission status.');
 		}
-	};
+
+		const { submission: sub } = await response.json();
+
+		if (sub.status === 'pending') {
+			return pollForResult(submissionId, attempt + 1);
+		}
+
+		return sub;
+	}
 
 	function closeSuccessPopup() {
 		showSuccessPopup = false;
@@ -152,7 +155,6 @@
 			>
 				<Logo variant="iconOnly" size={26} />
 			</a>
-
 			<nav class="hidden min-w-0 items-center gap-1 text-sm md:flex">
 				<a
 					class="truncate rounded px-2 py-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
@@ -165,7 +167,6 @@
 					title={data.item.title}>{data.item.title}</span
 				>
 			</nav>
-
 			<div class="flex min-w-0 items-center md:hidden">
 				<a
 					href={`/courses/${data.track?.slug}`}
@@ -189,42 +190,20 @@
 				transition:fade
 				class={cn(
 					'flex items-center gap-2 rounded-lg px-3 py-1.5 font-medium transition-colors',
-					cooldown >= 0
+					status === 'loading' || cooldown > 0 || !canSubmit
 						? 'cursor-not-allowed text-gray-600 dark:text-gray-400'
 						: 'cursor-pointer text-emerald-600 hover:bg-gray-500/10 dark:text-emerald-400'
 				)}
-				onclick={cooldown >= 0 ? undefined : attempt}
-				disabled={cooldown >= 0}
+				onclick={runSubmission}
+				disabled={status === 'loading' || cooldown > 0 || !canSubmit}
 			>
 				<Icon name="play" class="h-4 w-4 sm:h-5 sm:w-5" />
 				<span class="text-sm sm:text-base">تصحيح الإجابة</span>
-				{#if cooldown > 0 && status == 'idle'}
+				{#if cooldown > 0 && status === 'idle'}
 					<span>({cooldown})</span>
 				{/if}
 			</button>
 		</div>
-
-		<!-- <div class="flex shrink-0 items-center justify-end gap-1"> -->
-		<!-- 	<a -->
-		<!-- 		href={`/courses/${data.track?.slug}/${prev?.slug}`} -->
-		<!-- 		class="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100" -->
-		<!-- 		class:pointer-events-none={!prev?.slug} -->
-		<!-- 		class:opacity-50={!prev?.slug} -->
-		<!-- 		aria-label="Previous item" -->
-		<!-- 	> -->
-		<!-- 		<Icon name="chevron-right" size={22} /> -->
-		<!-- 	</a> -->
-		<!---->
-		<!-- 	<a -->
-		<!-- 		href={`/courses/${data.track?.slug}/${next?.slug}`} -->
-		<!-- 		class="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100" -->
-		<!-- 		class:pointer-events-none={!next?.slug} -->
-		<!-- 		class:opacity-50={!next?.slug} -->
-		<!-- 		aria-label="Next item" -->
-		<!-- 	> -->
-		<!-- 		<Icon name="chevron-left" size={22} /> -->
-		<!-- 	</a> -->
-		<!-- </div> -->
 	</header>
 
 	<div class="hidden flex-1 flex-col overflow-hidden md:flex">
@@ -258,8 +237,8 @@
 						{#snippet b()}
 							<section class="bg-page h-full overflow-auto dark:bg-gray-900">
 								<Loading {status} estimatedSeconds={3} />
-								{#if status == 'idle'}
-									<ResultsPanel {results} />
+								{#if status !== 'loading'}
+									<ResultsPanel {submission} {error} />
 								{/if}
 							</section>
 						{/snippet}
@@ -282,8 +261,8 @@
 			{:else if activeView === 'output'}
 				<div class="p-4">
 					<Loading {status} estimatedSeconds={3} />
-					{#if status == 'idle'}
-						<ResultsPanel {results} />
+					{#if status !== 'loading'}
+						<ResultsPanel {submission} {error} />
 					{/if}
 				</div>
 			{/if}
@@ -329,7 +308,7 @@
 	<SuccessPopup
 		visible={showSuccessPopup}
 		onClose={closeSuccessPopup}
-		nextHref={next?.slug ? `/courses/${data?.track.slug}/${next?.slug}` : undefined}
-		score={results?.xp_reward || 0}
+		nextHref={nextItem?.slug ? `/courses/${data?.track.slug}/${nextItem?.slug}` : undefined}
+		score={submission?.xp_reward ?? 0}
 	/>
 </main>

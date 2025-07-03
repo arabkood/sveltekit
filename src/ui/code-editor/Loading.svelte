@@ -5,14 +5,14 @@
 		status = 'idle',
 		estimatedSeconds = 5
 	}: {
-		status?: 'idle' | 'loading' | 'end';
+		status?: 'idle' | 'loading' | 'success' | 'error';
 		estimatedSeconds?: number;
 	} = $props();
 
 	let showLoader = $state(status != 'idle');
 	let statusText = $state('جاري إجراء الاختبارات...');
 	let timeEstimate = $state(`الوقت المتوقع: حوالي ${estimatedSeconds} ثوانٍ`);
-	let progressInterval: number | undefined = $state();
+	let progressInterval: ReturnType<typeof setInterval> | undefined = $state();
 	let fullBar = $state(false);
 
 	function startFakeProgress(): void {
@@ -39,8 +39,8 @@
 				showLoader = true;
 				startFakeProgress();
 				break;
-			case 'end':
-				showLoader = true;
+			case 'success':
+			case 'error':
 				clearInterval(progressInterval);
 				statusText = 'تم إنهاء العملية';
 				fullBar = true;

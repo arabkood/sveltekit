@@ -1,7 +1,17 @@
 <script lang="ts">
 	import { API_ENDPOINTS } from '$api/config';
+	import { browser } from '$app/environment';
 	import { goto, invalidateAll } from '$app/navigation';
 	import { onMount } from 'svelte';
+
+	onMount(() => {
+		if (browser) {
+			setTimeout(() => {
+				// @ts-expect-error any
+				window.posthog.reset();
+			}, 100);
+		}
+	});
 
 	async function handleSignOut() {
 		try {
