@@ -12,7 +12,7 @@
 		redirectUrl: string;
 	} = $props();
 
-	function handleNavigation(authPath: '/auth/signup' | '/auth/signin') {
+	function handleNavigation(authPath: '/signup' | '/signin') {
 		if (typeof window !== 'undefined') {
 			sessionStorage.setItem('redirectTo', redirectUrl);
 			location.href = authPath;
@@ -66,19 +66,14 @@
 		<!-- Action Buttons -->
 		<div class="mt-8 flex flex-col gap-3">
 			<Button
-				onclick={() => handleNavigation('/auth/signup')}
+				onclick={() => handleNavigation('/signup')}
 				variant="attention"
 				size="lg"
 				class="w-full"
 			>
 				إنشاء حساب جديد
 			</Button>
-			<Button
-				onclick={() => handleNavigation('/auth/signin')}
-				variant="ghost"
-				size="lg"
-				class="w-full"
-			>
+			<Button onclick={() => handleNavigation('/signin')} variant="ghost" size="lg" class="w-full">
 				لدي حساب بالفعل
 			</Button>
 		</div>

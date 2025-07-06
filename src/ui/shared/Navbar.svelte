@@ -375,10 +375,10 @@
 				</div>
 			{:else}
 				<!-- Auth Buttons -->
-				<Button href="/auth/signin" variant="link-pill" size="sm" rounded>
+				<Button href="/signin" variant="link-pill" size="sm" rounded>
 					{i18n.t('navigation.signin')}
 				</Button>
-				<Button href="/auth/signup" variant="attention" size="sm" rounded>
+				<Button href="/signup" variant="attention" size="sm" rounded>
 					{i18n.t('navigation.signup')}
 				</Button>
 			{/if}
@@ -463,7 +463,7 @@
 					<!-- Mobile Auth Buttons -->
 					<div class="mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-gray-700">
 						<Button
-							href="/auth/signup"
+							href="/signup"
 							variant="default"
 							size="sm"
 							class="flex w-full items-center justify-center"
@@ -472,7 +472,7 @@
 							{i18n.t('navigation.signup')}
 						</Button>
 						<Button
-							href="/auth/login"
+							href="/signin"
 							variant="ghost"
 							size="sm"
 							class="flex w-full items-center justify-center"
