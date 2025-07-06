@@ -119,7 +119,7 @@
 }
 
 .markdown-body ol {
-	list-style-type: lower-latin;
+	list-style-type: decimal;
 }
 
 .markdown-body ul {

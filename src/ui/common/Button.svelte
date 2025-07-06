@@ -3,6 +3,7 @@
 	import type { Snippet } from 'svelte';
 	import Icon from './Icon.svelte';
 	import type { IconId } from '$ui/shared/SvgSprite.svelte';
+	import Spinner from './Spinner.svelte';
 
 	type Variant =
 		| 'default'
@@ -68,8 +69,9 @@
     bg-primary-500 text-white shadow-lg shadow-primary-500/20 
     hover:bg-primary-600 hover:shadow-xl hover:shadow-primary-600/20
     focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
-    disabled:bg-primary-300 disabled:text-white/70 disabled:shadow-none
+    disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed
     dark:bg-primary-500 dark:hover:bg-primary-600 dark:shadow-primary-600/30
+    dark:disabled:bg-gray-700 dark:disabled:text-gray-400
   `,
 		destructive: `
     bg-rose-500 text-white shadow-lg shadow-rose-500/20 
@@ -203,20 +205,7 @@
 
 {#snippet inner()}
 	{#if loading}
-		<svg
-			class={cn('animate-spin', startIcon ? 'absolute' : '')}
-			xmlns="http://www.w3.org/2000/svg"
-			width={finalIconSize}
-			height={finalIconSize}
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<path d="M21 12a9 9 0 1 1-6.219-8.56" />
-		</svg>
+		<Spinner {size} class="me-2" />
 	{/if}
 
 	{#if startIcon && !loading}

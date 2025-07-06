@@ -5,6 +5,9 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	server: {
-		allowedHosts: ['dev.arabkood.com', 'host.docker.internal']
+		allowedHosts: ['dev.arabkood.com', 'host.docker.internal', 'dev.akood.com'],
+		watch: {
+			usePolling: true
+		}
 	}
 });

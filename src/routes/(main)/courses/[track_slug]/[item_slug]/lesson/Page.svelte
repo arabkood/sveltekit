@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import Header from './Header.svelte';
-	import QuizBody from './QuizBody.svelte';
-	import LessonBody from './LessonBody.svelte';
 	import type { Sound } from '$utils/sound';
 	import SuccessPopup from '$ui/success-popup/SuccessPopup.svelte';
 	import { API_ENDPOINTS } from '$api/config';
@@ -10,6 +8,18 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import FailPopup from '$ui/success-popup/FailPopup.svelte';
+	import Quiz from '$ui/lesson/quiz/Quiz.svelte';
+	import Fill from '$ui/lesson/fill/Fill.svelte';
+	import Lesson from '$ui/lesson/lesson/Lesson.svelte';
+	import Order from '$ui/lesson/order/Order.svelte';
+	import type {
+		BugAnswer,
+		FillAnswer,
+		LessonInteractiveAnswers,
+		OrderAnswer,
+		QuizAnswer
+	} from '$types/lesson';
+	import Bug from '$ui/lesson/bug/Bug.svelte';
 
 	let {
 		data,
@@ -23,14 +33,27 @@
 	const goToStep = (i: number) => (currentStepIndex = i);
 	const currentStep = $derived(lesson.steps[currentStepIndex]);
 
-	const getInitialAnswers = () => {
+	const getInitialAnswers = (): LessonInteractiveAnswers => {
 		if (submission?.status === 'pass') {
-			return (submission?.data as any).answers as any[];
+			return (submission?.data as any).answers as LessonInteractiveAnswers;
 		}
-		return [];
+		return lesson.steps.map((s) => {
+			if (typeof s === 'object') {
+				if (s.type === 'fill') {
+					return new Array(s.solution.length).fill('');
+				} else if (s.type === 'order') {
+					return new Array(s.code.length);
+				} else if (s.type === 'quiz') {
+					return -1;
+				} else if (s.type === 'bug') {
+					return -1;
+				}
+			}
+			return null;
+		});
 	};
-	let answers = $state<any[]>(getInitialAnswers());
-	const answer = $derived(answers[currentStepIndex]);
+
+	let answers = $state<LessonInteractiveAnswers>(getInitialAnswers());
 
 	let result = $state({
 		showPopup: false,
@@ -38,24 +61,7 @@
 		status: 'wait'
 	});
 
-	const setAnswer = (a: any) => (answers[currentStepIndex] = a);
-
-	let percentCorrect = $derived(
-		(() => {
-			const correct = lesson.steps.reduce((prev, currV, currI) => {
-				if (typeof currV === 'string') {
-					return prev + 1;
-				}
-				if (Object.hasOwn(currV, 'solution')) {
-					if (currV.solution == answers[currI]) {
-						return prev + 1;
-					}
-				}
-				return prev;
-			}, 0);
-			return correct > 0 ? Math.min(Math.round((correct / lesson.steps.length) * 100), 100) : 0;
-		})()
-	);
+	let percentCorrect = 100;
 	let gainedXp = $derived((percentCorrect / 100) * item.base_xp);
 
 	async function submit() {
@@ -112,6 +118,10 @@
 			window.scrollTo(0, 0);
 		}, 100);
 	});
+
+	$effect(() => {
+		console.log(answers);
+	});
 </script>
 
 {#if result.showPopup}
@@ -143,18 +153,43 @@
 	<div class="flex flex-1 flex-col items-center justify-center p-4">
 		{#if typeof currentStep !== 'string'}
 			{#key currentStep}
-				<QuizBody
-					{successPlayer}
-					{failPlayer}
-					{answer}
-					{setAnswer}
-					step={currentStep}
-					onNext={handleNext}
-				/>
+				{#if currentStep.type === 'fill'}
+					<Fill
+						bind:answer={answers[currentStepIndex] as FillAnswer}
+						{successPlayer}
+						{failPlayer}
+						step={currentStep}
+						onNext={handleNext}
+					/>
+				{:else if currentStep.type === 'quiz'}
+					<Quiz
+						bind:answer={answers[currentStepIndex] as QuizAnswer}
+						{successPlayer}
+						{failPlayer}
+						step={currentStep}
+						onNext={handleNext}
+					/>
+				{:else if currentStep.type === 'order'}
+					<Order
+						bind:answer={answers[currentStepIndex] as OrderAnswer}
+						{successPlayer}
+						{failPlayer}
+						step={currentStep}
+						onNext={handleNext}
+					/>
+				{:else if currentStep.type === 'bug'}
+					<Bug
+						bind:answer={answers[currentStepIndex] as BugAnswer}
+						{successPlayer}
+						{failPlayer}
+						step={currentStep}
+						onNext={handleNext}
+					/>
+				{/if}
 			{/key}
 		{/if}
 		{#if typeof currentStep === 'string'}
-			<LessonBody step={currentStep} onNext={handleNext} />
+			<Lesson step={currentStep} onNext={handleNext} />
 		{/if}
 	</div>
 </div>

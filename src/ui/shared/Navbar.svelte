@@ -114,7 +114,8 @@
 	const rankInfo = $derived(RANKS.find((r) => currentLevel >= r.minLevel)!);
 	const links = [
 		{ name: i18n.t('navigation.dashboard'), href: '/dashboard', icon: 'dashboard' },
-		{ name: i18n.t('navigation.exploreTracks'), href: '/courses', icon: 'book-open' }
+		{ name: i18n.t('navigation.exploreTracks'), href: '/courses', icon: 'book-open' },
+		{ name: i18n.t('navigation.glossary'), href: '/pages/glossary', icon: 'search' }
 	];
 	const activePath = $derived(page.url.pathname);
 

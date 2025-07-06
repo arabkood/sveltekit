@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { LessonMarkdown } from '$types/lesson';
 	import Markdown from '$ui/common/Markdown.svelte';
-	import QuizFooter from './QuizFooter.svelte';
+	import QuizFooter from '../quiz/QuizFooter.svelte';
 
 	const {
 		step,
@@ -12,6 +12,7 @@
 	} = $props();
 
 	let status = $state<'idle' | 'success' | 'fail' | 'explanation'>('idle');
+	console.log(step);
 </script>
 
 <main

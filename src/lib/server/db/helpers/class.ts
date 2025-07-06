@@ -102,7 +102,7 @@ export async function getTrackBySlug(slug: string, userId: string) {
 			return acc;
 		},
 		{
-			track: rows[0].tracks,
+			track: rows[0]?.tracks,
 			modules: {}
 		}
 	);

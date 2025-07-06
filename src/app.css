@@ -67,6 +67,27 @@
 	--font-family-arabic:
 		'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Sans Arabic', 'Segoe UI', Tahoma,
 		'Traditional Arabic', 'Arabic Typesetting', sans-serif;
+
+	--animate-shake: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+	@keyframes shake {
+		10%,
+		90% {
+			transform: translate3d(-1px, 0, 0);
+		}
+		20%,
+		80% {
+			transform: translate3d(2px, 0, 0);
+		}
+		30%,
+		50%,
+		70% {
+			transform: translate3d(-4px, 0, 0);
+		}
+		40%,
+		60% {
+			transform: translate3d(4px, 0, 0);
+		}
+	}
 }
 
 @layer utilities {
@@ -88,6 +109,16 @@
 
 	.bg-clickable-primary {
 		@apply bg-primary-500 dark:bg-primary-600 dark:text-primary-50 hover:bg-primary-600 dark:hover:bg-primary-500 active:bg-primary-700 dark:active:bg-primary-400 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-300 rounded-md px-4 py-2 text-white transition-colors duration-150 ease-in-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-gray-900;
+	}
+}
+
+body {
+	color: var(--color-gray-900);
+	background-color: var(--color-gray-50);
+
+	@media (prefers-color-scheme: dark) {
+		color: var(--color-gray-50);
+		background-color: var(--color-gray-900);
 	}
 }
 

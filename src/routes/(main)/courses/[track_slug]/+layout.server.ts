@@ -7,7 +7,7 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		error(404, 'Not found');
 	}
 	const trackWithModules = await getTrackBySlug(params.track_slug, locals.user!.id);
-	if (!trackWithModules) {
+	if (!trackWithModules.track) {
 		error(404, 'Not found');
 	}
 

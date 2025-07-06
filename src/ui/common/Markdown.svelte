@@ -18,7 +18,8 @@
 		DOMPurify.sanitize(
 			marked.parse(markdown, {
 				async: false
-			})
+			}),
+			{ ADD_ATTR: ['target'] }
 		)
 	);
 	let classes = $state('markdown-body');

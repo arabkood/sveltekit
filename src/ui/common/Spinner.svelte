@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { cn } from '$utils/classnames';
-
 	type Size = 'sm' | 'md' | 'lg' | 'xl';
 	type Variant = 'primary' | 'secondary' | 'destructive' | 'current';
-
 	let {
 		class: className = '',
 		size = 'md',
@@ -19,31 +17,26 @@
 		label?: string;
 		[key: string]: unknown;
 	} = $props();
-
 	const defaultSizes = {
 		sm: 16,
 		md: 24,
 		lg: 32,
 		xl: 48
 	};
-
 	const defaultThicknesses = {
 		sm: 2,
 		md: 3,
 		lg: 3,
 		xl: 4
 	};
-
 	const finalSize = $derived(defaultSizes[size]);
 	const finalThickness = $derived(thickness ?? defaultThicknesses[size]);
-
 	const variantClasses = {
 		primary: 'text-primary-500',
 		secondary: 'text-gray-500',
 		destructive: 'text-red-500',
 		current: 'text-current'
 	};
-
 	const spinnerClasses = $derived(
 		cn('inline-block animate-spin', variantClasses[variant], className)
 	);
@@ -64,5 +57,6 @@
 	aria-label={label}
 	{...props}
 >
+	<circle cx="12" cy="12" r="9" opacity="0.25" />
 	<path d="M21 12a9 9 0 1 1-6.219-8.56" />
 </svg>

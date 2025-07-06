@@ -1,12 +1,20 @@
-import { Marked } from 'marked';
+import { Marked, type RendererObject } from 'marked';
 import markedAlert from 'marked-alert';
 import hljs from 'highlight.js';
 
 import { glossary } from './ext/glossary';
 import { markedHighlight } from './ext/code';
 
+const renderer: RendererObject = {
+	link(t) {
+		const link = marked.Renderer.prototype.link.call(this, t);
+		return link.replace('<a', "<a target='_blank' rel='noreferrer' ");
+	}
+};
+
 export const marked = new Marked({
-	gfm: true
+	gfm: true,
+	renderer
 })
 	.use(
 		markedHighlight({
