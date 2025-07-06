@@ -3,11 +3,12 @@
 	import Header from './Header.svelte';
 	import type { Sound } from '$utils/sound';
 	import SuccessPopup from '$ui/success-popup/SuccessPopup.svelte';
+	import FailPopup from '$ui/success-popup/FailPopup.svelte';
+	import SignupPopup from '$ui/popup/SignupPopup.svelte';
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import FailPopup from '$ui/success-popup/FailPopup.svelte';
 	import Quiz from '$ui/lesson/quiz/Quiz.svelte';
 	import Fill from '$ui/lesson/fill/Fill.svelte';
 	import Lesson from '$ui/lesson/lesson/Lesson.svelte';
@@ -27,7 +28,8 @@
 		failPlayer,
 		finishPlayer
 	}: { data: PageData; successPlayer?: Sound; failPlayer?: Sound; finishPlayer?: Sound } = $props();
-	const { lesson, track, item, submission } = data;
+
+	const { lesson, track, item, submission, user } = data;
 
 	let currentStepIndex = $state(0);
 	const goToStep = (i: number) => (currentStepIndex = i);
@@ -61,11 +63,19 @@
 		status: 'wait'
 	});
 
+	let showSignupPopup = $state(false);
+
 	let percentCorrect = 100;
 	let gainedXp = $derived((percentCorrect / 100) * item.base_xp);
 
 	async function submit() {
 		if (!item.id || currentStepIndex < lesson.steps.length - 1) {
+			return;
+		}
+
+		// Check for a logged-in user before submitting
+		if (!user) {
+			showSignupPopup = true;
 			return;
 		}
 
@@ -123,6 +133,10 @@
 		console.log(answers);
 	});
 </script>
+
+{#if showSignupPopup}
+	<SignupPopup onClose={() => (showSignupPopup = false)} redirectUrl={`/courses/${track.slug}`} />
+{/if}
 
 {#if result.showPopup}
 	{#if result.status === 'pass'}

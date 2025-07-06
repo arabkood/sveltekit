@@ -15,7 +15,7 @@
 		user,
 		userStats,
 		transition = true
-	}: { user: SelectUser; userStats: SelectUsersStats; transition?: boolean } = $props();
+	}: { user?: SelectUser; userStats?: SelectUsersStats; transition?: boolean } = $props();
 
 	let isOpen = $state(false);
 	let isHovering = $state(false);
@@ -44,9 +44,9 @@
 		lastScrollY = currentScrollY;
 	};
 
-	const xp = $derived(useXp(userStats.totalXp));
-	const currentLevel = $derived(xp.currentLevel);
-	const progressPercent = $derived(xp.progressPercent);
+	const xp = $derived(userStats ? useXp(userStats.totalXp) : undefined);
+	const currentLevel = $derived(xp?.currentLevel);
+	const progressPercent = $derived(xp?.progressPercent);
 
 	const RANKS = [
 		{
@@ -111,12 +111,19 @@
 		}
 	];
 
-	const rankInfo = $derived(RANKS.find((r) => currentLevel >= r.minLevel)!);
-	const links = [
-		{ name: i18n.t('navigation.dashboard'), href: '/dashboard', icon: 'dashboard' },
-		{ name: i18n.t('navigation.exploreTracks'), href: '/courses', icon: 'book-open' },
-		{ name: i18n.t('navigation.glossary'), href: '/pages/glossary', icon: 'search' }
-	];
+	const rankInfo = $derived(
+		currentLevel !== undefined ? RANKS.find((r) => currentLevel >= r.minLevel)! : undefined
+	);
+	const links = $derived.by(() => {
+		let l = [
+			{ name: i18n.t('navigation.exploreTracks'), href: '/courses', icon: 'book-open' },
+			{ name: i18n.t('navigation.glossary'), href: '/pages/glossary', icon: 'search' }
+		];
+		if (user) {
+			l.unshift({ name: i18n.t('navigation.dashboard'), href: '/dashboard', icon: 'dashboard' });
+		}
+		return l;
+	});
 	const activePath = $derived(page.url.pathname);
 
 	// Enhanced animations and interactions
@@ -218,153 +225,163 @@
 			</div>
 		</div>
 
-		<!-- Right section: Level indicator and user menu -->
-		<div class="hidden items-center gap-3 sm:flex">
-			<!-- Enhanced level indicator with better UX -->
-			<div
-				class="group relative"
-				onmouseenter={() => (isHovering = true)}
-				onmouseleave={() => (isHovering = false)}
-				role="button"
-				tabindex="0"
-				onclick={handleLevelClick}
-				onkeydown={(e) => e.key === 'Enter' && handleLevelClick()}
-				aria-label="View level progress details"
-			>
-				<button
-					class="flex h-10 cursor-pointer items-center gap-3 rounded-xl bg-gradient-to-r from-gray-200/60 to-gray-300/60 ps-2 pe-3 text-black ring-1 ring-gray-300 transition-all duration-300 hover:shadow-xl hover:ring-gray-400 dark:from-gray-800/60 dark:to-gray-900/60 dark:text-white dark:ring-gray-700/50 dark:hover:ring-gray-600 {rankInfo.glow} {isLevelAnimating
-						? 'scale-105 animate-pulse'
-						: ''} backdrop-blur-sm"
+		<!-- Right section: User info or Auth buttons -->
+		<div class="hidden items-center gap-2 sm:flex">
+			{#if user && userStats && rankInfo && currentLevel !== undefined && progressPercent !== undefined && xp}
+				<!-- Enhanced level indicator with better UX -->
+				<div
+					class="group relative"
+					onmouseenter={() => (isHovering = true)}
+					onmouseleave={() => (isHovering = false)}
+					role="button"
+					tabindex="0"
+					onclick={handleLevelClick}
+					onkeydown={(e) => e.key === 'Enter' && handleLevelClick()}
+					aria-label="View level progress details"
 				>
-					<!-- Rank icon and level display -->
-					<div class="flex items-center gap-2">
-						<!-- Level badge with better design -->
-						<div
-							class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} px-2 py-1 shadow-lg"
-						>
-							<span class="text-xs font-bold text-white">مستوى</span>
-							<span class="text-sm font-bold text-white">{currentLevel}</span>
-						</div>
-						<span class="text-lg">{rankInfo.icon}</span>
-					</div>
-
-					<!-- XP display with better typography -->
-					<div class="flex flex-col items-end">
-						<div class="text-sm leading-none font-bold tabular-nums">
-							{userStats.totalXp.toLocaleString()}
-						</div>
-						<div class="text-xs leading-none text-gray-400">XP</div>
-					</div>
-
-					<!-- Progress indicator -->
-					<div class="h-6 w-1 overflow-hidden rounded-full bg-gray-700">
-						<div
-							class="w-full rounded-full bg-gradient-to-t {rankInfo.color} transition-all duration-1000"
-							style="height: {progressPercent}%"
-						></div>
-					</div>
-				</button>
-
-				<!-- Enhanced tooltip with better information architecture -->
-				{#if isHovering}
-					<div
-						class="absolute top-full left-0 z-50 mt-3 w-96 rounded-2xl border border-gray-300/50 bg-white/95 p-6 text-black shadow-2xl backdrop-blur-xl dark:border-white/20 dark:bg-gray-900/95 dark:text-white {rankInfo.glow}"
-						transition:fly={{ y: -10, duration: 300, easing: quintOut }}
-						dir="rtl"
-						role="tooltip"
+					<button
+						class="flex h-10 cursor-pointer items-center gap-3 rounded-xl bg-gradient-to-r from-gray-200/60 to-gray-300/60 ps-2 pe-3 text-black ring-1 ring-gray-300 transition-all duration-300 hover:shadow-xl hover:ring-gray-400 dark:from-gray-800/60 dark:to-gray-900/60 dark:text-white dark:ring-gray-700/50 dark:hover:ring-gray-600 {rankInfo.glow} {isLevelAnimating
+							? 'scale-105 animate-pulse'
+							: ''} backdrop-blur-sm"
 					>
-						<!-- Header with rank info -->
-						<div class="mb-4 flex items-start justify-between">
-							<div class="flex-1">
-								<div class="mb-1 flex items-center gap-2">
-									<span class="text-2xl">{rankInfo.icon}</span>
-									<h3
-										class="bg-gradient-to-r {rankInfo.color} bg-clip-text text-xl font-bold text-transparent"
-									>
-										{rankInfo.title}
-									</h3>
-								</div>
-								<p class="text-sm text-gray-700 dark:text-gray-400">المستوى {currentLevel}</p>
-							</div>
+						<!-- Rank icon and level display -->
+						<div class="flex items-center gap-2">
+							<!-- Level badge with better design -->
 							<div
-								class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} px-3 py-2 shadow-lg"
+								class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} px-2 py-1 shadow-lg"
 							>
 								<span class="text-xs font-bold text-white">مستوى</span>
-								<span class="text-lg font-bold text-white">{currentLevel}</span>
+								<span class="text-sm font-bold text-white">{currentLevel}</span>
 							</div>
+							<span class="text-lg">{rankInfo.icon}</span>
 						</div>
 
-						<!-- Progress section with visual improvements -->
-						<div class="mb-6 {rankInfo.bgColor} rounded-xl p-4">
-							<div class="mb-3 flex justify-between text-sm">
-								<span class="font-medium text-gray-600 dark:text-gray-300"
-									>التقدم للمستوى التالي</span
-								>
-								<span class="font-bold text-black dark:text-white"
-									>{Math.floor(progressPercent)}%</span
-								>
+						<!-- XP display with better typography -->
+						<div class="flex flex-col items-end">
+							<div class="text-sm leading-none font-bold tabular-nums">
+								{userStats.totalXp.toLocaleString()}
 							</div>
+							<div class="text-xs leading-none text-gray-400">XP</div>
+						</div>
 
+						<!-- Progress indicator -->
+						<div class="h-6 w-1 overflow-hidden rounded-full bg-gray-700">
 							<div
-								class="relative h-3 overflow-hidden rounded-full bg-gray-300/50 shadow-inner dark:bg-gray-700/50"
-							>
+								class="w-full rounded-full bg-gradient-to-t {rankInfo.color} transition-all duration-1000"
+								style="height: {progressPercent}%"
+							></div>
+						</div>
+					</button>
+
+					<!-- Enhanced tooltip with better information architecture -->
+					{#if isHovering}
+						<div
+							class="absolute top-full left-0 z-50 mt-3 w-96 rounded-2xl border border-gray-300/50 bg-white/95 p-6 text-black shadow-2xl backdrop-blur-xl dark:border-white/20 dark:bg-gray-900/95 dark:text-white {rankInfo.glow}"
+							transition:fly={{ y: -10, duration: 300, easing: quintOut }}
+							dir="rtl"
+							role="tooltip"
+						>
+							<!-- Header with rank info -->
+							<div class="mb-4 flex items-start justify-between">
+								<div class="flex-1">
+									<div class="mb-1 flex items-center gap-2">
+										<span class="text-2xl">{rankInfo.icon}</span>
+										<h3
+											class="bg-gradient-to-r {rankInfo.color} bg-clip-text text-xl font-bold text-transparent"
+										>
+											{rankInfo.title}
+										</h3>
+									</div>
+									<p class="text-sm text-gray-700 dark:text-gray-400">المستوى {currentLevel}</p>
+								</div>
 								<div
-									class="h-full rounded-full bg-gradient-to-r {rankInfo.color} shadow-sm transition-all duration-1000"
-									style="width: {progressPercent}%"
-								></div>
-								<!-- Shine effect -->
+									class="flex items-center gap-1 rounded-lg bg-gradient-to-br {rankInfo.bgColor} px-3 py-2 shadow-lg"
+								>
+									<span class="text-xs font-bold text-white">مستوى</span>
+									<span class="text-lg font-bold text-white">{currentLevel}</span>
+								</div>
+							</div>
+
+							<!-- Progress section with visual improvements -->
+							<div class="mb-6 {rankInfo.bgColor} rounded-xl p-4">
+								<div class="mb-3 flex justify-between text-sm">
+									<span class="font-medium text-gray-600 dark:text-gray-300"
+										>التقدم للمستوى التالي</span
+									>
+									<span class="font-bold text-black dark:text-white"
+										>{Math.floor(progressPercent)}%</span
+									>
+								</div>
+
 								<div
-									class="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
-								></div>
-							</div>
-						</div>
-
-						<!-- Stats grid with better visual hierarchy -->
-
-						<div class="grid grid-cols-2 gap-4">
-							<div
-								class="rounded-xl border border-gray-300/50 bg-gray-100 p-4 text-center dark:border-gray-700/50 dark:bg-gray-800/60"
-							>
-								<div class="mb-1 text-2xl font-bold text-cyan-600 dark:text-cyan-400">
-									{xp.xpLeftForNextLevel.toLocaleString()}
-								</div>
-								<div class="text-xs font-medium text-gray-700 dark:text-gray-400">
-									XP للمستوى التالي
+									class="relative h-3 overflow-hidden rounded-full bg-gray-300/50 shadow-inner dark:bg-gray-700/50"
+								>
+									<div
+										class="h-full rounded-full bg-gradient-to-r {rankInfo.color} shadow-sm transition-all duration-1000"
+										style="width: {progressPercent}%"
+									></div>
+									<!-- Shine effect -->
+									<div
+										class="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
+									></div>
 								</div>
 							</div>
-							<div
-								class="rounded-xl border border-gray-300/50 bg-gray-100 p-4 text-center dark:border-gray-700/50 dark:bg-gray-800/60"
-							>
-								<div class="mb-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-									{userStats.totalXp.toLocaleString()}
-								</div>
-								<div class="text-xs font-medium text-gray-700 dark:text-gray-400">
-									إجمالي الخبرة
-								</div>
-							</div>
-						</div>
 
-						<!-- Next rank preview -->
-						{#if currentLevel < 100}
-							{@const nextRank = RANKS.find((r) => r.minLevel > currentLevel)}
-							{#if nextRank}
-								<div class="mt-4 border-t border-gray-700/50 pt-4">
-									<div class="flex items-center gap-2 text-sm">
-										<span>الرتبة التالية:</span>
-										<span class="font-semibold">{nextRank.title}</span>
-										<span class="text-lg">{nextRank.icon}</span>
+							<!-- Stats grid with better visual hierarchy -->
+
+							<div class="grid grid-cols-2 gap-4">
+								<div
+									class="rounded-xl border border-gray-300/50 bg-gray-100 p-4 text-center dark:border-gray-700/50 dark:bg-gray-800/60"
+								>
+									<div class="mb-1 text-2xl font-bold text-cyan-600 dark:text-cyan-400">
+										{xp.xpLeftForNextLevel.toLocaleString()}
+									</div>
+									<div class="text-xs font-medium text-gray-700 dark:text-gray-400">
+										XP للمستوى التالي
 									</div>
 								</div>
-							{/if}
-						{/if}
-					</div>
-				{/if}
-			</div>
+								<div
+									class="rounded-xl border border-gray-300/50 bg-gray-100 p-4 text-center dark:border-gray-700/50 dark:bg-gray-800/60"
+								>
+									<div class="mb-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+										{userStats.totalXp.toLocaleString()}
+									</div>
+									<div class="text-xs font-medium text-gray-700 dark:text-gray-400">
+										إجمالي الخبرة
+									</div>
+								</div>
+							</div>
 
-			<!-- User menu with subtle enhancement -->
-			<div class="transition-transform duration-200 hover:scale-105">
-				<NavbarUserMenu {user} />
-			</div>
+							<!-- Next rank preview -->
+							{#if currentLevel < 100}
+								{@const nextRank = RANKS.find((r) => r.minLevel > currentLevel!)}
+								{#if nextRank}
+									<div class="mt-4 border-t border-gray-700/50 pt-4">
+										<div class="flex items-center gap-2 text-sm">
+											<span>الرتبة التالية:</span>
+											<span class="font-semibold">{nextRank.title}</span>
+											<span class="text-lg">{nextRank.icon}</span>
+										</div>
+									</div>
+								{/if}
+							{/if}
+						</div>
+					{/if}
+				</div>
+
+				<!-- User menu with subtle enhancement -->
+				<div class="transition-transform duration-200 hover:scale-105">
+					<NavbarUserMenu {user} />
+				</div>
+			{:else}
+				<!-- Auth Buttons -->
+				<Button href="/auth/signin" variant="link-pill" size="sm" rounded>
+					{i18n.t('navigation.signin')}
+				</Button>
+				<Button href="/auth/signup" variant="attention" size="sm" rounded>
+					{i18n.t('navigation.signup')}
+				</Button>
+			{/if}
 		</div>
 	</div>
 
@@ -372,7 +389,7 @@
 	{#if isOpen}
 		<div
 			transition:slide={{ duration: 300, easing: quintOut }}
-			class="border-t border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/95"
+			class="border-t border-gray-200 bg-white/95 backdrop-blur-sm sm:hidden dark:border-gray-800 dark:bg-gray-900/95"
 			id="mobile-menu"
 		>
 			<div class="px-4 py-4">
@@ -394,53 +411,77 @@
 					{/each}
 				</nav>
 
-				<!-- Mobile profile section -->
-				<div class="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700" dir="rtl">
-					<h3 class="mb-4 px-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-						ملفي الشخصي
-					</h3>
+				{#if user && userStats && rankInfo && currentLevel !== undefined && progressPercent !== undefined && xp}
+					<!-- Mobile profile section -->
+					<div class="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700" dir="rtl">
+						<h3 class="mb-4 px-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+							ملفي الشخصي
+						</h3>
 
-					<NavbarUserMenu {user} variant="mobile" />
+						<NavbarUserMenu {user} variant="mobile" />
 
-					<!-- Mobile level display -->
-					<div class="mt-4 rounded-2xl bg-gradient-to-br {rankInfo.color} p-0.5">
-						<div class="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-							<div class="mb-3 flex items-center justify-between">
-								<div class="flex items-center gap-2">
-									<span class="text-2xl">{rankInfo.icon}</span>
-									<div>
+						<!-- Mobile level display -->
+						<div class="mt-4 rounded-2xl bg-gradient-to-br {rankInfo.color} p-0.5">
+							<div class="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
+								<div class="mb-3 flex items-center justify-between">
+									<div class="flex items-center gap-2">
+										<span class="text-2xl">{rankInfo.icon}</span>
+										<div>
+											<div class="text-sm font-bold text-white">
+												{rankInfo.title}
+											</div>
+											<div class="text-xs text-white/80">
+												المستوى {currentLevel}
+											</div>
+										</div>
+									</div>
+									<div class="text-right">
 										<div class="text-sm font-bold text-white">
-											{rankInfo.title}
+											{userStats.totalXp.toLocaleString()}
 										</div>
-										<div class="text-xs text-white/80">
-											المستوى {currentLevel}
-										</div>
+										<div class="text-xs text-white/80">XP</div>
 									</div>
 								</div>
-								<div class="text-right">
-									<div class="text-sm font-bold text-white">
-										{userStats.totalXp.toLocaleString()}
-									</div>
-									<div class="text-xs text-white/80">XP</div>
-								</div>
-							</div>
 
-							<!-- Mobile progress bar -->
-							<div class="space-y-2">
-								<div class="flex justify-between text-xs text-white/80">
-									<span>التقدم: {Math.floor(progressPercent)}%</span>
-									<span>{xp.xpLeftForNextLevel} للمستوى التالي</span>
-								</div>
-								<div class="h-2 overflow-hidden rounded-full bg-white/20">
-									<div
-										class="h-full rounded-full bg-white/90 transition-all duration-1000"
-										style="width: {progressPercent}%"
-									></div>
+								<!-- Mobile progress bar -->
+								<div class="space-y-2">
+									<div class="flex justify-between text-xs text-white/80">
+										<span>التقدم: {Math.floor(progressPercent)}%</span>
+										<span>{xp.xpLeftForNextLevel} للمستوى التالي</span>
+									</div>
+									<div class="h-2 overflow-hidden rounded-full bg-white/20">
+										<div
+											class="h-full rounded-full bg-white/90 transition-all duration-1000"
+											style="width: {progressPercent}%"
+										></div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				{:else}
+					<!-- Mobile Auth Buttons -->
+					<div class="mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-gray-700">
+						<Button
+							href="/auth/signup"
+							variant="default"
+							size="sm"
+							class="flex w-full items-center justify-center"
+							onclick={() => (isOpen = false)}
+						>
+							{i18n.t('navigation.signup')}
+						</Button>
+						<Button
+							href="/auth/login"
+							variant="ghost"
+							size="sm"
+							class="flex w-full items-center justify-center"
+							onclick={() => (isOpen = false)}
+						>
+							{i18n.t('navigation.signin')}
+						</Button>
+					</div>
+				{/if}
 			</div>
 		</div>
 	{/if}

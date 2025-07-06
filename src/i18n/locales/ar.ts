@@ -170,12 +170,14 @@ export default {
 		BAD_CREDENTIALS: 'اسم المستخدم/البريد الإلكتروني أو كلمة المرور غير صحيحة'
 	},
 	navigation: {
-		dashboard: 'الرئيسية',
+		dashboard: 'لوحة التحكم ',
 		exploreTracks: 'المسارات التعليمية',
 		upgradePlan: 'ترقية العضوية',
 		settings: 'الإعدادات',
 		signout: 'تسجيل الخروج',
-		glossary: 'المصطلحات البرمجية'
+		glossary: 'المصطلحات البرمجية',
+		signin: 'تسجيل الدخول',
+		signup: 'إنشاء حساب جديد'
 	},
 	tracks: {
 		explore: {

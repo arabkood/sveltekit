@@ -1,5 +1,9 @@
 import { redirect } from '@sveltejs/kit';
 
-export function load() {
-	redirect(301, '/dashboard');
+export function load({ locals }) {
+	if (locals.user?.id) {
+		redirect(301, '/dashboard');
+	} else {
+		redirect(301, '/courses');
+	}
 }

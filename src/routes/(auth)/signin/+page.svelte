@@ -57,10 +57,18 @@
 			status = 'success';
 
 			setTimeout(() => {
-				if (data.emailVerified) {
-					location.href = '/';
+				const storedRedirect = sessionStorage.getItem('redirectTo');
+				sessionStorage.removeItem('redirectTo');
+				// Security Check: Ensure the path is internal to our site
+				let finalRedirectUrl = '/dashboard';
+				if (storedRedirect && storedRedirect.startsWith('/')) {
+					finalRedirectUrl = storedRedirect;
+				}
+
+				if (!data.emailVerified) {
+					location.href = '/auth/verify-email';
 				} else {
-					location.href = '/signup/verify-email';
+					location.href = finalRedirectUrl;
 				}
 			}, 1500);
 		}

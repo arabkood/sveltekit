@@ -11,6 +11,7 @@ import {
 	type Item
 } from '../schema/class';
 import { submissions } from '../schema/submission';
+import { sql } from 'drizzle-orm';
 
 export async function getAllCourses() {
 	const rows = await db
@@ -40,7 +41,7 @@ export type GetAllCourses = Record<
 	}
 >;
 
-export async function getTrackBySlug(slug: string, userId: string) {
+export async function getTrackBySlug(slug: string, userId?: string) {
 	const rows = await db
 		.select({
 			tracks,
@@ -59,7 +60,10 @@ export async function getTrackBySlug(slug: string, userId: string) {
 		.where(eq(tracks.slug, slug))
 		.innerJoin(modules, eq(tracks.id, modules.track_id))
 		.innerJoin(items, eq(modules.id, items.module_id))
-		.leftJoin(submissions, and(eq(submissions.item_id, items.id), eq(submissions.user_id, userId)));
+		.leftJoin(
+			submissions,
+			and(eq(submissions.item_id, items.id), userId ? eq(submissions.user_id, userId) : sql`false`)
+		);
 
 	type ItemWithSubmission = Item & {
 		submission?: {
@@ -106,6 +110,10 @@ export async function getTrackBySlug(slug: string, userId: string) {
 			modules: {}
 		}
 	);
+
+	if (!result.track) {
+		return null;
+	}
 
 	const final = {
 		track: result.track,

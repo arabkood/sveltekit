@@ -4,7 +4,9 @@ import { getAllCourses } from '$lib/server/db/helpers/class';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
 	if (!locals.user) {
-		return {};
+		return {
+			courses: await getAllCourses()
+		};
 	}
 	const [courses, userStats, userTracks] = await Promise.all([
 		getAllCourses(),
@@ -14,7 +16,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 	return {
 		courses,
 		user: locals.user,
-		userStats,
+		userStats: userStats || undefined,
 		userTracks
 	};
 };
