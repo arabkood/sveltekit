@@ -7,7 +7,17 @@ export default {
 		correctAnswer: 'الإجابة صحيحة',
 		falseAnswer: 'الإجابة خاطئة',
 		yourAnswerHere: 'إجابتك هنا',
-		chooseAnswer: 'اختر الإجابة الصحيحة'
+		chooseAnswer: 'اختر الإجابة الصحيحة',
+		continue: 'متابعة',
+		tryAgain: 'الإجابة خاطئة. حاول مرة أخرى ',
+		checking: 'جارٍ التحقق...',
+		checkAnswer: 'تحقق من الإجابة',
+		answerHere: 'اكتب هنا',
+		expectedOutput: 'الناتج المتوقع',
+		actualOutput: 'الناتج الفعلي',
+		selectLine: 'اختر سطراً للمتابعة',
+		showHint: 'عرض التلميح',
+		hideHint: 'إخفاء التلميح'
 	},
 	forgotPassword: {
 		success: 'إذا كان البريد الإلكتروني صحيحاً، سنرسل لك رابطاً لإعادة تعيين كلمة المرور',
@@ -28,7 +38,8 @@ export default {
 		signinHere: 'تسجيل الدخول هنا'
 	},
 	site: {
-		logo: 'أكوود'
+		logo: 'أكوود',
+		name: 'أكوود'
 	},
 	signup: {
 		title: 'إنشاء حساب جديد',
@@ -163,7 +174,8 @@ export default {
 		exploreTracks: 'المسارات التعليمية',
 		upgradePlan: 'ترقية العضوية',
 		settings: 'الإعدادات',
-		signout: 'تسجيل الخروج'
+		signout: 'تسجيل الخروج',
+		glossary: 'المصطلحات البرمجية'
 	},
 	tracks: {
 		explore: {
