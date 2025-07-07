@@ -12,7 +12,6 @@
 	} = $props();
 
 	let status = $state<'idle' | 'success' | 'fail' | 'explanation'>('idle');
-	console.log(step);
 </script>
 
 <main

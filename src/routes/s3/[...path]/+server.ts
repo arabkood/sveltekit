@@ -39,7 +39,11 @@ export const GET: RequestHandler = async ({ params }) => {
 			status: 200,
 			headers: {
 				'Content-Type': contentType,
-				'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
+				'Cache-Control': 'public, max-age=3600',
+				'Content-Length': fileBuffer.length.toString(),
+				'Access-Control-Allow-Origin': '*', // or your specific domain
+				'Access-Control-Allow-Methods': 'GET',
+				'Access-Control-Allow-Headers': 'Content-Type'
 			}
 		});
 	} catch (err: any) {

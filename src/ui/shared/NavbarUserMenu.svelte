@@ -129,7 +129,7 @@
 			aria-expanded={showMenu}
 			aria-haspopup="true"
 			aria-controls="user-menu"
-			size="sm"
+			size="md"
 		>
 			<Avatar
 				src={user.avatar || undefined}

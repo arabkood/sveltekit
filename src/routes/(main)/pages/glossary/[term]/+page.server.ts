@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import glossaryData from '$lib/markdown/ext/glossary.json';
+import glossaryData from '$lib/data/glossary.json';
 
 function findTerm(slug: string) {
 	const allTerms = Object.keys(glossaryData);

@@ -1,4 +1,4 @@
-import glossaryData from '$lib/markdown/ext/glossary.json';
+import glossaryData from '$lib/data/glossary.json';
 import type { PageLoad } from './$types';
 
 // Define a type for a single glossary item for better autocompletion

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from '$utils/classnames';
-	type Size = 'sm' | 'md' | 'lg' | 'xl';
+	type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 	type Variant = 'primary' | 'secondary' | 'destructive' | 'current';
 	let {
 		class: className = '',
@@ -8,6 +8,7 @@
 		variant = 'current',
 		thickness,
 		label = 'Loading...',
+		// eslint-disable-next-line svelte/valid-compile
 		...props
 	}: {
 		class?: string;
@@ -18,12 +19,14 @@
 		[key: string]: unknown;
 	} = $props();
 	const defaultSizes = {
+		xs: 14,
 		sm: 16,
 		md: 24,
 		lg: 32,
 		xl: 48
 	};
 	const defaultThicknesses = {
+		xs: 2,
 		sm: 2,
 		md: 3,
 		lg: 3,

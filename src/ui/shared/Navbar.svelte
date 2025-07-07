@@ -19,7 +19,6 @@
 
 	let isOpen = $state(false);
 	let isHovering = $state(false);
-	let isLevelAnimating = $state(false);
 	let isScrolled = $state(false);
 
 	// Handle navbar scroll behavior
@@ -126,12 +125,6 @@
 	});
 	const activePath = $derived(page.url.pathname);
 
-	// Enhanced animations and interactions
-	const handleLevelClick = () => {
-		isLevelAnimating = true;
-		setTimeout(() => (isLevelAnimating = false), 600);
-	};
-
 	// Close mobile menu when clicking outside
 	const handleOutsideClick = (event: Event) => {
 		const target = event.target as HTMLElement;
@@ -162,7 +155,7 @@
 		<div class="flex items-center gap-6">
 			<!-- Mobile menu button -->
 			<button
-				class="group relative rounded-lg p-2 text-gray-600 transition-all duration-200 hover:scale-110 hover:bg-gray-100 active:scale-95 sm:hidden dark:text-gray-300 dark:hover:bg-gray-800"
+				class="group relative rounded-lg p-2 text-gray-600 transition-all duration-200 hover:bg-gray-100 sm:hidden dark:text-gray-300 dark:hover:bg-gray-800"
 				onclick={() => (isOpen = !isOpen)}
 				aria-label={isOpen ? 'Close menu' : 'Open menu'}
 				aria-expanded={isOpen}
@@ -172,9 +165,7 @@
 					<Icon
 						name={isOpen ? 'x' : 'menu'}
 						size={24}
-						class="transition-transform duration-200 {isOpen
-							? 'rotate-90'
-							: 'group-hover:scale-110'}"
+						class="transition-transform duration-200 {isOpen ? 'rotate-90' : ''}"
 					/>
 					<!-- Subtle interaction indicator -->
 					<div
@@ -187,7 +178,7 @@
 			<a
 				href="/"
 				aria-label="Go to homepage"
-				class="group flex-shrink-0 rounded-lg p-1 transition-transform duration-200 hover:scale-105 active:scale-95"
+				class="group flex-shrink-0 rounded-lg p-1 transition-transform duration-200"
 			>
 				<Logo
 					variant="withTextMobile"
@@ -206,9 +197,7 @@
 						variant={isActive ? 'link-pill-active' : 'link-pill'}
 						size="sm"
 						rounded
-						class="group relative overflow-hidden transition-all duration-200 {isActive
-							? 'font-semibold'
-							: 'hover:scale-105'} flex items-center"
+						class="relative"
 						startIcon={link.icon}
 					>
 						{link.name}
@@ -235,14 +224,10 @@
 					onmouseleave={() => (isHovering = false)}
 					role="button"
 					tabindex="0"
-					onclick={handleLevelClick}
-					onkeydown={(e) => e.key === 'Enter' && handleLevelClick()}
 					aria-label="View level progress details"
 				>
 					<button
-						class="flex h-10 cursor-pointer items-center gap-3 rounded-xl bg-gradient-to-r from-gray-200/60 to-gray-300/60 ps-2 pe-3 text-black ring-1 ring-gray-300 transition-all duration-300 hover:shadow-xl hover:ring-gray-400 dark:from-gray-800/60 dark:to-gray-900/60 dark:text-white dark:ring-gray-700/50 dark:hover:ring-gray-600 {rankInfo.glow} {isLevelAnimating
-							? 'scale-105 animate-pulse'
-							: ''} backdrop-blur-sm"
+						class="flex h-10 cursor-pointer items-center gap-3 rounded-xl bg-gradient-to-r from-gray-200/60 to-gray-300/60 ps-2 pe-3 text-black ring-1 ring-gray-300 transition-all duration-300 hover:shadow-xl hover:ring-gray-400 dark:from-gray-800/60 dark:to-gray-900/60 dark:text-white dark:ring-gray-700/50 dark:hover:ring-gray-600 {rankInfo.glow} backdrop-blur-sm"
 					>
 						<!-- Rank icon and level display -->
 						<div class="flex items-center gap-2">
@@ -370,9 +355,7 @@
 				</div>
 
 				<!-- User menu with subtle enhancement -->
-				<div class="transition-transform duration-200 hover:scale-105">
-					<NavbarUserMenu {user} />
-				</div>
+				<NavbarUserMenu {user} />
 			{:else}
 				<!-- Auth Buttons -->
 				<Button href="/signin" variant="link-pill" size="sm" rounded>
@@ -402,7 +385,7 @@
 							aria-current={isActive ? 'page' : undefined}
 							variant={isActive ? 'link-pill-active' : 'link-pill'}
 							size="sm"
-							class="flex w-full items-center justify-start transition-all duration-200 hover:scale-[1.02] active:scale-98"
+							class="flex w-full items-center justify-start"
 							onclick={() => (isOpen = false)}
 						>
 							<Icon name={link.icon} size={18} class="mr-3 flex-shrink-0" />

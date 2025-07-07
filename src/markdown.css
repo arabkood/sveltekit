@@ -183,10 +183,25 @@
 .markdown-body img {
 	max-width: 100%;
 	box-sizing: content-box;
-	background-color: #fff;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 	border-radius: 3px;
+}
+
+.markdown-img-load {
+	aspect-ratio: var(--aspect-w) / var(--aspect-h);
+
+	background: var(--color-slate-100);
+	color: var(--color-slate-100);
+	border-radius: 10px;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+	.markdown-img-load {
+		background: var(--color-slate-600);
+		color: var(--color-slate-600);
+	}
 }
 
 /* Dark mode */
@@ -228,10 +243,6 @@
 	.markdown-body th,
 	.markdown-body td {
 		border-color: var(--color-gray-600);
-	}
-
-	.markdown-body img {
-		background-color: var(--color-gray-800);
 	}
 }
 
