@@ -35,13 +35,22 @@ export const load: PageServerLoad = async ({ parent }) => {
 	if (item.s3_path) {
 		const buffs = await Promise.all([
 			getS3TopicObjectAsBuffer(path.join(item.s3_path, 'files.bundle.zip')),
-			getS3TopicObjectAsBuffer(path.join(item.s3_path, 'docs.bundle.zip')),
-			getS3TopicObjectAsString(path.join(item.s3_path, 'config.json'))
+			getS3TopicObjectAsBuffer(path.join(item.s3_path, 'docs.bundle.zip'))
 		]);
 
 		if (buffs[0]) {
 			try {
 				files = unzip(buffs[0]);
+				if (!Object.hasOwn(files, '.meta/config.json')) {
+					console.error('.meta/config.json not found at', item.s3_path);
+					error(404, 'Not found');
+				}
+				try {
+					cconfig = JSON.parse(files['.meta/config.json']);
+				} catch {
+					console.error('.meta/config.json invalid at', item.s3_path, files['.meta/config.json']);
+					error(404, 'Not found');
+				}
 			} catch (e) {
 				console.error('bad files.bundle.zip at', item.s3_path, e);
 				error(404, 'Not found');
@@ -54,17 +63,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 				console.error('bad docs.bundle.zip at', item.s3_path, e);
 				error(404, 'Not found');
 			}
-		}
-		if (buffs[2]) {
-			try {
-				cconfig = JSON.parse(buffs[2]);
-			} catch (e) {
-				console.error('bad config.json at', item.s3_path, e);
-				error(404, 'Not found');
-			}
-		} else {
-			// the config is required
-			error(404, 'Not found');
 		}
 	}
 

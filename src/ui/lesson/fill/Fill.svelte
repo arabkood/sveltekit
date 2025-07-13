@@ -78,6 +78,10 @@
 	}
 
 	const canCheck = $derived(answer.every((a) => a.trim() !== ''));
+
+	$effect(() => {
+		console.log('roro', canCheck, answer, isChecking);
+	});
 </script>
 
 <div
