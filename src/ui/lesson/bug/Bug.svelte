@@ -81,25 +81,25 @@
 
 	<footer class="mt-auto border-t border-gray-200 dark:border-gray-700">
 		{#if status === 'correct'}
-			<div class="bg-green-50 p-6 dark:bg-green-500/10" transition:fly={{ y: 20, duration: 250 }}>
+			<div
+				class="bg-green-50 p-6 text-green-800 dark:bg-green-500/10 dark:text-green-200"
+				transition:fly={{ y: 20, duration: 250 }}
+			>
 				<div class="mb-4">
-					<h3 class="mb-2 text-lg font-bold text-green-800 dark:text-green-200">
-						{i18n.t('lessons.correctAnswer')}!
-					</h3>
-					{#if step.explanation}
-						<div class="prose prose-sm prose-green dark:prose-invert max-w-none">
-							<Markdown markdown={step.explanation} />
-						</div>
-					{/if}
+					<h3 class="mb-2 text-lg font-bold">{i18n.t('lessons.correctAnswer')}</h3>
+					<Markdown markdown={step.explanation} />
 				</div>
-				<Button type="button" onclick={onNext} fullWidth={true} color="green">
+				<Button type="button" onclick={onNext} fullWidth={true}>
 					{i18n.t('lessons.continue')}
 				</Button>
 			</div>
 		{:else}
 			<div class="space-y-4 bg-gray-50/50 p-4 dark:bg-gray-800/50">
 				{#if step.expectedOutput || step.actualOutput}
-					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+					<div
+						class="grid grid-cols-1 gap-4"
+						class:sm:grid-cols-2={step.expectedOutput && step.actualOutput}
+					>
 						{#if step.expectedOutput}
 							<div>
 								<h4
@@ -108,7 +108,8 @@
 									{i18n.t('lessons.expectedOutput')}
 								</h4>
 								<pre
-									class="overflow-x-auto rounded-md bg-gray-100 p-3 text-sm text-gray-800 dark:bg-gray-900 dark:text-gray-200"><code
+									dir="auto"
+									class="whitespace-pre-wrap break-words rounded-md bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-900 dark:text-gray-200"><code
 										>{step.expectedOutput}</code
 									></pre>
 							</div>
@@ -121,7 +122,8 @@
 									{i18n.t('lessons.actualOutput')}
 								</h4>
 								<pre
-									class="overflow-x-auto rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-500/10 dark:text-red-200"><code
+									dir="auto"
+									class="whitespace-pre-wrap break-words rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-500/10 dark:text-red-200"><code
 										>{step.actualOutput}</code
 									></pre>
 							</div>
@@ -141,12 +143,14 @@
 										>
 											{i18n.t('lessons.tryAgain')}
 										</p>
-										<button
-											onclick={() => (showHint = !showHint)}
-											class="cursor-pointer text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
-										>
-											{showHint ? i18n.t('lessons.hideHint') : i18n.t('lessons.showHint')}
-										</button>
+										{#if step.hint}
+											<button
+												onclick={() => (showHint = !showHint)}
+												class="cursor-pointer text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
+											>
+												{showHint ? i18n.t('lessons.hideHint') : i18n.t('lessons.showHint')}
+											</button>
+										{/if}
 									</div>
 
 									{#if showHint}

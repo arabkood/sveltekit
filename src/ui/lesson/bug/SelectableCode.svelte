@@ -22,17 +22,20 @@
 	} = $props();
 
 	const lines = $derived(
-		code.split('\n').map((lineContent, index) => {
-			let html: string;
-			if (lineContent.trim() === '') {
-				html = ' ';
-			} else if (lang && hljs.getLanguage(lang)) {
-				html = hljs.highlight(lineContent, { language: lang, ignoreIllegals: true }).value;
-			} else {
-				html = lineContent.replace(/</g, '<').replace(/>/g, '>');
-			}
-			return { id: index, html };
-		})
+		code
+			.split('\n')
+			.filter((v) => v !== '')
+			.map((lineContent, index) => {
+				let html: string;
+				if (lineContent.trim() === '') {
+					html = ' ';
+				} else if (lang && hljs.getLanguage(lang)) {
+					html = hljs.highlight(lineContent, { language: lang, ignoreIllegals: true }).value;
+				} else {
+					html = lineContent.replace(/</g, '<').replace(/>/g, '>');
+				}
+				return { id: index, html };
+			})
 	);
 
 	function handleLineSelect(index: number) {
@@ -106,42 +109,3 @@
 		{/each}
 	</div>
 {/if}
-
-<style>
-	pre {
-		background: transparent !important;
-		padding: 0 !important;
-	}
-	.code-container :global(code.hljs) {
-		padding-top: 0.5rem !important;
-		padding-bottom: 0.5rem !important;
-		background: transparent;
-	}
-	.line-row:focus-visible {
-		outline: 2px solid #3b82f6;
-		outline-offset: -2px;
-		z-index: 10;
-		position: relative;
-	}
-	.code-container::-webkit-scrollbar {
-		height: 8px;
-	}
-	.code-container::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	.code-container::-webkit-scrollbar-thumb {
-		background-color: rgba(156, 163, 175, 0.4);
-		border-radius: 4px;
-	}
-	.code-container::-webkit-scrollbar-thumb:hover {
-		background-color: rgba(156, 163, 175, 0.6);
-	}
-	@media (prefers-color-scheme: dark) {
-		.code-container::-webkit-scrollbar-thumb {
-			background-color: rgba(107, 114, 128, 0.4);
-		}
-		.code-container::-webkit-scrollbar-thumb:hover {
-			background-color: rgba(107, 114, 128, 0.6);
-		}
-	}
-</style>
