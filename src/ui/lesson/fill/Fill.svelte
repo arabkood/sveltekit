@@ -6,6 +6,7 @@
 	import Markdown from '$ui/common/Markdown.svelte';
 	import { fly } from 'svelte/transition';
 	import Button from '$ui/common/Button.svelte';
+	import RandExp from 'randexp';
 
 	let {
 		step,
@@ -25,28 +26,23 @@
 	let isChecking = $state(false);
 	let isShaking = $state(false);
 	let incorrectIndexes = $state<number[]>([]);
+	let failCount = $state(0);
 
-	// Helper function to check a single answer
 	function isAnswerCorrect(userAnswer: string, solution: string): boolean {
 		const trimmedSolution = solution.trim();
-
-		// Check if the solution is a regex (e.g., /pattern/flags)
 		const regexMatch = trimmedSolution.match(/^\/(.*)\/([gimuy]*)$/);
 
 		if (regexMatch) {
 			try {
-				// It's a regex. regexMatch[1] is the pattern, regexMatch[2] is the flags.
 				const pattern = regexMatch[1];
 				const flags = regexMatch[2];
 				const regex = new RegExp(pattern, flags);
 				return regex.test(userAnswer);
 			} catch (e) {
 				console.error(`Invalid regex in solution: ${trimmedSolution}`, e);
-				// If the regex in the lesson data is invalid, fail the check safely.
 				return false;
 			}
 		} else {
-			// It's a plain string. Perform a simple comparison.
 			return userAnswer.trim() === trimmedSolution;
 		}
 	}
@@ -71,21 +67,48 @@
 		} else {
 			status = 'incorrect';
 			incorrectIndexes = currentIncorrectIndexes;
+			failCount += 1;
 			failPlayer?.play();
 			isShaking = true;
 		}
 		isChecking = false;
 	}
 
+	function getAnswer() {
+		const newAnswers = step.solution.map((sol) => {
+			const trimmedSolution = sol.trim();
+			const regexMatch = trimmedSolution.match(/^\/(.*)\/([gimuy]*)$/);
+
+			if (regexMatch) {
+				try {
+					const pattern = regexMatch[1];
+					const flags = regexMatch[2];
+					const randexp = new RandExp(new RegExp(pattern, flags));
+					randexp.min = 1;
+					randexp.max = 1;
+					return randexp.gen();
+				} catch (e) {
+					console.error(`Invalid regex for randexp: ${trimmedSolution}`, e);
+					return regexMatch[1];
+				}
+			} else {
+				return trimmedSolution;
+			}
+		});
+		answer = newAnswers;
+	}
+
 	const canCheck = $derived(answer.every((a) => a.trim() !== ''));
 
 	$effect(() => {
-		console.log('roro', canCheck, answer, isChecking);
+		if (status === 'correct') {
+			failCount = 0;
+		}
 	});
 </script>
 
 <div
-	class="shadow-card-lg flex w-full max-w-lg flex-col overflow-hidden rounded-xl border border-gray-700/20 bg-white dark:border-gray-100/20 dark:bg-gray-800"
+	class="shadow-card-lg flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-gray-700/20 bg-white dark:border-gray-100/20 dark:bg-gray-800"
 >
 	<main class="space-y-6 p-6">
 		<div>
@@ -118,29 +141,39 @@
 				</Button>
 			</div>
 		{:else}
-			<div class="flex min-h-[88px] items-center gap-4 bg-gray-50/50 p-4 dark:bg-gray-800/50">
-				{#if status === 'incorrect'}
-					<p
-						class="flex-1 text-sm font-semibold text-gray-700 dark:text-gray-300"
-						aria-live="polite"
-						transition:fly={{ y: 10, duration: 200 }}
-					>
-						{i18n.t('lessons.tryAgain')}
-					</p>
-				{/if}
-				<Button
-					loading={isChecking}
-					type="button"
-					disabled={!canCheck || isChecking}
-					onclick={handleCheck}
-					class="ms-auto"
-				>
-					{#if isChecking}
-						{i18n.t('lessons.checking')}
-					{:else}
-						{i18n.t('lessons.checkAnswer')}
+			<div
+				class="flex min-h-[88px] items-center justify-between gap-4 bg-gray-50/50 p-4 dark:bg-gray-800/50"
+			>
+				<div>
+					{#if status === 'incorrect'}
+						<p
+							class="flex-1 text-sm font-semibold text-gray-700 dark:text-gray-300"
+							aria-live="polite"
+							transition:fly={{ y: 10, duration: 200 }}
+						>
+							{i18n.t('lessons.tryAgain')}
+						</p>
 					{/if}
-				</Button>
+				</div>
+				<div class="flex items-center gap-2">
+					{#if failCount >= 3}
+						<Button variant="outline" type="button" onclick={getAnswer}>
+							{i18n.t('lessons.getAnswer', { defaultValue: 'Get Answer' })}
+						</Button>
+					{/if}
+					<Button
+						loading={isChecking}
+						type="button"
+						disabled={!canCheck || isChecking}
+						onclick={handleCheck}
+					>
+						{#if isChecking}
+							{i18n.t('lessons.checking')}
+						{:else}
+							{i18n.t('lessons.checkAnswer')}
+						{/if}
+					</Button>
+				</div>
 			</div>
 		{/if}
 	</footer>

@@ -94,7 +94,7 @@
 </script>
 
 <div
-	class="shadow-card-lg flex w-full max-w-lg flex-col overflow-hidden rounded-xl border border-gray-700/20 bg-white dark:border-gray-100/20 dark:bg-gray-800"
+	class="shadow-card-lg flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-gray-700/20 bg-white dark:border-gray-100/20 dark:bg-gray-800"
 >
 	<main class="space-y-6 p-6">
 		<div>

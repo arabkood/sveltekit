@@ -11,7 +11,7 @@
 	import CodeEditor from '$ui/code-editor/monaco.svelte';
 	import Loading from '$ui/code-editor/Loading.svelte';
 	import ResultsPanel from '$ui/code-editor/ResultsPanel.svelte';
-	import SuccessPopup from '$ui/code-editor/SuccessPopup.svelte';
+	import SuccessPopup from '$ui/success-popup/SuccessPopup.svelte';
 
 	import type { PageData } from './$types';
 	import type { ApiError } from '$types/api';
@@ -26,7 +26,7 @@
 	const POLLING_MAX_ATTEMPTS = 20;
 
 	// --- Props ---
-	let { data }: { data: PageData } = $props();
+	let { data, finishPlayer }: { data: PageData; finishPlayer?: Sound } = $props();
 
 	// --- State ---
 	let status: 'idle' | 'loading' | 'success' | 'error' = $state('idle');
@@ -107,7 +107,7 @@
 			error = (e as Error).message || 'INTERNAL_ERROR';
 			status = 'error';
 		} finally {
-      status = 'idle';
+			status = 'idle';
 		}
 	}
 
@@ -303,10 +303,12 @@
 		</nav>
 	</div>
 
-	<SuccessPopup
-		visible={showSuccessPopup}
-		onClose={closeSuccessPopup}
-		nextHref={nextItem?.slug ? `/courses/${data?.track.slug}/${nextItem?.slug}` : undefined}
-		score={submission?.xp_reward ?? 0}
-	/>
+	{#if showSuccessPopup}
+		<SuccessPopup
+			onClose={closeSuccessPopup}
+			nextHref={`/courses/${data?.track.slug}`}
+			sound={finishPlayer}
+			score={submission?.xp_reward ?? 0}
+		/>
+	{/if}
 </main>
