@@ -17,16 +17,18 @@
 
 	function startFakeProgress(): void {
 		const startTime: number = Date.now();
-		timeEstimate = `الوقت المتوقع: حوالي ${estimatedSeconds} ثوانٍ`;
+		timeEstimate = `الوقت المتوقع: حوالي ${estimatedSeconds.toFixed(1)} ثوانٍ`;
 
 		progressInterval = setInterval(() => {
 			const elapsed: number = Date.now() - startTime;
+			const elapsedSeconds: number = elapsed / 1000;
+
 			timeEstimate =
 				elapsed < 1500
-					? `الوقت المتوقع: حوالي ${estimatedSeconds} ثوانٍ`
-					: `الوقت المستغرق: ${(elapsed / 1000).toFixed(1)} ثانية`;
+					? `الوقت المتوقع: حوالي ${estimatedSeconds.toFixed(1)} ثوانٍ`
+					: `الوقت المستغرق: ${elapsedSeconds.toFixed(1)} ثانية`;
 
-			// when half estimated time pass + random second for variatioon
+			// when half estimated time pass + random second for variation
 			if (elapsed > (estimatedSeconds * 1000) / 2 + Math.random() * 1000) {
 				statusText = 'تحليل النتائج...';
 			}
