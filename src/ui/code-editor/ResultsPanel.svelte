@@ -113,14 +113,7 @@
 		</div>
 		<div class="space-y-2 px-4" dir="ltr">
 			{#each testCases as testCase, index}
-				<div
-					role="button"
-					tabindex="0"
-					onclick={() => toggleTestCase(index)}
-					onkeydown={(e) => e.key === 'Enter' && toggleTestCase(index)}
-				>
-					<TestCase {testCase} expanded={expandedTestCases[index]} />
-				</div>
+				<TestCase {testCase} expanded={expandedTestCases[index]} />
 			{/each}
 		</div>
 		<!-- Priority 4: Initial state, no results yet -->

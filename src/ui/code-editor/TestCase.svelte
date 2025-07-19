@@ -4,13 +4,15 @@
 	import { cn } from '$utils/classnames';
 	import type { TestResult } from '$types/code';
 
-	let {
-		testCase,
-		expanded = false
-	}: {
+	interface Props {
 		testCase: TestResult;
-		expanded: boolean;
-	} = $props();
+		expanded?: boolean;
+	}
+
+	let { testCase, expanded = false }: Props = $props();
+
+	// Separate state for showing test code
+	let showTestCode = $state(false);
 
 	const statusConfig = {
 		pass: {
@@ -28,9 +30,25 @@
 			bgClass: 'bg-yellow-100/80 dark:bg-yellow-900/20',
 			iconClass: 'text-yellow-600 dark:text-yellow-400'
 		}
-	};
+	} as const;
 
 	const config = statusConfig[testCase.status] || statusConfig.error;
+
+	function toggleExpanded(): void {
+		expanded = !expanded;
+	}
+
+	function toggleTestCode(event: Event): void {
+		event.stopPropagation();
+		showTestCode = !showTestCode;
+	}
+
+	// Reset test code visibility when collapsing main section
+	$effect(() => {
+		if (!expanded) {
+			showTestCode = false;
+		}
+	});
 </script>
 
 <article
@@ -38,6 +56,8 @@
 >
 	<h3>
 		<button
+			type="button"
+			onclick={toggleExpanded}
 			aria-expanded={expanded}
 			class="flex w-full cursor-pointer items-center justify-between p-2 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
 			dir="rtl"
@@ -79,33 +99,65 @@
 
 			{#if testCase.test_code}
 				<section aria-labelledby="test-code-heading" class="mt-3">
-					<div class="mb-2 flex items-center gap-2" dir="rtl">
-						<svg
-							aria-hidden="true"
-							class="h-4 w-4 text-gray-500 dark:text-gray-400"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
+					<div class="mb-2 flex items-center justify-between" dir="rtl">
+						<div class="flex items-center gap-2">
+							<svg
+								aria-hidden="true"
+								class="h-4 w-4 text-gray-500 dark:text-gray-400"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+								/>
+							</svg>
+							<h4
+								id="test-code-heading"
+								class="text-sm font-semibold text-gray-700 dark:text-gray-300"
+							>
+								كود الاختبار
+							</h4>
+						</div>
+
+						<button
+							type="button"
+							onclick={toggleTestCode}
+							aria-expanded={showTestCode}
+							class="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+							dir="ltr"
 						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-							/>
-						</svg>
-						<h4
-							id="test-code-heading"
-							class="text-sm font-semibold text-gray-700 dark:text-gray-300"
-						>
-							كود الاختبار
-						</h4>
+							<span>{showTestCode ? 'إخفاء' : 'عرض'}</span>
+							<svg
+								aria-hidden="true"
+								class="h-3 w-3 transform transition-transform duration-200"
+								class:rotate-180={showTestCode}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7"
+								/>
+							</svg>
+						</button>
 					</div>
-					<pre
-						class="overflow-x-auto rounded-lg border border-gray-100 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900"><code
-							class="font-mono text-sm leading-relaxed text-gray-800 dark:text-gray-200"
-							>{testCase.test_code}</code
-						></pre>
+
+					{#if showTestCode}
+						<div transition:slide={{ duration: 250 }}>
+							<pre
+								class="whitespace-pre-wrap break-words rounded-lg border border-gray-100 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900"><code
+									class="font-mono text-sm leading-relaxed text-gray-800 dark:text-gray-200"
+									>{testCase.test_code}</code
+								></pre>
+						</div>
+					{/if}
 				</section>
 			{/if}
 		</div>
