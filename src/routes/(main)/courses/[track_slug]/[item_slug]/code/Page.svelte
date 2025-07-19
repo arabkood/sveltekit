@@ -107,9 +107,7 @@
 			error = (e as Error).message || 'INTERNAL_ERROR';
 			status = 'error';
 		} finally {
-			if (status !== 'loading') {
-				status = 'idle';
-			}
+      status = 'idle';
 		}
 	}
 
