@@ -29,7 +29,7 @@
 		finishPlayer
 	}: { data: PageData; successPlayer?: Sound; failPlayer?: Sound; finishPlayer?: Sound } = $props();
 
-	const { lesson, track, item, submission, user } = data;
+	const { lesson, track, item, submission, user, module } = data;
 
 	let currentStepIndex = $state(0);
 	const goToStep = (i: number) => (currentStepIndex = i);
@@ -155,6 +155,7 @@
 >
 	<Header
 		{track}
+		{module}
 		{item}
 		currentStep={currentStepIndex}
 		totalSteps={lesson.steps.length}

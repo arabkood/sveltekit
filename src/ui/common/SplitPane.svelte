@@ -155,7 +155,6 @@
 	svelte-split-pane-section > :global(*) {
 		width: 100%;
 		height: 100%;
-		overflow: hidden;
 	}
 
 	svelte-split-pane-mousecatcher {

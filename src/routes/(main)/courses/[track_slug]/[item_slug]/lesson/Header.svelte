@@ -1,16 +1,18 @@
 <script lang="ts">
-	import type { Item, Track } from '$lib/server/db/schema/class';
+	import type { Item, Module, Track } from '$lib/server/db/schema/class';
 	import Icon from '$ui/common/Icon.svelte';
 
 	const {
 		currentStep,
 		totalSteps,
 		track,
+		module,
 		item,
 		goToStep
 	}: {
 		currentStep: number;
 		track: Track;
+		module: Module;
 		item: Item;
 		totalSteps: number;
 		goToStep: (i: number) => void;
@@ -24,11 +26,11 @@
 		<a
 			class="truncate rounded px-2 py-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
 			href={`/courses/${track?.slug}`}
-			title={track.title}>{track.title}</a
+			title={module.title}>{String(module.position).padStart(3, '0')} - {module.title}</a
 		>
 		<Icon class="shrink-0 text-gray-400 dark:text-gray-500" name="chevron-left" size={18} />
 		<span class="truncate px-2 py-1 font-medium text-gray-800 dark:text-gray-100" title={item.title}
-			>{item.title}</span
+			>{String(item.position).padStart(2, '0')} - {item.title}</span
 		>
 	</nav>
 
