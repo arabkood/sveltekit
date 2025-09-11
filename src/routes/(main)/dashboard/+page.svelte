@@ -1,6 +1,7 @@
 <script lang="ts">
 	// import Achievements from '$ui/dashboard/Achievements.svelte';
 	import ActiveTrack from '$ui/dashboard/ActiveTrack.svelte';
+	import BannerPremium from '$ui/dashboard/BannerPremium.svelte';
 	// import DailyChallenge from '$ui/dashboard/DailyChallenge.svelte';
 	import Stats from '$ui/dashboard/Stats.svelte';
 	import UserTracks from '$ui/dashboard/UserTracks.svelte';
@@ -12,13 +13,19 @@
 	}: {
 		data: PageData;
 	} = $props();
-	// console.debug(data);
+	// console.debug(data.user);
 </script>
 
 <div class="bg-page min-h-screen">
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">
-		<!-- <BannerPremium /> -->
-		<Welcome userTracks={data.userTracks!} name={data.user!.username} is_user_premium={true} />
+		{#if !data.user?.premiumActive}
+			<BannerPremium />
+		{/if}
+		<Welcome
+			userTracks={data.userTracks!}
+			name={data.user!.username}
+			is_user_premium={data.user?.premiumActive || false}
+		/>
 		<Stats
 			totalXp={data.userStats!.totalXp}
 			currentStreak={0}

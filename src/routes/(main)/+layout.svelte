@@ -1,7 +1,5 @@
 <script lang="ts">
-	import '../../app.css';
 	import Navbar from '$ui/shared/Navbar.svelte';
-	import SvgSprite from '$ui/shared/SvgSprite.svelte';
 	import { onMount, type Snippet } from 'svelte';
 	import { page } from '$app/state';
 	import type { LayoutData } from './$types';
@@ -42,5 +40,3 @@
 	></div>
 {/if}
 {@render children()}
-
-<SvgSprite />

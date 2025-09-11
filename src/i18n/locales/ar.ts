@@ -102,6 +102,7 @@ export default {
     }
   },
   common: {
+    upgrade_to_unlock_content: "قم بالترقية لفتح المحتوى",
     coming_soon: 'قريباً',
     find_other_tracks: 'استكشف مسارات أخرى',
     your_progress: 'تقدّمك',

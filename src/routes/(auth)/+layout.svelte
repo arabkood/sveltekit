@@ -1,6 +1,4 @@
 <script lang="ts">
-	import '../../app.css';
-	import SvgSprite from '$ui/shared/SvgSprite.svelte';
 	import type { Snippet } from 'svelte';
 
 	let {
@@ -11,5 +9,3 @@
 </script>
 
 {@render children()}
-
-<SvgSprite />

@@ -4,6 +4,9 @@
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
 
+	import '../app.css';
+	import SvgSprite from '$ui/shared/SvgSprite.svelte';
+
 	export const load = async () => {
 		if (browser) {
 			// @ts-expect-error no typing
@@ -28,3 +31,5 @@
 </script>
 
 {@render children()}
+
+<SvgSprite />

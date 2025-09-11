@@ -7,6 +7,8 @@
 	import type { LayoutServerData } from './$types';
 
 	let { data }: { data: LayoutServerData } = $props();
+
+	const isPremium = $derived(data.user?.premiumActive);
 	const track = $derived(data?.track);
 	const modules = $derived(data?.modules);
 
@@ -68,14 +70,25 @@
 		}
 	}
 
-	function getItemClass(status?: string, isNext?: boolean): string {
+	function getItemClass(status?: string, isNext?: boolean, isLocked?: boolean): string {
 		const baseClass =
-			'group block w-full cursor-pointer justify-between rounded-2xl border-2 p-6 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-500/20 active:scale-[0.98]';
+			'group relative block w-full justify-between rounded-2xl border-2 p-6 shadow-md transition-all duration-300 focus:outline-none';
+
+		if (isLocked) {
+			return (
+				baseClass +
+				' border-slate-100 bg-white dark:border-slate-700 dark:bg-slate-800 cursor-not-allowed'
+			);
+		}
+
+		const clickableBaseClass =
+			baseClass +
+			' cursor-pointer hover:shadow-xl hover:-translate-y-1 focus:ring-4 focus:ring-blue-500/20 active:scale-[0.98]';
 
 		// HICK'S LAW: Make the next item unmistakably the primary choice
 		if (isNext) {
 			return (
-				baseClass +
+				clickableBaseClass +
 				' border-blue-400 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:border-blue-500/70 dark:from-blue-900/40 dark:via-indigo-900/20 dark:to-purple-900/20 hover:border-blue-500 dark:hover:border-blue-400 ring-4 ring-blue-200/60 dark:ring-blue-500/30 animate-gentle-pulse shadow-blue-200/50 dark:shadow-blue-900/30'
 			);
 		}
@@ -84,22 +97,22 @@
 		switch (status) {
 			case 'pass':
 				return (
-					baseClass +
+					clickableBaseClass +
 					' border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50 dark:border-emerald-700/50 dark:from-emerald-900/20 dark:to-green-900/10 hover:border-emerald-200 dark:hover:border-emerald-600/70 opacity-70 hover:opacity-85'
 				);
 			case 'fail':
 				return (
-					baseClass +
+					clickableBaseClass +
 					' border-rose-100 bg-gradient-to-br from-rose-50 to-pink-50 dark:border-rose-700/50 dark:from-rose-900/20 dark:to-pink-900/10 hover:border-rose-200 dark:hover:border-rose-600/70 opacity-70 hover:opacity-85'
 				);
 			case 'wait':
 				return (
-					baseClass +
+					clickableBaseClass +
 					' border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50 dark:border-amber-700/50 dark:from-amber-900/20 dark:to-orange-900/10 hover:border-amber-200 dark:hover:border-amber-600/70 opacity-75 hover:opacity-90'
 				);
 			default:
 				return (
-					baseClass +
+					clickableBaseClass +
 					' border-slate-100 bg-white dark:border-slate-700 dark:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-600 hover:bg-gradient-to-br hover:from-slate-50 hover:to-gray-50 dark:hover:from-slate-900/10 dark:hover:to-gray-900/5 opacity-60 hover:opacity-80'
 				);
 		}
@@ -275,91 +288,151 @@
 							{#each module.items as item, index}
 								{@const isNextItem = nextItem && nextItem.item.slug === item.slug}
 								<div class="relative w-full">
-									<a
-										bind:this={
-											() => nextItemElement,
-											(v) => {
-												if (isNextItem) {
-													nextItemElement = v;
+									{#if item.premium_only && !isPremium && !item.submission}
+										<div class={getItemClass(undefined, undefined, true)}>
+											<!-- Blurred background content -->
+											<div class="flex w-full items-center gap-6 blur-sm">
+												<div
+													class="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700/50"
+												>
+													<Icon name="lock" class="h-7 w-7 text-slate-400 dark:text-slate-600" />
+												</div>
+
+												<div class="min-w-0 grow">
+													<h3 class="mb-2 text-xl font-bold text-slate-800 dark:text-white">
+														{item.title}
+													</h3>
+													{#if item.blurb}
+														<p
+															class="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400"
+														>
+															{item.blurb}
+														</p>
+													{/if}
+												</div>
+
+												<div class="flex flex-col items-end gap-3">
+													<span class={getDifficultyClass(item.difficulty || undefined)}>
+														{item.difficulty || 'N/A'}
+													</span>
+													<span
+														class="min-w-[48px] rounded-full border border-slate-300 bg-gradient-to-r from-slate-100 to-gray-100 px-3 py-1.5 text-center text-xs font-semibold text-nowrap text-slate-600 shadow-sm dark:border-slate-600 dark:from-slate-800/50 dark:to-slate-700/50 dark:text-slate-400"
+													>
+														{item.base_xp} XP
+													</span>
+												</div>
+											</div>
+
+											<!-- Upgrade prompt overlay -->
+											<a
+												href={'/pricing'}
+												class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-slate-900/60 p-6 text-center backdrop-blur-[1px] transition-all duration-300 hover:bg-slate-900/75"
+											>
+												<Icon name="star" class="h-10 w-10 text-amber-400" />
+												<span
+													class="flex items-center gap-2 text-lg font-bold text-white drop-shadow-md"
+												>
+													{i18n.t('common.premium_only')}
+													<Icon name="star" size={16} />
+												</span>
+												<span
+													class="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-1.5 text-sm font-semibold text-white shadow-lg"
+												>
+													{i18n.t('common.upgrade_to_unlock_content')}
+												</span>
+											</a>
+										</div>
+									{:else}
+										<a
+											bind:this={
+												() => nextItemElement,
+												(v) => {
+													if (isNextItem) {
+														nextItemElement = v;
+													}
 												}
 											}
-										}
-										href={`/courses/${track.slug}/${item.slug}/${item.type}`}
-										class={getItemClass(item.submission?.status, isNextItem || undefined)}
-									>
-										<div class="flex w-full items-center gap-6">
-											<div
-												class={`relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 transition-colors duration-200 dark:bg-slate-700/50 
-          ${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-blue-800' : ''}`}
-											>
-												<Icon
-													name={item.type === 'lesson' ? 'book-open' : 'code'}
-													class="h-7 w-7 {getStatusClass(
-														item.submission?.status
-													)} transition-all duration-200 group-hover:scale-110"
-												/>
-												{#if item.submission?.status === 'pass'}
-													<div
-														class="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-800"
+											href={`/courses/${track.slug}/${item.slug}/${item.type}`}
+											class={getItemClass(item.submission?.status, isNextItem || undefined)}
+										>
+											<div class="flex w-full items-center gap-6">
+												<div
+													class={`relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 transition-colors duration-200 dark:bg-slate-700/50 
+${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-blue-800' : ''}`}
+												>
+													<Icon
+														name={item.type === 'lesson' ? 'book-open' : 'code'}
+														class="h-7 w-7 {getStatusClass(
+															item.submission?.status
+														)} transition-all duration-200 group-hover:scale-110"
+													/>
+													{#if item.submission?.status === 'pass'}
+														<div
+															class="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-800"
+														>
+															<Icon name="check" class="h-3 w-3 text-white" />
+														</div>
+													{/if}
+												</div>
+
+												<div class="min-w-0 grow">
+													<h3
+														class="mb-2 flex items-center gap-2 text-xl font-bold text-slate-800 transition-colors duration-200 group-hover:text-green-600 dark:text-white dark:group-hover:text-green-400 {isNextItem
+															? 'text-blue-700 dark:text-blue-300'
+															: ''}"
 													>
-														<Icon name="check" class="h-3 w-3 text-white" />
+														{item.title}
+														{#if item.premium_only}
+															<Icon name="star" size={16} />
+														{/if}
+													</h3>
+
+													{#if item.blurb}
+														<p
+															class="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400"
+														>
+															{item.blurb}
+														</p>
+													{/if}
+												</div>
+
+												{#if isNextItem}
+													<div
+														class="animate-gentle-pulse absolute top-3 -right-3 flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold tracking-wider text-white uppercase shadow-lg"
+													>
+														<span>{i18n.t('common.next')}</span>
+														<Icon name="arrow-left" class="h-4 w-4" />
 													</div>
 												{/if}
-											</div>
 
-											<div class="min-w-0 grow">
-												<h3
-													class="mb-2 text-xl font-bold text-slate-800 transition-colors duration-200 group-hover:text-green-600 dark:text-white dark:group-hover:text-green-400 {isNextItem
-														? 'text-blue-700 dark:text-blue-300'
-														: ''}"
-												>
-													{item.title}
-												</h3>
-												{#if item.blurb}
-													<p
-														class="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400"
+												<div class="flex flex-col items-end gap-3">
+													<span
+														class={`${getDifficultyClass(item.difficulty || undefined)} 
+								min-w-[48px] rounded-full px-3 py-1.5 text-center
+								text-xs font-semibold
+								shadow-sm
+								transition-colors duration-200 ease-in-out`}
 													>
-														{item.blurb}
-													</p>
-												{/if}
-											</div>
-
-											{#if isNextItem}
-												<div
-													class="animate-gentle-pulse absolute top-3 -right-3 flex items-center gap-1 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold tracking-wider text-white uppercase shadow-lg"
-												>
-													<span>{i18n.t('common.next')}</span>
-													<Icon name="arrow-left" class="h-4 w-4" />
+														{item.difficulty || 'N/A'}
+													</span>
+													<span
+														class={`min-w-[48px] rounded-full border px-3 py-1.5 text-center text-xs font-semibold text-nowrap shadow-sm transition-transform duration-700 ease-in-out
+${
+	!item.submission?.xp_reward
+		? 'border-slate-300 bg-gradient-to-r from-slate-100 to-gray-100 text-slate-600 dark:border-slate-600 dark:from-slate-800/50 dark:to-slate-700/50 dark:text-slate-400'
+		: 'border-blue-200 bg-gradient-to-r from-blue-50 to-violet-50 text-blue-700 dark:border-blue-700/50 dark:from-blue-900/30 dark:to-violet-900/30 dark:text-blue-300'
+}`}
+													>
+														{!item.submission?.xp_reward
+															? `${item.base_xp} XP`
+															: item.submission?.xp_reward >= item.base_xp
+																? `${item.submission?.xp_reward} XP`
+																: `${item.submission?.xp_reward}/${item.base_xp} XP`}
+													</span>
 												</div>
-											{/if}
-
-											<div class="flex flex-col items-end gap-3">
-												<span
-													class={`${getDifficultyClass(item.difficulty || undefined)} 
-														min-w-[48px] rounded-full px-3 py-1.5 text-center
-														text-xs font-semibold
-														shadow-sm
-														transition-colors duration-200 ease-in-out`}
-												>
-													{item.difficulty || 'N/A'}
-												</span>
-												<span
-													class={`min-w-[48px] rounded-full border px-3 py-1.5 text-center text-xs font-semibold text-nowrap shadow-sm transition-transform duration-700 ease-in-out
-    ${
-			!item.submission?.xp_reward
-				? 'border-slate-300 bg-gradient-to-r from-slate-100 to-gray-100 text-slate-600 dark:border-slate-600 dark:from-slate-800/50 dark:to-slate-700/50 dark:text-slate-400'
-				: 'border-blue-200 bg-gradient-to-r from-blue-50 to-violet-50 text-blue-700 dark:border-blue-700/50 dark:from-blue-900/30 dark:to-violet-900/30 dark:text-blue-300'
-		}`}
-												>
-													{!item.submission?.xp_reward
-														? `${item.base_xp} XP`
-														: item.submission?.xp_reward >= item.base_xp
-															? `${item.submission?.xp_reward} XP`
-															: `${item.submission?.xp_reward}/${item.base_xp} XP`}
-												</span>
 											</div>
-										</div>
-									</a>
+										</a>
+									{/if}
 
 									{#if index < module.items.length - 1}
 										<div class="flex justify-center py-4">

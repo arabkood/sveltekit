@@ -17,7 +17,7 @@
 			</h2>
 			<p class="text-purple-200">{i18n.t('dashboard.premium_description')}</p>
 			<a
-				href="/settings/plans"
+				href="/pricing"
 				class="group inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-purple-600 transition hover:bg-purple-50"
 			>
 				<Icon name="star" class="h-5 w-5 text-yellow-500" />

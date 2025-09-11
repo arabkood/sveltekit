@@ -49,7 +49,7 @@
 				/>
 			</svg>
 			<span
-				class={'font-semibold ' + (variant === 'withTextMobile' ? 'sm:hidden' : '')}
+				class={'mt-1 text-xl font-bold ' + (variant === 'withTextMobile' ? 'sm:hidden' : '')}
 				style="color: {color};"
 			>
 				{i18n.t('site.logo')}

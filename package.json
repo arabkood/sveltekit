@@ -45,6 +45,7 @@
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.842.0",
+		"@polar-sh/sveltekit": "^0.4.4",
 		"@popperjs/core": "^2.11.8",
 		"@types/pg": "^8.15.4",
 		"adm-zip": "^0.5.16",
@@ -66,5 +67,5 @@
 		"svelte": "^5.35.2",
 		"zod": "^3.25.74"
 	},
-	"packageManager": "pnpm@10.12.3+sha512.467df2c586056165580ad6dfb54ceaad94c5a30f80893ebdec5a44c5aa73c205ae4a5bb9d5ed6bb84ea7c249ece786642bbb49d06a307df218d03da41c317417"
+	"packageManager": "pnpm@10.15.1"
 }
