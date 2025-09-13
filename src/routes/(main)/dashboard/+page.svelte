@@ -7,6 +7,7 @@
 	import UserTracks from '$ui/dashboard/UserTracks.svelte';
 	import Welcome from '$ui/dashboard/Welcome.svelte';
 	import type { PageData } from '../settings/$types';
+	import Footer from '$ui/shared/Footer.svelte';
 
 	const {
 		data
@@ -56,3 +57,4 @@
 		</div>
 	</div>
 </div>
+<Footer />

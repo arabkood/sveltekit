@@ -14,6 +14,7 @@ export async function getUserBySessionToken(token: string) {
       emailVerified: users.emailVerified,
       createdAt: users.createdAt,
       premiumActive: users.premiumActive,
+      polarCustomerId: users.polarCustomerId,
     })
     .from(sessionTokens)
     .innerJoin(users, eq(sessionTokens.userId, users.id))

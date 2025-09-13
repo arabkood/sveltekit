@@ -243,7 +243,7 @@ export default {
       saveButton: 'حفظ كلمة المرور'
     },
     billing: {
-      title: 'الفوترة'
+      title: 'الفوترة و الاشتراك'
     }
   },
   dashboard: {

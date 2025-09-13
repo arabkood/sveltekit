@@ -3,7 +3,7 @@
 	import { i18n } from '$i18n/i18n';
 	import Icon from '$ui/common/Icon.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	type Tab = {
 		label: string;
@@ -14,6 +14,9 @@
 		{ label: i18n.t('settings.account.title'), href: '/settings/account' }
 		// { label: i18n.t('settings.billing.title'), href: '/settings/billing' }
 	];
+	if (data.user?.polarCustomerId) {
+		tabs.push({ label: i18n.t('settings.billing.title'), href: '/services/portal' });
+	}
 </script>
 
 <div class="bg-page min-h-screen">
