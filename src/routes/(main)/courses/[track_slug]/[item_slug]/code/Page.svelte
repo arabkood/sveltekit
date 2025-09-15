@@ -17,6 +17,7 @@
 	import type { ApiError } from '$types/api';
 	import { i18n } from '$i18n/i18n';
 	import type { Submission } from '$lib/server/db/schema/submission';
+	import type { Sound } from '$utils/sound';
 
 	// --- Constants ---
 	const ATTEMPT_COOLDOWN_SECONDS = 3;
@@ -45,6 +46,19 @@
 		newSubmission ? newSubmission : data.submission ? data.submission : undefined
 	);
 	let canSubmit = $derived(submission?.status !== 'pass');
+
+	let problemDocs = $derived(
+		Object.entries(data.code.docs).map(([k, v]) => {
+			const dct = {
+				'instructions.md': 'تعليمات',
+				'hints.md': 'تلميحات'
+			};
+			return {
+				title: Object.hasOwn(dct, k) ? dct[k as keyof typeof dct] : k,
+				content: v
+			};
+		})
+	);
 
 	// --- Lifecycle ---
 	onMount(() => {
@@ -215,7 +229,7 @@
 		>
 			{#snippet a()}
 				<section class="h-full overflow-auto bg-gray-50 dark:bg-gray-900">
-					<Problem markdown={data.code.docs['instructions.md']} />
+					<Problem markdown={problemDocs} />
 				</section>
 			{/snippet}
 			{#snippet b()}

@@ -33,7 +33,7 @@
 			}
 
 			try {
-				await navigator.clipboard.writeText(preEl.textContent || '');
+				await navigator.clipboard.writeText(preEl.textContent?.trim() || '');
 				button.innerHTML = checkIconSVG;
 				button.classList.add('text-green-500', 'dark:text-green-400');
 				button.setAttribute('aria-label', 'Copied!');
