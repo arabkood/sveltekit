@@ -56,7 +56,7 @@
 		const currentIncorrectIndexes: number[] = [];
 
 		step.solution.forEach((sol, i) => {
-			if (!isAnswerCorrect(answer[i], sol)) {
+			if (!isAnswerCorrect(String(answer[i]), sol)) {
 				currentIncorrectIndexes.push(i);
 			}
 		});
@@ -76,7 +76,7 @@
 
 	function getAnswer() {
 		const newAnswers = step.solution.map((sol) => {
-			const trimmedSolution = sol.trim();
+			const trimmedSolution = String(sol).trim();
 			const regexMatch = trimmedSolution.match(/^\/(.*)\/([gimuy]*)$/);
 
 			if (regexMatch) {
@@ -98,7 +98,7 @@
 		answer = newAnswers;
 	}
 
-	const canCheck = $derived(answer.every((a) => a.trim() !== ''));
+	const canCheck = $derived(answer.every((a) => String(a).trim() !== ''));
 
 	$effect(() => {
 		if (status === 'correct') {

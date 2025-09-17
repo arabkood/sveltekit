@@ -48,16 +48,22 @@
 	let canSubmit = $derived(submission?.status !== 'pass');
 
 	let problemDocs = $derived(
-		Object.entries(data.code.docs).map(([k, v]) => {
-			const dct = {
-				'instructions.md': 'تعليمات',
-				'hints.md': 'تلميحات'
-			};
-			return {
-				title: Object.hasOwn(dct, k) ? dct[k as keyof typeof dct] : k,
-				content: v
-			};
-		})
+		Object.entries(data.code.docs)
+			.sort(([a], [b]) => {
+				if (a === 'instructions.md') return -1;
+				if (b === 'instructions.md') return 1;
+				return 0;
+			})
+			.map(([k, v]) => {
+				const dct = {
+					'instructions.md': 'تعليمات',
+					'hints.md': 'تلميحات'
+				};
+				return {
+					title: Object.hasOwn(dct, k) ? dct[k as keyof typeof dct] : k,
+					content: v
+				};
+			})
 	);
 
 	// --- Lifecycle ---

@@ -37,8 +37,41 @@
 
 	const getInitialAnswers = (): LessonInteractiveAnswers => {
 		if (submission?.status === 'pass') {
-			return (submission?.data as any).answers as LessonInteractiveAnswers;
+			const savedAnswers = (submission?.data as any).answers as LessonInteractiveAnswers;
+			// Validate that saved answers match current step types
+			return lesson.steps.map((step, index) => {
+				if (typeof step === 'object') {
+					const savedAnswer = savedAnswers[index];
+
+					if (step.type === 'fill') {
+						if (
+							Array.isArray(savedAnswer) &&
+							savedAnswer.length === step.solution.length &&
+							savedAnswer.every((a) => typeof a === 'string')
+						) {
+							return savedAnswer;
+						}
+						return new Array(step.solution.length).fill('');
+					} else if (step.type === 'order') {
+						if (
+							Array.isArray(savedAnswer) &&
+							savedAnswer.length === step.code.length &&
+							savedAnswer.every((a) => typeof a === 'number')
+						) {
+							return savedAnswer;
+						}
+						return new Array(step.code.length);
+					} else if (step.type === 'quiz' || step.type === 'bug') {
+						if (typeof savedAnswer === 'number') {
+							return savedAnswer;
+						}
+						return -1;
+					}
+				}
+				return null;
+			});
 		}
+
 		return lesson.steps.map((s) => {
 			if (typeof s === 'object') {
 				if (s.type === 'fill') {

@@ -78,6 +78,7 @@
 
 		if (isCorrect) {
 			answer = userOrder;
+			incorrectPositions = [];
 			status = 'correct';
 			successPlayer?.play();
 		} else {
