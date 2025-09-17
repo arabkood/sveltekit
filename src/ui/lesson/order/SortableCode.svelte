@@ -9,17 +9,20 @@
 	 * @property {number[]} order - A bindable array of numbers representing the display order of blocks from the 'code' prop.
 	 * @property {string} lang - The language for syntax highlighting.
 	 * @property {boolean} [disabled=false] - If true, disables the drag-and-drop functionality.
+	 * @property {boolean[]} [incorrectPositions=[]] - Array indicating which positions are incorrect.
 	 */
 	let {
 		code = [],
 		order = $bindable([]),
 		lang,
-		disabled = false
+		disabled = false,
+		incorrectPositions = []
 	}: {
 		code: string[];
 		order: number[];
 		lang: string;
 		disabled?: boolean;
+		incorrectPositions?: boolean[];
 	} = $props();
 
 	// All state and derived values are only needed on the client,
@@ -173,6 +176,7 @@
 		style="-webkit-overflow-scrolling: touch;"
 	>
 		{#each displayedBlocks as block, i (block.id)}
+			{@const isIncorrect = incorrectPositions[i] || false}
 			<div
 				class="code-body relative mb-2 flex min-h-[48px] items-start rounded-lg border p-3 transition-all duration-200
                ease-in-out select-none last:mb-0
@@ -186,14 +190,16 @@
 					? 'drag-below'
 					: ''}
                {isTouchDevice ? 'mb-3 min-h-[56px] p-4' : ''}
-               border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600
+               {isIncorrect
+					? 'border-red-400 bg-red-50 hover:border-red-500 hover:bg-red-100 dark:border-red-500 dark:bg-red-900/30 dark:hover:border-red-400 dark:hover:bg-red-900/40'
+					: 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600'}
                {draggedIndex === i ? 'border-blue-500 bg-blue-100 dark:bg-blue-900' : ''}"
 				draggable={!disabled}
 				tabindex={disabled ? -1 : 0}
 				role="button"
-				aria-label="Code block {i + 1} of {order.length}. {isTouchDevice
-					? 'Touch and drag to reorder'
-					: 'Use arrow keys or drag to reorder'}"
+				aria-label="Code block {i + 1} of {order.length}. {isIncorrect
+					? 'Incorrect position. '
+					: ''}{isTouchDevice ? 'Touch and drag to reorder' : 'Use arrow keys or drag to reorder'}"
 				ondragstart={() => handleDragStart(i)}
 				ondragover={(e) => handleDragOver(e, i)}
 				ondragleave={() => handleDragLeave(i)}
@@ -209,10 +215,28 @@
 				dir="ltr"
 				style="touch-action: none;"
 			>
+				<!-- {#if isIncorrect} -->
+				<!-- 	<div -->
+				<!-- 		class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white" -->
+				<!-- 	> -->
+				<!-- 		<svg -->
+				<!-- 			class="h-3 w-3" -->
+				<!-- 			fill="currentColor" -->
+				<!-- 			viewBox="0 0 20 20" -->
+				<!-- 			xmlns="http://www.w3.org/2000/svg" -->
+				<!-- 		> -->
+				<!-- 			<path -->
+				<!-- 				fill-rule="evenodd" -->
+				<!-- 				d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" -->
+				<!-- 				clip-rule="evenodd" -->
+				<!-- 			></path> -->
+				<!-- 		</svg> -->
+				<!-- 	</div> -->
+				<!-- {/if} -->
 				<div
 					class="my-auto flex min-w-[32px] items-center justify-center rounded-md pr-5 transition-all duration-200 ease-in-out
 				       {isTouchDevice ? 'pr-6' : ''}
-				       text-gray-500"
+				       {isIncorrect ? 'text-red-600 dark:text-red-400' : 'text-gray-500'}"
 					title={isTouchDevice ? 'Touch and drag to reorder' : 'Drag to reorder'}
 				>
 					<svg
@@ -239,7 +263,8 @@
 				</div>
 				<pre
 					class="overflow-wrap-anywhere m-0 min-h-[1.5em] flex-grow p-0 break-words whitespace-pre-wrap"><code
-						class="hljs language-{lang} font-mono text-sm leading-relaxed text-gray-900 antialiased md:text-base dark:text-gray-100"
+						class="hljs language-{lang} font-mono text-sm leading-relaxed antialiased md:text-base
+						{isIncorrect ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-gray-100'}"
 						><!-- eslint-disable-next-line svelte/no-at-html-tags --><!--
           -->{@html block.html}</code
 					></pre>

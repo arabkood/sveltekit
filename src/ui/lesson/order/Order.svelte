@@ -30,6 +30,21 @@
 		);
 	}
 
+	function getIncorrectPositions(userOrder: number[]): boolean[] {
+		const correctOrder = step.code.map((_, i) => i);
+		const alternateOrders = step.alternate || [];
+
+		return userOrder.map((item, index) => {
+			if (correctOrder[index] === item) return false;
+
+			for (const altOrder of alternateOrders) {
+				if (altOrder[index] === item) return false;
+			}
+
+			return true;
+		});
+	}
+
 	function shuffle(array: number[]): number[] {
 		const copiedArray = [...array];
 		let currentIndex = copiedArray.length;
@@ -51,6 +66,7 @@
 	let status = $state<'idle' | 'incorrect' | 'correct'>('idle');
 	let isChecking = $state(false);
 	let isShaking = $state(false);
+	let incorrectPositions = $state<boolean[]>([]);
 
 	async function handleCheck() {
 		if (isChecking) return;
@@ -66,6 +82,7 @@
 			successPlayer?.play();
 		} else {
 			status = 'incorrect';
+			incorrectPositions = getIncorrectPositions(userOrder);
 			failPlayer?.play();
 			isShaking = true;
 		}
@@ -87,6 +104,7 @@
 				bind:order={userOrder}
 				code={step.code}
 				disabled={status === 'correct' || isChecking}
+				{incorrectPositions}
 			/>
 		</div>
 	</main>
