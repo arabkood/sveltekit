@@ -329,6 +329,7 @@
 			nextHref={`/courses/${data?.track.slug}`}
 			sound={finishPlayer}
 			score={submission?.xp_reward ?? 0}
+			courseTitle={data.track.title}
 		/>
 	{/if}
 </main>

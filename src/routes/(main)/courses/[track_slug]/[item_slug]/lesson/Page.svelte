@@ -174,6 +174,7 @@
 			nextHref={`/courses/${track.slug}`}
 			sound={finishPlayer}
 			score={gainedXp}
+			courseTitle={track.title}
 		/>
 	{:else}
 		<FailPopup

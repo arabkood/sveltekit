@@ -6,6 +6,7 @@
 	import { scale, fly } from 'svelte/transition';
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
+	import Icon from '$ui/common/Icon.svelte';
 
 	let {
 		onClose,
@@ -14,6 +15,7 @@
 		title = 'ممتاز!',
 		message = 'لقد أكملتَ هذا الدرس بنجاح',
 		continueButtonText = 'متابعة',
+		courseTitle,
 		sound
 	} = $props<{
 		onClose?: () => void;
@@ -23,11 +25,13 @@
 		message?: string;
 		continueButtonText?: string;
 		sound?: Sound;
+		courseTitle?: string;
 	}>();
 
 	let canvas: HTMLCanvasElement;
 	let scoreAnimationComplete = $state(false);
 	let animationFrame: number;
+	let copied = $state(false); // State for copy-to-clipboard feedback
 
 	const scoreCount = new Tween(0, {
 		delay: 600,
@@ -113,7 +117,6 @@
 			for (let i = particles.length - 1; i >= 0; i--) {
 				const p = particles[i];
 
-				// Update physics
 				p.speed *= p.friction;
 				p.velocityY += p.gravity;
 				p.x += Math.cos(p.angle) * p.speed;
@@ -149,7 +152,7 @@
 	});
 
 	const handleKeydown = (event: KeyboardEvent) => {
-		// if (event.key === 'Escape') onClose?.();
+		if (event.key === 'Escape') onClose?.();
 	};
 
 	const mainModalTransition = (node: Element, { delay = 0, duration = 400 }) => {
@@ -164,6 +167,49 @@
                 `;
 			}
 		};
+	};
+
+	const handleShare = async () => {
+		if (!browser) return;
+
+		// 1. Create a more engaging share text
+		const shareTextTemplate = `أنجزتُ تحديًا في {title} وحصلت على +{score} نقطة خبرة 💡! تعلّم البرمجة معي وجرّب أن تتفوق علي. هل تقدر؟ 😉`;
+		let shareText = shareTextTemplate.replace('{score}', String(Math.round(score)));
+		if (courseTitle) {
+			shareText = shareText.replace('{title}', '"' + courseTitle + '"');
+		} else {
+			shareText = shareText.replace('{title}', 'أكوود');
+		}
+
+		// 2. Get the current URL and add a referral parameter
+		const url = new URL(window.location.href);
+		url.searchParams.set('ref', 'success-share');
+		const shareUrl = url.toString();
+
+		// 3. Use Web Share API if available (mobile)
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: 'إنجاز جديد!',
+					text: shareText,
+					url: shareUrl
+				});
+			} catch (error) {
+				console.log('Share was cancelled or failed', error);
+			}
+		} else {
+			// 4. Fallback to copying to clipboard (desktop)
+			try {
+				await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+				copied = true;
+				setTimeout(() => {
+					copied = false;
+				}, 2000); // Show "Copied!" for 2 seconds
+			} catch (error) {
+				console.error('Failed to copy to clipboard', error);
+				alert('لم نتمكن من نسخ الرابط. الرجاء نسخه يدويًا.');
+			}
+		}
 	};
 </script>
 
@@ -240,7 +286,11 @@
 				{message}
 			</p>
 
-			<div class="mt-8 w-full" in:fly={{ y: 20, delay: 900, duration: 500, easing: cubicOut }}>
+			<div
+				class="mt-8 w-full space-y-3"
+				in:fly={{ y: 20, delay: 900, duration: 500, easing: cubicOut }}
+			>
+				<!-- Primary Button -->
 				<Button
 					size="lg"
 					fullWidth={true}
@@ -251,6 +301,26 @@
 					data-sveltekit-reload
 				>
 					{continueButtonText}
+				</Button>
+
+				<Button
+					size="md"
+					fullWidth={true}
+					onclick={handleShare}
+					variant="link"
+					class="mt-2 ring-0!"
+				>
+					{#if copied}
+						<span class="flex items-center gap-2">
+							<Icon name="check" size={20} />
+							تم النسخ!
+						</span>
+					{:else}
+						<span class="flex items-center gap-2">
+							<Icon name="share" size={20} />
+							شارك الإنجاز
+						</span>
+					{/if}
 				</Button>
 			</div>
 		</div>
