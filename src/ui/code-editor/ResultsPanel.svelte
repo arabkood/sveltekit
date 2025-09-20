@@ -5,8 +5,10 @@
 	import { i18n } from '$i18n/i18n';
 	import type { Submission } from '$lib/server/db/schema/submission';
 	import type { JobResult, TestResult } from '$types/code';
+	import Icon from '$ui/common/Icon.svelte';
 
-	let { submission, error = null }: { submission?: Submission; error?: string | null } = $props();
+	let { submission, error = null }: { submission?: Submission | null; error?: string | null } =
+		$props();
 
 	// --- Derived ---
 	const job: JobResult | null = $derived((submission?.metadata as any)?.job || null);
@@ -27,30 +29,21 @@
 			);
 		}
 	});
-
-	function toggleTestCase(index: number) {
-		expandedTestCases[index] = !expandedTestCases[index];
-	}
 </script>
 
-<div in:fade={{ duration: 200 }} class="max-h-full overflow-y-auto pb-20">
+<div
+	in:fade={{ duration: 200 }}
+	class="h-full w-full bg-gray-50 p-4 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+>
+	<header class="mb-4 flex items-center justify-between">
+		<h3 class="text-lg font-semibold">نتائج الاختبارات (Unit Tests)</h3>
+	</header>
+
 	<!-- Priority 1: Top-level fetch/network error from parent -->
 	{#if error}
 		<div class="m-4 rounded-md bg-red-100 p-4 dark:bg-red-900/20">
 			<div class="flex items-start gap-3">
-				<svg
-					class="h-6 w-6 shrink-0 text-red-600 dark:text-red-400"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-					/>
-				</svg>
+				<Icon name="x-circle" class="text-red-400" />
 				<div>
 					<h2 class="text-sm font-semibold text-red-800 dark:text-red-200">
 						{i18n.t('editor.error')}
@@ -74,36 +67,12 @@
 		>
 			<div class="flex items-center gap-3">
 				{#if failedTests === 0}
-					<svg
-						class="h-6 w-6 text-green-600 dark:text-green-400"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-						/>
-					</svg>
+					<Icon name="check-circle" class="text-green-500" />
 					<h2 class="text-sm font-semibold text-green-800 dark:text-green-200">
 						جميع الاختبارات ناجحة! ({passedTests}/{totalTests})
 					</h2>
 				{:else}
-					<svg
-						class="h-6 w-6 text-red-600 dark:text-red-400"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-						/>
-					</svg>
+					<Icon name="x-circle" class="text-red-500" />
 					<h2 class="text-sm font-semibold text-red-800 dark:text-red-200">
 						{failedTests}
 						{#if failedTests === 1}اختبار فشل{:else}اختبارات فشلت{/if}
@@ -111,7 +80,7 @@
 				{/if}
 			</div>
 		</div>
-		<div class="space-y-2 px-4" dir="ltr">
+		<div class="space-y-2" dir="ltr">
 			{#each testCases as testCase, index}
 				<TestCase {testCase} expanded={expandedTestCases[index]} />
 			{/each}
@@ -120,19 +89,6 @@
 	{:else}
 		<div class="px-4 py-4">
 			<div class="flex items-center gap-3">
-				<svg
-					class="h-5 w-5 text-gray-600 dark:text-gray-400"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-					/>
-				</svg>
 				<h2 class="text-sm font-semibold text-gray-800 dark:text-gray-200">
 					ستظهر النتائج هنا بعد تشغيل الاختبارات
 				</h2>

@@ -9,6 +9,8 @@
 		| 'default'
 		| 'destructive'
 		| 'outline'
+		| 'boring'
+		| 'friendly'
 		| 'secondary'
 		| 'ghost'
 		| 'link'
@@ -92,6 +94,25 @@
    dark:hover:bg-gray-800 dark:hover:border-neutral-600
    transition-all duration-150 ease-out
  `,
+		boring: `
+  bg-gray-200 text-gray-900 shadow-md shadow-gray-300
+  hover:bg-gray-300 hover:shadow-lg hover:shadow-gray-400
+  focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
+  disabled:bg-gray-600 disabled:bg-gray-100 disabled:text-gray-400 disabled:shadow-none disabled:cursor-not-allowed
+  dark:bg-gray-700 dark:text-gray-100 dark:shadow-gray-900/30
+  dark:hover:bg-gray-600 dark:hover:shadow-gray-900/50
+  transition-all duration-200 ease-out
+`,
+		friendly: `
+  bg-emerald-500 text-white shadow-md shadow-emerald-400/30
+  hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/40
+  focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2
+  active:bg-emerald-700 disabled:bg-emerald-800
+  disabled:bg-emerald-300 disabled:text-white/70 disabled:shadow-none disabled:cursor-not-allowed
+  dark:bg-emerald-600 dark:hover:bg-emerald-500 dark:active:bg-emerald-700
+  dark:shadow-emerald-700/40 dark:hover:shadow-emerald-600/50
+  transition-all duration-200 ease-out`,
+
 		secondary: `
    bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/30
    hover:from-violet-700 hover:to-purple-700 hover:shadow-xl hover:shadow-violet-600/40
@@ -227,7 +248,7 @@
 	{/if}
 
 	{#if children}
-		<span class={loading && startIcon ? 'invisible' : ''}>
+		<span>
 			{@render children?.()}
 		</span>
 	{/if}

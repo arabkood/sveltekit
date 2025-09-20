@@ -36,7 +36,9 @@ export const API_ENDPOINTS = {
   },
   item: {
     // codeAttempt: (itemId: string) => API_BASE_URL + `/item/code/attempt/${itemId}`,
-    submit: (itemId: string) => API_BASE_URL + `/item/submit/${itemId}`
+    submit: (itemId: string) => API_BASE_URL + `/item/submit/${itemId}`,
+    run: (itemId: string) => API_BASE_URL + `/item/run/${itemId}`,
+    get_run: (taskId: string) => API_BASE_URL + `/item/run/${taskId}/status`
   }
   // modules: {
   // 	get: (moduleSlug: string) => API_BASE_URL + `/module/${moduleSlug}`,
