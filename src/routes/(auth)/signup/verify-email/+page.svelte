@@ -17,7 +17,7 @@
 	const { data }: { data: PageData } = $props();
 	const { user } = data;
 
-	if (!user || user.emailVerified) {
+	if (!user || user.emailVerified || !user.email) {
 		location.href = '/';
 		goto('/', {
 			invalidateAll: true
@@ -47,6 +47,7 @@
 		const code = verificationCode.join('');
 
 		try {
+			console.log(user);
 			const response = await fetch(API_ENDPOINTS.auth.verifyEmail, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },

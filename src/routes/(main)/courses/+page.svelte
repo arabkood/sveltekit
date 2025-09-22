@@ -101,11 +101,11 @@
 												<img
 													src={toPublicUrl(track.logo)}
 													alt=""
-													class="max-h-[120px] max-w-[120px] object-contain transition-all duration-500 {track.coming_soon
+													class="max-h-[140px] max-w-[140px] object-contain transition-all duration-500 {track.coming_soon
 														? 'opacity-40 grayscale filter'
 														: 'group-hover:scale-110 group-hover:brightness-110'}"
-													height="120"
-													width="120"
+													height="140"
+													width="140"
 												/>
 												{#if track.coming_soon}
 													<div class="absolute inset-0 flex items-center justify-center">
