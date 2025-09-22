@@ -142,23 +142,15 @@
 	<!-- Email Section -->
 	<div class="w-full space-y-4">
 		<div class="w-full">
-			<label class="mb-2 block text-sm font-medium text-gray-700">
+			<label class="mb-2 block text-sm font-medium">
 				{i18n.t('common.email')}
 			</label>
 			<div class="flex items-center gap-3">
 				<span class="text-sm text-gray-900">{user.email || 'No email'}</span>
 				{#if user.emailVerified}
-					<span
-						class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
-					>
-						<Icon name="check-circle" />
-					</span>
+					<Icon name="check-circle" class="text-green-500" />
 				{:else}
-					<span
-						class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800"
-					>
-						<Icon name="x-circle" />
-					</span>
+					<Icon name="x-circle" class="text-yellow-600" />
 				{/if}
 			</div>
 		</div>
