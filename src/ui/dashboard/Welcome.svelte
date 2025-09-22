@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import Button from '$ui/common/Button.svelte';
 	import type { SelectUserTracks } from '$lib/server/db/schema/class';
+	import IconPng from '$ui/common/IconPng.svelte';
 
 	const {
 		userTracks,
@@ -47,13 +48,8 @@
 					{name}!
 				</h1>
 
-				{#if is_user_premium}
-					<span
-						class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-700"
-					>
-						<Icon name="star" class="me-1.5 h-4 w-4" />
-						{i18n.t('common.premium')}
-					</span>
+				{#if !is_user_premium}
+					<IconPng name="premium" size={18} />
 				{/if}
 
 				<span class="relative flex h-3 w-3">

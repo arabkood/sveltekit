@@ -1,36 +1,50 @@
 <script>
 	import { i18n } from '$i18n/i18n';
-	import Icon from '$ui/common/Icon.svelte';
+	import Button from '$ui/common/Button.svelte';
+	import IconPng from '$ui/common/IconPng.svelte';
 </script>
 
-<div class="mb-8 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 p-1">
-	<div class="relative flex items-center justify-between rounded-xl bg-gray-900 p-6 lg:p-8">
-		<div class="relative z-10 max-w-xl space-y-4">
-			<span
-				class="inline-flex items-center rounded-full bg-purple-500/20 px-4 py-1 text-sm text-purple-300"
-			>
-				<Icon name="sparkles" class="me-2 h-4 w-4" />
+<div
+	class="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-100 ring-1 ring-gray-900/5 dark:from-gray-900 dark:to-gray-950 dark:ring-white/10"
+>
+	<div class="relative flex flex-col p-6 text-center md:flex-row md:gap-12 md:p-10 md:text-start">
+		<!-- Content -->
+		<div
+			class="relative z-10 mx-auto flex max-w-xl flex-shrink-0 flex-col items-center space-y-6 pt-20 md:mx-0 md:items-start md:pt-0"
+		>
+			<p class="font-semibold text-purple-600 dark:text-purple-400">
 				{i18n.t('dashboard.premium_offer')}
-			</span>
-			<h2 class="text-2xl font-bold text-white lg:text-3xl">
+			</p>
+			<h2
+				class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl dark:text-white"
+			>
 				{i18n.t('dashboard.unlock_premium')}
 			</h2>
-			<p class="text-purple-200">{i18n.t('dashboard.premium_description')}</p>
-			<a
+			<p class="text-lg leading-relaxed text-gray-600 dark:text-gray-400">
+				{i18n.t('dashboard.premium_description')}
+			</p>
+			<Button
 				href="/pricing"
-				class="group inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-purple-600 transition hover:bg-purple-50"
+				variant="attention"
+				size="lg"
+				class="transition-all hover:scale-105 hover:brightness-110"
 			>
-				<Icon name="star" class="h-5 w-5 text-yellow-500" />
 				<span>{i18n.t('common.upgrade_now')}</span>
-			</a>
+			</Button>
 		</div>
-		<div class="absolute top-0 right-0 h-full w-1/3">
+		<!-- Visual Element -->
+		<div
+			class="pointer-events-none absolute top-16 left-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 select-none md:top-1/2 md:left-auto md:h-[400px] md:w-[400px] md:translate-x-0 md:-translate-y-1/2 md:ltr:-right-20 md:rtl:-left-20"
+		>
 			<div
-				class="absolute top-1/2 right-16 h-64 w-64 -translate-y-1/2 rounded-full bg-purple-500/20 blur-3xl"
+				class="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 opacity-20 blur-3xl dark:from-purple-600 dark:to-indigo-600 dark:opacity-25"
 			></div>
 			<div
-				class="absolute top-1/2 right-32 h-48 w-48 -translate-y-1/2 rounded-full bg-indigo-500/20 blur-2xl"
-			></div>
+				class="absolute top-1/2 left-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 ring-1 ring-black/10 backdrop-blur-lg md:h-32 md:w-32 dark:bg-gray-950/50 dark:ring-white/20"
+			>
+				<IconPng name="premium" size={48} class="md:hidden" />
+				<IconPng name="premium" size={64} class="hidden md:block" />
+			</div>
 		</div>
 	</div>
 </div>

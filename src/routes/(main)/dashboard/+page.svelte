@@ -19,9 +19,6 @@
 
 <div class="bg-page min-h-screen">
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">
-		{#if !data.user?.premiumActive}
-			<BannerPremium />
-		{/if}
 		<Welcome
 			userTracks={data.userTracks!}
 			name={data.user!.username}
@@ -37,7 +34,7 @@
 		<!-- Main Content Grid -->
 		<!-- <div class="grid gap-8 lg:grid-cols-12"> -->
 		<!-- 	<div class="space-y-8 lg:col-span-8"> -->
-		<div>
+		<div class="mb-12">
 			<div>
 				{#if data.userTracks!.length > 0}
 					<UserTracks userTracks={data.userTracks!} courses={data.courses!} />
@@ -55,6 +52,9 @@
 				<!-- <JoinCommunity /> -->
 			</div>
 		</div>
+		{#if !data.user?.premiumActive}
+			<BannerPremium />
+		{/if}
 	</div>
 </div>
 <Footer />

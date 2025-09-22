@@ -385,10 +385,10 @@
 							aria-current={isActive ? 'page' : undefined}
 							variant={isActive ? 'link-pill-active' : 'link-pill'}
 							size="sm"
-							class="flex w-full items-center justify-start"
+							class="w-full justify-start py-5"
 							onclick={() => (isOpen = false)}
+							startIcon={link.icon}
 						>
-							<Icon name={link.icon} size={18} class="mr-3 flex-shrink-0" />
 							<span class="whitespace-nowrap">{link.name}</span>
 						</Button>
 					{/each}
@@ -396,11 +396,7 @@
 
 				{#if user && userStats && rankInfo && currentLevel !== undefined && progressPercent !== undefined && xp}
 					<!-- Mobile profile section -->
-					<div class="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700" dir="rtl">
-						<h3 class="mb-4 px-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-							ملفي الشخصي
-						</h3>
-
+					<div class="mt-3 border-t border-gray-200 pt-3 dark:border-gray-700" dir="rtl">
 						<NavbarUserMenu {user} variant="mobile" />
 
 						<!-- Mobile level display -->

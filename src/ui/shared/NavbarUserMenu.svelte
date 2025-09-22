@@ -7,6 +7,7 @@
 	import Button from '$ui/common/Button.svelte';
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
+	import IconPng from '$ui/common/IconPng.svelte';
 
 	let {
 		variant = 'desktop',
@@ -29,6 +30,11 @@
 
 	const signOut = async () => {
 		goto('/signout');
+	};
+
+	const upgrade = async () => {
+		goto('/pricing');
+		showMenu = false;
 	};
 
 	$effect(() => {
@@ -90,12 +96,27 @@
 
 {#if variant === 'mobile'}
 	<ul class="list-none">
+		{#if !user.premiumActive}
+			<li>
+				<Button
+					variant={'link-pill'}
+					size="sm"
+					class="w-full justify-start py-5"
+					rounded={false}
+					onclick={() => upgrade()}
+					startIcon="star"
+					iconSize={20}
+				>
+					{i18n.t('common.upgrade')}
+				</Button>
+			</li>
+		{/if}
 		<li>
 			<Button
 				href={'/settings'}
 				variant={'link-pill'}
 				size="sm"
-				class="w-full"
+				class="w-full justify-start py-5"
 				rounded={false}
 				onclick={() => (showMenu = false)}
 				startIcon={'cog'}
@@ -108,7 +129,7 @@
 			<Button
 				variant={'link-pill'}
 				size="sm"
-				class="w-full"
+				class="w-full justify-start py-5"
 				rounded={false}
 				onclick={() => signOut()}
 				startIcon="exit"
@@ -141,6 +162,9 @@
 				className="me-1"
 			/>
 			{user.username}
+			{#if user.premiumActive}
+				<IconPng name="premium" size={20} alt="Premium" class="ms-1 mb-1 inline" />
+			{/if}
 		</Button>
 
 		{#if showMenu}
@@ -151,6 +175,21 @@
 				transition:slide={{ duration: 200 }}
 			>
 				<ul class="divide-y divide-gray-100 dark:divide-gray-700">
+					{#if !user.premiumActive}
+						<li>
+							<button
+								class="group flex w-full cursor-pointer items-center gap-3 px-3.5 py-2.5 text-sm text-yellow-600 transition-colors duration-150 ease-in-out hover:bg-yellow-50 hover:text-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20 dark:hover:text-yellow-300"
+								onclick={() => upgrade()}
+							>
+								<Icon
+									name="star"
+									size={20}
+									class="text-yellow-500 transition-colors duration-150 ease-in-out group-hover:text-yellow-600 dark:text-yellow-400 dark:group-hover:text-yellow-300"
+								/>
+								{i18n.t('common.upgrade')}
+							</button>
+						</li>
+					{/if}
 					<li>
 						<a
 							href="/settings"

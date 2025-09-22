@@ -4,6 +4,7 @@
 	export const isValidIconId = (iconId: string): iconId is IconId => {
 		return icons.some((icon) => icon.id === iconId);
 	};
+
 	interface IconData {
 		id: string;
 		content: string;
@@ -13,7 +14,7 @@
 		strokeWidth?: string;
 	}
 
-	export const icons: IconData[] = [
+	export const icons = [
 		{
 			id: 'dashboard',
 			content:

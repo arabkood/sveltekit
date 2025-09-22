@@ -72,7 +72,7 @@
 							{#if track?.logo}
 								<img
 									src={toPublicUrl(track.logo)}
-									class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+									class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
 									alt={`${track.title} logo`}
 									loading="lazy"
 								/>

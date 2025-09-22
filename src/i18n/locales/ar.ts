@@ -257,9 +257,9 @@ export default {
     no_tracks: 'لا يوجد مسار',
     start_track_prompt: 'ابدأ مسارك الأول',
     browse_tracks: 'تصفح المسارات',
-    premium_offer: 'عرض خاص',
-    unlock_premium: 'احصل على العضوية المميزة',
-    premium_description: 'احصل على وصول غير محدود إلى جميع المسارات التعليمية والتمارين المتقدمة',
+    premium_offer: 'العضوية المميزة',
+    unlock_premium: 'ارتقِ بتعلمك إلى المستوى التالي', // "Take your learning to the next level" - More inspiring and benefit-driven
+    premium_description: 'تمتع بوصول فوري وغير محدود لجميع المسارات المتقدمة والمشاريع الحصرية لتسريع رحلتك الاحترافية.',
     continue_learning: 'متابعة التعلم',
     level: 'المستوى',
     xp: 'نقاط الخبرة',
