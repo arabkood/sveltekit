@@ -3,11 +3,11 @@
 	import ActiveTrack from '$ui/dashboard/ActiveTrack.svelte';
 	import BannerPremium from '$ui/dashboard/BannerPremium.svelte';
 	// import DailyChallenge from '$ui/dashboard/DailyChallenge.svelte';
-	import Stats from '$ui/dashboard/Stats.svelte';
 	import UserTracks from '$ui/dashboard/UserTracks.svelte';
 	import Welcome from '$ui/dashboard/Welcome.svelte';
 	import type { PageData } from '../settings/$types';
 	import Footer from '$ui/shared/Footer.svelte';
+	import CardXp from '$ui/dashboard/CardXP.svelte';
 
 	const {
 		data
@@ -24,12 +24,9 @@
 			name={data.user!.username}
 			is_user_premium={data.user?.premiumActive || false}
 		/>
-		<Stats
-			totalXp={data.userStats!.totalXp}
-			currentStreak={0}
-			globalRank={0}
-			todayStreakCompleted={false}
-		/>
+		<div class="mb-8 grid gap-6 lg:grid-cols-3">
+			<CardXp totalXp={data.userStats!.totalXp} />
+		</div>
 
 		<!-- Main Content Grid -->
 		<!-- <div class="grid gap-8 lg:grid-cols-12"> -->

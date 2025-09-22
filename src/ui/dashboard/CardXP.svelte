@@ -185,8 +185,7 @@
 		theme.border,
 		theme.glow,
 		theme.hoverGlow,
-		theme.hoverBorder,
-		'hover:-translate-y-1 hover:scale-[1.02]'
+		theme.hoverBorder
 	)}
 >
 	<div class="absolute inset-0 opacity-5">
