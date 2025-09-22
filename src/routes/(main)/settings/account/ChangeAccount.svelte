@@ -146,7 +146,7 @@
 				{i18n.t('common.email')}
 			</label>
 			<div class="flex items-center gap-3">
-				<span class="text-sm text-gray-900">{user.email || 'No email'}</span>
+				<span class="text-sm">{user.email || 'No email'}</span>
 				{#if user.emailVerified}
 					<Icon name="check-circle" class="text-green-500" />
 				{:else}
