@@ -48,7 +48,7 @@
 					{name}!
 				</h1>
 
-				{#if !is_user_premium}
+				{#if is_user_premium}
 					<IconPng name="premium" size={18} />
 				{/if}
 
