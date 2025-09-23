@@ -9,8 +9,6 @@ COPY pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
 
-ENV PUBLIC_APP_ENV=dev
-
 RUN pnpm run build
 
 FROM node:18-alpine AS runtime

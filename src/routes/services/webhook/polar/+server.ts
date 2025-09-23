@@ -23,7 +23,7 @@ export const POST = Webhooks({
     }
 
     // check premium benefit
-    const targetBenefitId = "3d28686e-5c17-4c12-88f0-fa6b387854c7";
+    const targetBenefitId = env.POLAR_PREMIUM_BENEFIT_ID;
     const isPremium = data.grantedBenefits.some((b) => {
       // console.log(`Comparing: "${b.benefitId}" === "${targetBenefitId}"`, b.benefitId === targetBenefitId);
       return b.benefitId === targetBenefitId;

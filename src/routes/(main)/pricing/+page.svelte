@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { POLAR_PRODUCTS } from '$config';
 	import Icon from '$ui/common/Icon.svelte';
 	import Footer from '$ui/shared/Footer.svelte';
 	import type { LayoutServerData } from '../$types';
@@ -81,8 +82,8 @@
 			isPopular: true,
 			iconName: 'zap',
 			checkout: {
-				yearly: `/services/checkout?products=5b7b704c-34d7-4c26-ac75-fe08e14d6a04&customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`,
-				monthly: `/services/checkout?products=b5d7dffe-148a-4b0b-9c32-5b9c9b47ebf7&customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
+				yearly: `/services/checkout?products=${POLAR_PRODUCTS.premium_yearly}&customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`,
+				monthly: `/services/checkout?products=${POLAR_PRODUCTS.premium_monthly}&customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
 			}
 		}
 	];

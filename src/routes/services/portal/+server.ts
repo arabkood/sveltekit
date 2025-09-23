@@ -1,3 +1,4 @@
+import { APP_ENV } from '$config';
 import { env } from '$env/dynamic/private';
 import { CustomerPortal } from "@polar-sh/sveltekit";
 import { redirect } from '@sveltejs/kit';
@@ -11,6 +12,6 @@ export const GET = (e) => {
   return CustomerPortal({
     accessToken: env.POLAR_ACCESS_TOKEN!,
     getCustomerId: async (event) => event.locals.user!.polarCustomerId!,
-    server: "sandbox",
+    server: APP_ENV === "production" ? "production" : "sandbox",
   })(e);
 }
