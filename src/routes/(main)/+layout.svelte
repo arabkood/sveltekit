@@ -17,7 +17,7 @@
 		setTimeout(() => {
 			if (data.user && browser) {
 				// @ts-expect-error any
-				window.posthog.identify(data.user.email, {
+				window.posthog?.identify(data.user.email, {
 					email: data.user.email
 				});
 			}

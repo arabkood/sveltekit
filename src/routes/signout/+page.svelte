@@ -8,7 +8,7 @@
 		if (browser) {
 			setTimeout(() => {
 				// @ts-expect-error any
-				window.posthog.reset();
+				window.posthog?.reset();
 			}, 100);
 		}
 	});
