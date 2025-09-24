@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /settings/*
+
+Sitemap: https://www.akood.com/sitemap.xml
