@@ -17,3 +17,9 @@ export const POLAR_PRODUCTS = {
   premium_yearly: env.PUBLIC_POLAR_PRODUCT_ID_PREMIUM_YEARLY,
   premium_monthly: env.PUBLIC_POLAR_PRODUCT_ID_PREMIUM_MONTHLY,
 }
+
+export const SITE_NAME_EN = "Akood";
+export const SITE_NAME_AR = "أكود";
+export const SITE_NAME_FULL = "أكود - Akood";
+
+export const SITE = "https://www.akood.com"

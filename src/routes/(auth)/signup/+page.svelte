@@ -5,9 +5,10 @@
 	import { createForm, z } from '$utils/createForm.svelte';
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';
-	import type { AuthState } from '$types/auth';
 	import Icon from '$ui/common/Icon.svelte';
 	import Button from '$ui/common/Button.svelte';
+	import { SITE_NAME_AR } from '$config';
+	import Seo from '$ui/others/SEO.svelte';
 
 	let status = $state('idle');
 	let submitError = $state<null | string>(null);
@@ -63,7 +64,7 @@
 				return;
 			}
 
-			const data: AuthState = {
+			const data = {
 				authenticated: true,
 				canResendCodeAt: Date.now() + 60 * 1000,
 				...(await response.json())
@@ -80,7 +81,12 @@
 			}, 2000);
 		}
 	);
+
+	const signupTitle = `انضم إلى ${SITE_NAME_AR} مجاناً | ابدأ تعلم البرمجة تفاعلياً`;
+	const signupDescription = `سجل في ${SITE_NAME_AR} مجاناً وابدأ رحلتك في تعلم البرمجة بالممارسة العملية. أكثر من 50 تمرين تفاعلي، تحديات برمجية، وتطبيق مباشر بدون فيديوهات.`;
 </script>
+
+<Seo title={signupTitle} description={signupDescription} lang="ar" />
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
 	<div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col items-center justify-center">

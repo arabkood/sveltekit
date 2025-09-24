@@ -102,10 +102,18 @@ export default {
     }
   },
   common: {
+    progress: 'التقدم',
+
+    track: 'المسار',
+    challenges_completed: 'التحديات المنجزة',
+    lessons_completed: 'الدروس المنجزة',
+    your_progress: 'تقدمك',
+    xp_earned: 'خبرتك المكتسبة',
+
+    done: "تم!",
     upgrade_to_unlock_content: "قم بالترقية لفتح المحتوى",
     coming_soon: 'قريباً',
     find_other_tracks: 'استكشف مسارات أخرى',
-    your_progress: 'تقدّمك',
     continue_learning: 'متابعة التعلم',
     copied: 'تم نسخ',
     copy: 'نسخ',
@@ -195,10 +203,10 @@ export default {
     difficulty: {
       all: 'جميع المستويات',
       novice: 'لا خبرة',
-      beginner: 'سهل',
-      intermediate: 'متوسط',
-      advanced: 'متقدم',
-      expert: 'خبير'
+      beginner: "مبتدئ",
+      intermediate: "متوسط",
+      advanced: "متقدم",
+      expert: "خبير"
     },
     modules: 'تمرين',
     xp: 'نقطة خبرة',
@@ -210,7 +218,6 @@ export default {
     total_xp: 'مجموع نقاط الخبرة',
     exercises_completed: 'التمارين المكتملة',
     enrolled_users: 'المتعلمون المسجلون',
-    progress: 'التقدم',
     prerequisites: 'المتطلبات الأساسية',
     what_you_learn: 'ماذا ستتعلم',
     tags: 'الوسوم',

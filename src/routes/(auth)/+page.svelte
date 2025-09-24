@@ -12,6 +12,7 @@
 	import Video from '$ui/common/Video.svelte';
 	import { fade } from 'svelte/transition';
 	import type { FillQuestion } from '$types/lesson';
+	import Seo from '$ui/others/SEO.svelte';
 
 	let mobileMenuOpen = $state(false);
 	const closeMenu = () => {
@@ -70,15 +71,93 @@ print(greeting)`,
 				'بالتأكيد. الخطة المجانية تمنحك وصولاً لوحدات تمهيدية أساسية ومسار "كيف يعمل الإنترنت" بالكامل، وهي طريقة ممتازة لتجربة منصتنا والبدء في رحلتك البرمجية.'
 		}
 	];
+
+	// SEO data
+	const seoTitle = 'أكود | تعلم البرمجة بالممارسة لا بالتلقين';
+	const seoDescription =
+		'منصة أكود لتعلم البرمجة باللغة العربية عبر دروس تفاعلية وتحديات عملية. ابدأ رحلتك البرمجية مجاناً مع أكثر من 50 تمرين تفاعلي.';
+	const seoKeywords =
+		'تعلم البرمجة, بايثون, جافاسكريبت, كورسات برمجة عربية, تعليم تفاعلي, أكود, akood';
+
+	// Homepage schema markup
+	const homepageSchema = [
+		// Organization schema
+		{
+			'@context': 'https://schema.org',
+			'@type': 'Organization',
+			name: 'أكود - Akood',
+			alternateName: ['أكود', 'Akood'],
+			url: 'https://akood.com',
+			logo: 'https://akood.com/images/logo.png',
+			description: seoDescription,
+			foundingDate: '2024',
+			sameAs: [
+				'https://twitter.com/akoodlearn', // Add your social media
+				'https://github.com/akood'
+			],
+			contactPoint: {
+				'@type': 'ContactPoint',
+				contactType: 'customer service',
+				availableLanguage: 'Arabic'
+			}
+		},
+		// Website schema
+		{
+			'@context': 'https://schema.org',
+			'@type': 'WebSite',
+			name: 'أكود - منصة تعلم البرمجة',
+			url: 'https://akood.com',
+			description: seoDescription,
+			inLanguage: 'ar',
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: 'https://akood.com/courses?q={search_term_string}',
+				'query-input': 'required name=search_term_string'
+			}
+		},
+		// Course catalog
+		{
+			'@context': 'https://schema.org',
+			'@type': 'ItemList',
+			name: 'كورسات البرمجة المتاحة',
+			description: 'مجموعة شاملة من كورسات البرمجة باللغة العربية',
+			itemListElement: [
+				{
+					'@type': 'Course',
+					position: 1,
+					name: 'بايثون للمبتدئين',
+					description: 'تعلم أساسيات البرمجة مع لغة بايثون',
+					provider: {
+						'@type': 'Organization',
+						name: 'أكود - Akood'
+					},
+					educationalLevel: 'مبتدئ',
+					url: 'https://akood.com/courses/beginner@python'
+				},
+				{
+					'@type': 'Course',
+					position: 2,
+					name: 'كيف يعمل الإنترنت',
+					description: 'فهم أساسيات الشبكة العالمية',
+					provider: {
+						'@type': 'Organization',
+						name: 'أكود - Akood'
+					},
+					educationalLevel: 'مبتدئ',
+					url: 'https://akood.com/courses/internet@web'
+				}
+			]
+		}
+	];
 </script>
 
-<svelte:head>
-	<title>أكوود | أتقن البرمجة، سطراً بسطر</title>
-	<meta
-		name="description"
-		content="منصة أكود هي طريقك لتعلم البرمجة باللغة العربية عبر دروس تفاعلية وتحديات عملية. ابدأ رحلتك البرمجية اليوم."
-	/>
-</svelte:head>
+<Seo
+	title={seoTitle}
+	description={seoDescription}
+	keywords={seoKeywords}
+	schema={homepageSchema}
+	lang="ar"
+/>
 
 <svelte:body class:overflow-hidden={mobileMenuOpen} />
 

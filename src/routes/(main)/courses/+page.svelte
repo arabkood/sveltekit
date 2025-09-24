@@ -1,11 +1,124 @@
 <script lang="ts">
+	import { SITE, SITE_NAME_AR, SITE_NAME_EN, SITE_NAME_FULL } from '$config';
 	import { i18n } from '$i18n/i18n';
+	import Seo from '$ui/others/SEO.svelte';
 	import { toPublicUrl } from '$utils/s3-public-assets';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 	const courses = $derived(Object.values(data.courses));
+
+	// SEO data
+	const seoTitle = `${SITE_NAME_AR} | تعلم البرمجة تفاعلياً بالممارسة العملية`;
+	const seoDescription = `${SITE_NAME_AR} - منصة تعلم ذاتي تفاعلية للبرمجة. لا فيديوهات، بل تطبيق مباشر! حل التحديات البرمجية، اكتب الكود، واختبر نفسك من اليوم الأول. تعلم بايثون والويب بطريقة عملية 100%.`;
+	const seoKeywords = `تعلم البرمجة التفاعلي, تمارين برمجة, تحديات كود, تعلم ذاتي, بايثون تفاعلي, برمجة عملية, ${SITE_NAME_AR}, ${SITE_NAME_EN}, تطبيق مباشر, بدون فيديوهات`;
+
+	// Homepage schema markup
+	const homepageSchema = [
+		// Organization schema
+		{
+			'@context': 'https://schema.org',
+			'@type': 'Organization',
+			name: SITE_NAME_FULL,
+			alternateName: [SITE_NAME_AR, SITE_NAME_EN, SITE],
+			url: SITE,
+			logo: `${SITE}/images/logo.png`,
+			description:
+				'منصة تعلم ذاتي تفاعلية للبرمجة بدون فيديوهات - تعلم بالممارسة المباشرة والتطبيق العملي',
+			foundingDate: '2024',
+			sameAs: [
+				'https://x.com/arabkood',
+				'https://facebook.com/arabkood',
+				'https://github.com/arabkood'
+			],
+			contactPoint: {
+				'@type': 'ContactPoint',
+				contactType: 'customer service',
+				availableLanguage: 'Arabic'
+			},
+			makesOffer: {
+				'@type': 'Offer',
+				itemOffered: {
+					'@type': 'Course',
+					name: 'دورات البرمجة التفاعلية',
+					description: 'تعلم البرمجة من خلال التطبيق المباشر والتحديات العملية'
+				},
+				availability: 'https://schema.org/InStock'
+			}
+		},
+		// Website schema
+		{
+			'@context': 'https://schema.org',
+			'@type': 'WebSite',
+			name: `${SITE_NAME_AR} - تعلم البرمجة تفاعلياً`,
+			url: SITE,
+			description: seoDescription,
+			inLanguage: 'ar',
+			audience: {
+				'@type': 'Audience',
+				audienceType: 'self-learners, programming beginners, coding students'
+			},
+			mainContentOfPage: {
+				'@type': 'WebPageElement',
+				name: 'Interactive Programming Exercises'
+			},
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: `${SITE}/courses?q={search_term_string}`,
+				'query-input': 'required name=search_term_string'
+			}
+		},
+		// Course catalog
+		{
+			'@context': 'https://schema.org',
+			'@type': 'ItemList',
+			name: 'كورسات البرمجة التفاعلية',
+			description: 'تعلم البرمجة من خلال التطبيق المباشر - بدون فيديوهات، فقط ممارسة عملية',
+			itemListElement: [
+				{
+					'@type': 'Course',
+					position: 1,
+					name: 'بايثون للمبتدئين - تطبيق تفاعلي',
+					description: 'تعلم بايثون من خلال كتابة الكود وحل التحديات البرمجية المباشرة',
+					courseMode: 'online',
+					educationalCredentialAwarded: 'Certificate of Completion',
+					interactionType: 'hands-on practice',
+					teaches: ['Python basics', 'Problem solving', 'Code writing'],
+					provider: {
+						'@type': 'Organization',
+						name: SITE_NAME_FULL
+					},
+					educationalLevel: 'مبتدئ',
+					url: `${SITE}/courses/beginner@python`
+				},
+				{
+					'@type': 'Course',
+					position: 2,
+					name: 'كيف يعمل الإنترنت - استكشاف تفاعلي',
+					description: 'اكتشف أسرار الإنترنت من خلال التجارب التفاعلية والأنشطة العملية',
+					courseMode: 'online',
+					educationalCredentialAwarded: 'Certificate of Completion',
+					interactionType: 'interactive exploration',
+					teaches: ['Internet protocols', 'DNS', 'HTTP', 'Web fundamentals'],
+					provider: {
+						'@type': 'Organization',
+						name: SITE_NAME_FULL
+					},
+					educationalLevel: 'مبتدئ',
+					url: `${SITE}/courses/internet@web`
+				}
+			]
+		}
+	];
 </script>
+
+<Seo
+	title={seoTitle}
+	description={seoDescription}
+	keywords={seoKeywords}
+	schema={homepageSchema}
+	lang="ar"
+/>
 
 <div class="bg-page min-h-screen">
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">

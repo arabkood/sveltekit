@@ -6,8 +6,9 @@
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';
 	import Icon from '$ui/common/Icon.svelte';
-	import type { AuthState } from '$types/auth';
 	import Button from '$ui/common/Button.svelte';
+	import { SITE_NAME_AR } from '$config';
+	import Seo from '$ui/others/SEO.svelte';
 
 	let status = $state('idle');
 	let submitError = $state<null | string>(null);
@@ -50,7 +51,7 @@
 				return;
 			}
 
-			const data: AuthState = {
+			const data = {
 				authenticated: true,
 				...(await response.json())
 			};
@@ -74,7 +75,12 @@
 			}, 1500);
 		}
 	);
+
+	const signinTitle = `تسجيل الدخول إلى ${SITE_NAME_AR} | واصل تعلم البرمجة`;
+	const signinDescription = `سجل دخولك إلى ${SITE_NAME_AR} لمواصلة رحلتك في تعلم البرمجة التفاعلية. تابع تقدمك في الكورسات والتحديات البرمجية.`;
 </script>
+
+<Seo title={signinTitle} description={signinDescription} lang="ar" />
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
 	<div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col items-center justify-center">

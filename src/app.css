@@ -69,6 +69,7 @@
 		'Traditional Arabic', 'Arabic Typesetting', sans-serif;
 
 	--animate-shake: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+
 	@keyframes shake {
 		10%,
 		90% {
@@ -124,7 +125,6 @@ body {
 
 html {
 	font-family: var(--font-family-arabic);
-	box-sizing: border-box;
 
 	scroll-behavior: smooth;
 }
@@ -132,7 +132,7 @@ html {
 *,
 *:before,
 *:after {
-	box-sizing: inherit;
+	box-sizing: border-box;
 }
 
 html[dir='rtl'] {

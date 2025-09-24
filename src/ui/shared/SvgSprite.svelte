@@ -277,6 +277,15 @@
 			id: 'chevron-right',
 			content: '<path d="M9 6L15 12L9 18"/>'
 		},
+
+		{
+			id: 'chevron-down',
+			content: '<path d="m19.5 8.25-7.5 7.5-7.5-7.5" />'
+		},
+		{
+			id: 'chevron-up',
+			content: '<path d="m4.5 15.75 7.5-7.5 7.5 7.5" />'
+		},
 		{
 			id: 'upload',
 			content: '<path d="M6 20L18 20"/><path d="M12 16V4M12 4L15.5 7.5M12 4L8.5 7.5" />'
