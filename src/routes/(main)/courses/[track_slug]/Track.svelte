@@ -8,10 +8,14 @@
 	const {
 		track,
 		modules,
-		nextItem
-	}: { track: Track; modules: ModuleWithItems[]; nextItem?: ItemWithSubmission } = $props();
-
-	const isPremium = false;
+		nextItem,
+		isPremium = false
+	}: {
+		isPremium?: boolean;
+		track: Track;
+		modules: ModuleWithItems[];
+		nextItem?: ItemWithSubmission;
+	} = $props();
 </script>
 
 {#each modules as module}

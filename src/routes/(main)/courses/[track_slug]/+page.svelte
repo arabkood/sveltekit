@@ -100,7 +100,12 @@
 <!-- Desktop -->
 <div class="mx-auto hidden min-h-screen max-w-7xl grid-cols-[1fr_380px] lg:grid">
 	<main class="p-4">
-		<Track modules={data.modules} nextItem={nextItem?.item} track={data.track} />
+		<Track
+			isPremium={data.user?.premiumActive}
+			modules={data.modules}
+			nextItem={nextItem?.item}
+			track={data.track}
+		/>
 	</main>
 	<aside class="p-4">
 		<TrackProgress modules={data.modules} />
@@ -116,7 +121,12 @@
 		</TabList>
 		<TabPanel index={0} transition="slide">
 			<main class="p-4">
-				<Track modules={data.modules} nextItem={nextItem?.item} track={data.track} />
+				<Track
+					isPremium={data.user?.premiumActive}
+					modules={data.modules}
+					nextItem={nextItem?.item}
+					track={data.track}
+				/>
 			</main>
 		</TabPanel>
 		<TabPanel index={1} transition="slide">
