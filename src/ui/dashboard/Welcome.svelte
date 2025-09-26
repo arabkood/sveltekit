@@ -347,9 +347,9 @@
 					class="absolute inset-2 rounded-full bg-gradient-to-br from-purple-400/10 to-indigo-500/10 blur-lg"
 				></div>
 				<div
-					class="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/80 ring-1 ring-purple-400/30 backdrop-blur-sm dark:bg-gray-950/50 dark:ring-purple-500/30"
+					class="relative flex h-14 w-14 items-center justify-center rounded-full bg-white/80 ring-1 ring-purple-400/30 backdrop-blur-sm dark:bg-gray-950/50 dark:ring-purple-500/30"
 				>
-					<IconPng name="premium" size={20} />
+					<IconPng name="premium" size={28} />
 				</div>
 			</div>
 		{/if}
