@@ -20,7 +20,6 @@
 <div class="bg-page min-h-screen">
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">
 		<Welcome
-			handleContinueLearning={() => {}}
 			userTracks={data.userTracks!}
 			name={data.user!.username}
 			is_user_premium={data.user?.premiumActive ?? false}
