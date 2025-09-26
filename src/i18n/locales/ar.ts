@@ -254,6 +254,8 @@ export default {
     }
   },
   dashboard: {
+    "continue_learning": "أكمل التعلّم",
+
     achievements: 'إنجازاتك',
     highest_streak: 'أطول فترة متتالية',
     highest_rank: 'أعلى رتبة',
@@ -267,7 +269,6 @@ export default {
     premium_offer: 'العضوية المميزة',
     unlock_premium: 'ارتقِ بتعلمك إلى المستوى التالي', // "Take your learning to the next level" - More inspiring and benefit-driven
     premium_description: 'تمتع بوصول فوري وغير محدود لجميع المسارات المتقدمة والمشاريع الحصرية لتسريع رحلتك الاحترافية.',
-    continue_learning: 'متابعة التعلم',
     level: 'المستوى',
     xp: 'نقاط الخبرة',
     streak: 'شعلة النشاط',
