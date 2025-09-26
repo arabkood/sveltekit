@@ -8,13 +8,14 @@
 	import type { PageData } from '../settings/$types';
 	import Footer from '$ui/shared/Footer.svelte';
 	import CardXp from '$ui/dashboard/CardXP.svelte';
+	import CardStreak from '$ui/dashboard/CardStreak.svelte';
 
 	const {
 		data
 	}: {
 		data: PageData;
 	} = $props();
-	// console.debug(data.user);
+	console.debug(data.userStats);
 </script>
 
 <div class="bg-page min-h-screen">
@@ -27,6 +28,9 @@
 		/>
 		<div class="mb-8 grid gap-6 lg:grid-cols-3">
 			<CardXp totalXp={data.userStats!.totalXp} />
+			<div class="m-auto w-full">
+				<CardStreak userStreak={data.userStreak!} />
+			</div>
 		</div>
 
 		<!-- Main Content Grid -->

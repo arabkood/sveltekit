@@ -1,4 +1,4 @@
-import { uuid, bigint, integer, timestamp, pgSchema, text, jsonb } from 'drizzle-orm/pg-core';
+import { uuid, bigint, integer, timestamp, pgSchema, text, jsonb, date } from 'drizzle-orm/pg-core';
 import { users } from './auth';
 import { modules, tracks } from './class';
 
@@ -11,7 +11,9 @@ export const usersStats = usersSchema.table('stats', {
   totalXp: bigint('total_xp', { mode: 'number' }).notNull().default(0),
   completedItems: integer('completed_items').notNull().default(0),
   longestStreak: integer('longest_streak').notNull().default(0),
-  lastActiveAt: timestamp('last_active_at', { withTimezone: true })
+  lastActiveAt: timestamp('last_active_at', { withTimezone: true }),
+  currentStreak: integer('current_streak').notNull().default(0),
+  lastActiveDate: date('last_active_date').notNull()
 });
 export type SelectUsersStats = typeof usersStats.$inferSelect;
 
