@@ -91,7 +91,7 @@
 			</p>
 
 			<div class="mt-6 space-y-2" in:fly={{ y: 20, duration: 600, delay: 600 }}>
-				<div class="relative h-2.5 overflow-hidden rounded-full bg-white/30 dark:bg-gray-800/50">
+				<div class="relative h-2.5 overflow-hidden rounded-full bg-slate-700/10 dark:bg-white/10">
 					<div
 						class={cn('h-full rounded-full', currentRank.theme.progress)}
 						style="width: {progressWidth.current}%"

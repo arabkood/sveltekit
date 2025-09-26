@@ -1,6 +1,6 @@
-import type { IconPngName } from "$ui/common/IconPng.svelte";
+import type { IconPngName } from '$ui/common/IconPng.svelte';
 
-// Same RankTheme interface as before.
+// The RankTheme interface remains the same.
 export interface RankTheme {
   bg: string;
   border: string;
@@ -12,48 +12,6 @@ export interface RankTheme {
   accent: string;
 }
 
-// A more flexible theme generator that accepts an array of colors.
-const createTheme = (colors: string[]): RankTheme => {
-  // Use the first color as the primary and the last as the secondary for consistency.
-  const primary = colors[0];
-  const secondary = colors[colors.length - 1];
-
-  let progressGradient = '';
-  let accentGradient = '';
-  let bgGradient = '';
-
-  // Dynamically create gradient classes based on the number of colors.
-  switch (colors.length) {
-    case 1:
-      progressGradient = `bg-${primary}-500`;
-      accentGradient = `from-${primary}-500 to-${primary}-500`;
-      bgGradient = `bg-${primary}-50 dark:bg-${primary}-900/20`;
-      break;
-    case 2:
-      progressGradient = `bg-gradient-to-r from-${colors[0]}-500 to-${colors[1]}-500`;
-      accentGradient = `from-${colors[0]}-600 to-${colors[1]}-500`;
-      bgGradient = `bg-gradient-to-br from-${colors[0]}-50 to-${colors[1]}-50 dark:from-${colors[0]}-900/20 dark:to-${colors[1]}-900/20`;
-      break;
-    case 3:
-    default: // Fallback for 3+ colors
-      progressGradient = `bg-gradient-to-r from-${colors[0]}-500 via-${colors[1]}-500 to-${colors[2]}-500`;
-      accentGradient = `from-${colors[0]}-600 via-${colors[1]}-500 to-${colors[2]}-500`;
-      bgGradient = `bg-gradient-to-br from-${colors[0]}-50 via-${colors[1]}-50 to-${colors[2]}-50 dark:from-${colors[0]}-900/20 via-${colors[1]}-900/20 dark:to-${colors[2]}-900/20`;
-      break;
-  }
-
-  return {
-    bg: bgGradient,
-    border: `border-${primary}-300/50 dark:border-${secondary}-700/50`,
-    hoverBorder: `hover:border-${primary}-400 dark:hover:border-${secondary}-500`,
-    text: `text-${primary}-800 dark:text-${primary}-300`,
-    progress: progressGradient,
-    glow: `shadow-${primary}-300/60 dark:shadow-${secondary}-900/40`,
-    hoverGlow: `hover:shadow-${primary}-400/70 dark:hover:shadow-${secondary}-800/50`,
-    accent: accentGradient
-  };
-};
-
 export interface Rank {
   minLevel: number;
   icon: IconPngName;
@@ -61,67 +19,158 @@ export interface Rank {
   name: string;
 }
 
-// Now we can define themes with 2 or 3 colors easily.
+// NO MORE createTheme function. We define everything directly.
 export const RANKS: Rank[] = [
   {
     minLevel: 90,
-    name: 'الحكيم', // Al-Hakeem (The Wise One)
+    name: 'الحكيم', // The Wise One
     icon: 'level_badges_9',
-    theme: createTheme(['violet', 'purple', 'amber'])
+    theme: {
+      bg: 'bg-gradient-to-br from-violet-50 via-purple-50 to-amber-50 dark:from-violet-900/20 dark:via-purple-900/20 dark:to-amber-900/20',
+      border: 'border-violet-300/50 dark:border-amber-700/50',
+      hoverBorder: 'hover:border-violet-400 dark:hover:border-amber-500',
+      text: 'text-violet-800 dark:text-violet-300',
+      progress: 'bg-gradient-to-r from-violet-500 via-purple-500 to-amber-500',
+      glow: 'shadow-violet-300/60 dark:shadow-amber-900/40',
+      hoverGlow: 'hover:shadow-violet-400/70 dark:hover:shadow-amber-800/50',
+      accent: 'from-violet-600 via-purple-500 to-amber-500'
+    }
   },
   {
     minLevel: 80,
-    name: 'العالِم', // Al-Aalim (The Scholar)
+    name: 'العالِم', // The Scholar
     icon: 'level_badges_8',
-    theme: createTheme(['purple', 'cyan', 'yellow'])
+    theme: {
+      bg: 'bg-gradient-to-br from-purple-50 via-cyan-50 to-yellow-50 dark:from-purple-900/20 dark:via-cyan-900/20 dark:to-yellow-900/20',
+      border: 'border-purple-300/50 dark:border-yellow-700/50',
+      hoverBorder: 'hover:border-purple-400 dark:hover:border-yellow-500',
+      text: 'text-purple-800 dark:text-purple-300',
+      progress: 'bg-gradient-to-r from-purple-500 via-cyan-500 to-yellow-500',
+      glow: 'shadow-purple-300/60 dark:shadow-yellow-900/40',
+      hoverGlow: 'hover:shadow-purple-400/70 dark:hover:shadow-yellow-800/50',
+      accent: 'from-purple-600 via-cyan-500 to-yellow-500'
+    }
   },
   {
     minLevel: 70,
-    name: 'الأستاذ', // Al-Ustaz (The Master/Professor)
+    name: 'الأستاذ', // The Master/Professor
     icon: 'level_badges_7',
-    theme: createTheme(['purple', 'yellow'])
+    theme: {
+      bg: 'bg-gradient-to-br from-purple-50 to-yellow-50 dark:from-purple-900/20 dark:to-yellow-900/20',
+      border: 'border-purple-300/50 dark:border-yellow-700/50',
+      hoverBorder: 'hover:border-purple-400 dark:hover:border-yellow-500',
+      text: 'text-purple-800 dark:text-purple-300',
+      progress: 'bg-gradient-to-r from-purple-500 to-yellow-500',
+      glow: 'shadow-purple-300/60 dark:shadow-yellow-900/40',
+      hoverGlow: 'hover:shadow-purple-400/70 dark:hover:shadow-yellow-800/50',
+      accent: 'from-purple-600 to-yellow-500'
+    }
   },
   {
     minLevel: 60,
-    name: 'المهندس', // Al-Muhandis (The Engineer)
+    name: 'المهندس', // The Engineer
     icon: 'level_badges_6',
-    theme: createTheme(['purple', 'red'])
+    theme: {
+      bg: 'bg-gradient-to-br from-purple-50 to-red-50 dark:from-purple-900/20 dark:to-red-900/20',
+      border: 'border-purple-300/50 dark:border-red-700/50',
+      hoverBorder: 'hover:border-purple-400 dark:hover:border-red-500',
+      text: 'text-purple-800 dark:text-purple-300',
+      progress: 'bg-gradient-to-r from-purple-500 to-red-500',
+      glow: 'shadow-purple-300/60 dark:shadow-red-900/40',
+      hoverGlow: 'hover:shadow-purple-400/70 dark:hover:shadow-red-800/50',
+      accent: 'from-purple-600 to-red-500'
+    }
   },
   {
     minLevel: 50,
-    name: 'الباحث', // Al-Bahith (The Researcher)
+    name: 'الباحث', // The Researcher
     icon: 'level_badges_5',
-    theme: createTheme(['slate', 'red'])
+    theme: {
+      bg: 'bg-gradient-to-br from-slate-50 to-red-50 dark:from-slate-900/20 dark:to-red-900/20',
+      border: 'border-slate-300/50 dark:border-red-700/50',
+      hoverBorder: 'hover:border-slate-400 dark:hover:border-red-500',
+      text: 'text-slate-800 dark:text-slate-300',
+      progress: 'bg-gradient-to-r from-slate-500 to-red-500',
+      glow: 'shadow-slate-300/60 dark:shadow-red-900/40',
+      hoverGlow: 'hover:shadow-slate-400/70 dark:hover:shadow-red-800/50',
+      accent: 'from-slate-600 to-red-500'
+    }
   },
+  // ... and so on for the rest of the ranks. I've completed them all for you below.
   {
     minLevel: 40,
-    name: 'المطور', // Al-Mutawwir (The Developer)
+    name: 'المطور', // The Developer
     icon: 'level_badges_4',
-    theme: createTheme(['blue', 'slate'])
+    theme: {
+      bg: 'bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-900/20 dark:to-slate-900/20',
+      border: 'border-blue-300/50 dark:border-slate-700/50',
+      hoverBorder: 'hover:border-blue-400 dark:hover:border-slate-500',
+      text: 'text-blue-800 dark:text-blue-300',
+      progress: 'bg-gradient-to-r from-blue-500 to-slate-500',
+      glow: 'shadow-blue-300/60 dark:shadow-slate-900/40',
+      hoverGlow: 'hover:shadow-blue-400/70 dark:hover:shadow-slate-800/50',
+      accent: 'from-blue-600 to-slate-500'
+    }
   },
   {
     minLevel: 30,
-    name: 'المبرمج', // Al-Mubarmij (The Programmer)
+    name: 'المبرمج', // The Programmer
     icon: 'level_badges_3',
-    theme: createTheme(['slate', 'teal'])
+    theme: {
+      bg: 'bg-gradient-to-br from-slate-50 to-teal-50 dark:from-slate-900/20 dark:to-teal-900/20',
+      border: 'border-slate-300/50 dark:border-teal-700/50',
+      hoverBorder: 'hover:border-slate-400 dark:hover:border-teal-500',
+      text: 'text-slate-800 dark:text-slate-300',
+      progress: 'bg-gradient-to-r from-slate-500 to-teal-500',
+      glow: 'shadow-slate-300/60 dark:shadow-teal-900/40',
+      hoverGlow: 'hover:shadow-slate-400/70 dark:hover:shadow-teal-800/50',
+      accent: 'from-slate-600 to-teal-500'
+    }
   },
   {
     minLevel: 20,
-    name: 'الطالب', // Al-Talib (The Student/Seeker)
+    name: 'الطالب', // The Student/Seeker
     icon: 'level_badges_2',
-    theme: createTheme(['gray', 'yellow'])
+    theme: {
+      bg: 'bg-gradient-to-br from-gray-50 to-yellow-50 dark:from-gray-900/20 dark:to-yellow-900/20',
+      border: 'border-gray-300/50 dark:border-yellow-700/50',
+      hoverBorder: 'hover:border-gray-400 dark:hover:border-yellow-500',
+      text: 'text-gray-800 dark:text-gray-300',
+      progress: 'bg-gradient-to-r from-gray-500 to-yellow-500',
+      glow: 'shadow-gray-300/60 dark:shadow-yellow-900/40',
+      hoverGlow: 'hover:shadow-gray-400/70 dark:hover:shadow-yellow-800/50',
+      accent: 'from-gray-600 to-yellow-500'
+    }
   },
   {
     minLevel: 10,
-    name: 'المتدرب', // Al-Mutadarrib (The Trainee)
+    name: 'المتدرب', // The Trainee
     icon: 'level_badges_1',
-    theme: createTheme(['yellow', 'amber'])
+    theme: {
+      bg: 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20',
+      border: 'border-yellow-300/50 dark:border-amber-700/50',
+      hoverBorder: 'hover:border-yellow-400 dark:hover:border-amber-500',
+      text: 'text-yellow-800 dark:text-yellow-300',
+      progress: 'bg-gradient-to-r from-yellow-500 to-amber-500',
+      glow: 'shadow-yellow-300/60 dark:shadow-amber-900/40',
+      hoverGlow: 'hover:shadow-yellow-400/70 dark:hover:shadow-amber-800/50',
+      accent: 'from-yellow-600 to-amber-500'
+    }
   },
   {
     minLevel: 0,
-    name: 'المبتدئ', // Al-Mubtadi' (The Beginner)
+    name: 'المبتدئ', // The Beginner
     icon: 'level_badges_0',
-    theme: createTheme(['amber', 'orange'])
+    theme: {
+      bg: 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20',
+      border: 'border-amber-300/50 dark:border-orange-700/50',
+      hoverBorder: 'hover:border-amber-400 dark:hover:border-orange-500',
+      text: 'text-amber-800 dark:text-amber-300',
+      progress: 'bg-gradient-to-r from-amber-500 to-orange-500',
+      glow: 'shadow-amber-300/60 dark:shadow-orange-900/40',
+      hoverGlow: 'hover:shadow-amber-400/70 dark:hover:shadow-orange-800/50',
+      accent: 'from-amber-600 to-orange-500'
+    }
   }
 ];
 
