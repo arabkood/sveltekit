@@ -1,8 +1,5 @@
 <script lang="ts">
-	// import Achievements from '$ui/dashboard/Achievements.svelte';
-	import ActiveTrack from '$ui/dashboard/ActiveTrack.svelte';
 	import BannerPremium from '$ui/dashboard/BannerPremium.svelte';
-	// import DailyChallenge from '$ui/dashboard/DailyChallenge.svelte';
 	import UserTracks from '$ui/dashboard/UserTracks.svelte';
 	import Welcome from '$ui/dashboard/Welcome.svelte';
 	import type { PageData } from '../settings/$types';
@@ -33,26 +30,8 @@
 			</div>
 		</div>
 
-		<!-- Main Content Grid -->
-		<!-- <div class="grid gap-8 lg:grid-cols-12"> -->
-		<!-- 	<div class="space-y-8 lg:col-span-8"> -->
 		<div class="mb-12">
-			<div>
-				{#if data.userTracks!.length > 0}
-					<UserTracks userTracks={data.userTracks!} courses={data.courses!} />
-				{:else}
-					<ActiveTrack userTracks={[]} />
-				{/if}
-			</div>
-			<div class="space-y-8 lg:col-span-4">
-				<!-- TODO: enable -->
-				<!-- <Achievements -->
-				<!-- 	completedItems={data.userStats!.completedItems} -->
-				<!-- 	longestStreak={data.userStats!.longestStreak} -->
-				<!-- /> -->
-				<!-- <DailyChallenge /> -->
-				<!-- <JoinCommunity /> -->
-			</div>
+			<UserTracks userTracks={data.userTracks!} courses={data.courses!} />
 		</div>
 		{#if !data.user?.premiumActive}
 			<BannerPremium />

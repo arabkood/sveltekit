@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { i18n } from '$i18n/i18n';
+	import Button from '$ui/common/Button.svelte';
 	import Icon from '$ui/common/Icon.svelte';
 
 	let { children, data } = $props();
@@ -55,23 +56,16 @@
 
 			<!-- Desktop Layout -->
 			<div class="flex flex-col sm:flex-row sm:gap-8">
-				<!-- Sidebar (hidden on mobile) -->
 				<nav class="hidden w-48 flex-shrink-0 sm:block">
-					<ul class="space-y-1">
-						{#each tabs as tab}
-							<li>
-								<a
-									href={tab.href}
-									class="flex items-center rounded-md px-3 py-2 text-sm font-medium {page.url
-										.pathname === tab.href
-										? 'bg-clickable-primary pointer-events-none'
-										: 'bg-clickable'}"
-								>
-									{tab.label}
-								</a>
-							</li>
-						{/each}
-					</ul>
+					{#each tabs as tab}
+						<Button
+							href={tab.href}
+							variant={page.url.pathname === tab.href ? 'link-pill-active' : 'link-pill'}
+							fullWidth={true}
+						>
+							{tab.label}
+						</Button>
+					{/each}
 				</nav>
 
 				<!-- Content -->

@@ -2,8 +2,8 @@
 	import type { PageData } from './$types';
 	import Header from './Header.svelte';
 	import type { Sound } from '$utils/sound';
-	import SuccessPopup from '$ui/success-popup/SuccessPopup.svelte';
-	import FailPopup from '$ui/success-popup/FailPopup.svelte';
+	import SuccessPopup from '$ui/popup/SuccessPopup.svelte';
+	import FailPopup from '$ui/popup/FailPopup.svelte';
 	import SignupPopup from '$ui/popup/SignupPopup.svelte';
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';

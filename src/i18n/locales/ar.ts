@@ -1,12 +1,5 @@
 export default {
-  editor: {
-    error: 'خطأ في الكود'
-  },
   lessons: {
-    explanation: 'شرح الحل',
-    falseAnswer: 'الإجابة خاطئة',
-    yourAnswerHere: 'إجابتك هنا',
-    chooseAnswer: 'اختر الإجابة الصحيحة',
     tryAgain: 'الإجابة خاطئة. حاول مرة أخرى ',
     checking: 'جارٍ التحقق...',
     checkAnswer: 'تحقق من الإجابة',
@@ -16,9 +9,9 @@ export default {
     selectLine: 'اختر سطراً للمتابعة',
     showHint: 'عرض التلميح',
     hideHint: 'إخفاء التلميح',
-    "correctAnswer": "إجابة صحيحة",
-    "continue": "متابعة",
-    "getAnswer": "احصل على الإجابة"
+    correctAnswer: "إجابة صحيحة",
+    continue: "متابعة",
+    getAnswer: "احصل على الإجابة"
   },
   forgotPassword: {
     success: 'إذا كان البريد الإلكتروني صحيحاً، سنرسل لك رابطاً لإعادة تعيين كلمة المرور',
@@ -39,8 +32,8 @@ export default {
     signinHere: 'تسجيل الدخول هنا'
   },
   site: {
-    logo: 'أكوود',
-    name: 'أكوود'
+    logo: 'أكود',
+    name: 'أكود'
   },
   signup: {
     title: 'إنشاء حساب جديد',
@@ -102,7 +95,9 @@ export default {
     }
   },
   common: {
+    choose_correct_answer: 'اختر الإجابة الصحيحة',
     progress: 'التقدم',
+    solution_explanation: 'شرح الحل',
 
     track: 'المسار',
     challenges_completed: 'التحديات المنجزة',
@@ -155,6 +150,7 @@ export default {
     less: 'أقل',
     back: 'رجوع',
     next: 'التالي',
+    false_answer: 'الإجابة خاطئة',
     days: '{days} يوم',
     today: 'اليوم',
     completed: 'منجز',

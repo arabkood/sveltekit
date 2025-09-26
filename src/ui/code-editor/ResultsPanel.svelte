@@ -46,7 +46,7 @@
 				<Icon name="x-circle" class="text-red-400" />
 				<div>
 					<h2 class="text-sm font-semibold text-red-800 dark:text-red-200">
-						{i18n.t('editor.error')}
+						{i18n.t('common.error')}
 					</h2>
 					<p class="mt-1 text-sm text-red-700 dark:text-red-300">{error}</p>
 				</div>

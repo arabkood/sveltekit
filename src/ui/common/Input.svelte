@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { cn } from '$utils/classnames';
 	import Icon from '$ui/common/Icon.svelte';
-	import { uniqueId } from 'lodash-es';
 	import type { IconId } from '$ui/shared/SvgSprite.svelte';
 	import { slide } from 'svelte/transition';
+	import { uniqueId } from '$utils/uniqueId';
 
 	let {
 		class: className = '',

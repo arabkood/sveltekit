@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade, slide } from 'svelte/transition';
-	import Icon, { type IconName } from '$ui/common/Icon.svelte';
+	import Icon from '$ui/common/Icon.svelte';
 	import { cn } from '$utils/classnames';
 
 	interface BannerAction {
@@ -21,7 +21,7 @@
 		variant?: 'warning' | 'success' | 'error' | 'info';
 		title?: string;
 		message: string;
-		iconName?: IconName;
+		iconName?: string;
 		action?: BannerAction;
 		class?: string;
 		dismissible?: boolean;
@@ -68,7 +68,7 @@
 		}
 	};
 
-	const defaultIcons: Record<string, IconName> = {
+	const defaultIcons: Record<string, string> = {
 		warning: 'alert-triangle',
 		success: 'check-circle',
 		error: 'x-circle',

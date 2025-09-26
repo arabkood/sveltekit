@@ -16,18 +16,6 @@
 }
 
 @theme {
-	/* --color-primary-50: #e0f2ff; */
-	/* --color-primary-100: #b3daff; */
-	/* --color-primary-200: #80c0ff; */
-	/* --color-primary-300: #4da6ff; */
-	/* --color-primary-400: #1a8cff; */
-	/* --color-primary-500: #0073e6;  */
-	/* --color-primary-600: #005bb4; */
-	/* --color-primary-700: #004080; */
-	/* --color-primary-800: #00294d; */
-	/* --color-primary-900: #001519; */
-	/* --color-primary-950: #000a0f; */
-
 	--color-primary-50: #f1fbf5;
 	--color-primary-100: #d9f4db;
 	--color-primary-200: #b7e9ba;
@@ -40,28 +28,16 @@
 	--color-primary-900: #183f1a;
 	--color-primary-950: #0d260f;
 
-	/* --color-primary-50: #e6f5ee; */
-	/* --color-primary-100: #b3e0d0; */
-	/* --color-primary-200: #80cbb2; */
-	/* --color-primary-300: #4db694; */
-	/* --color-primary-400: #26a27c; */
-	/* --color-primary-500: #008c65; */
-	/* --color-primary-600: #007352; */
-	/* --color-primary-700: #005c40; */
-	/* --color-primary-800: #00452f; */
-	/* --color-primary-900: #002e1f; */
-	/* --color-primary-950: #001a12; */
-
 	--color-gray-50: #f8fafc;
 	--color-gray-100: #f1f5f9;
 	--color-gray-200: #e2e8f0;
 	--color-gray-300: #cbd5e1;
 	--color-gray-400: #94a3b8;
-	--color-gray-500: #64748b; /* main text */
+	--color-gray-500: #64748b;
 	--color-gray-600: #475569;
 	--color-gray-700: #334155;
-	--color-gray-800: #1e293b; /* background surface */
-	--color-gray-900: #0f172a; /* darkest bg */
+	--color-gray-800: #1e293b;
+	--color-gray-900: #0f172a;
 	--color-gray-950: #020617;
 
 	--font-family-arabic:
@@ -98,18 +74,6 @@
 
 	.bg-section {
 		@apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-50;
-	}
-
-	.bg-inner {
-		@apply bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-50;
-	}
-
-	.bg-clickable {
-		@apply focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400 rounded-md bg-gray-50 text-gray-900 transition-colors duration-150 ease-in-out hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 focus-visible:outline-none active:bg-gray-200 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900 dark:active:bg-gray-600;
-	}
-
-	.bg-clickable-primary {
-		@apply bg-primary-500 dark:bg-primary-600 dark:text-primary-50 hover:bg-primary-600 dark:hover:bg-primary-500 active:bg-primary-700 dark:active:bg-primary-400 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-300 rounded-md px-4 py-2 text-white transition-colors duration-150 ease-in-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-gray-900;
 	}
 }
 

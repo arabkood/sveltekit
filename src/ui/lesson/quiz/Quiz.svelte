@@ -108,7 +108,7 @@
 		{#if step.options && step.options.length > 0}
 			<fieldset class="space-y-3">
 				<legend class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
-					>{i18n.t('lessons.chooseAnswer')}</legend
+					>{i18n.t('common.choose_correct_answer')}</legend
 				>
 				{#each step.options as option, i}
 					{@const isCorrectSolution = step.solution === i}

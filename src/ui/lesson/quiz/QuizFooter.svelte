@@ -15,7 +15,7 @@
 </script>
 
 <QuizExplanation
-	title={i18n.t('lessons.explanation')}
+	title={i18n.t('common.solution_explanation')}
 	{explanation}
 	visible={openExplanation}
 	onClose={() => {
@@ -42,7 +42,7 @@
 					class="flex items-center text-sm font-semibold text-red-600 sm:text-base dark:text-red-400"
 				>
 					<span class="me-3 text-xl" aria-hidden="true">❌ </span>
-					{i18n.t('lessons.falseAnswer')}
+					{i18n.t('common.false_answer')}
 				</span>
 			{/if}
 		</div>
@@ -54,7 +54,7 @@
 						openExplanation = true;
 					}}
 				>
-					{i18n.t('lessons.explanation')}
+					{i18n.t('common.solution_explanation')}
 				</Button>
 			{/if}
 			<Button type="button" onclick={onNext}>{i18n.t('common.next')}</Button>

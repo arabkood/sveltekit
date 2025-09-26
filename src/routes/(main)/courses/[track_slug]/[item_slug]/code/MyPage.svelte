@@ -11,7 +11,7 @@
 	import DesktopLayout from './DesktopLayout.svelte';
 	import MobileLayout from './MobileLayout.svelte';
 	import { onMount } from 'svelte';
-	import SuccessPopup from '$ui/success-popup/SuccessPopup.svelte';
+	import SuccessPopup from '$ui/popup/SuccessPopup.svelte';
 
 	// --- Props ---
 	let { data, finishPlayer }: { data: PageData; finishPlayer?: Sound } = $props();
