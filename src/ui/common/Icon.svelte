@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { isValidIconId, type IconId } from '$ui/shared/SvgSprite.svelte';
+	import { draw, fade } from 'svelte/transition';
 
 	const {
 		name,

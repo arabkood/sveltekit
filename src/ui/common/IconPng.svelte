@@ -1,6 +1,7 @@
 <script lang="ts" module>
 	const icons = {
 		premium: '/images/icons/premium.png',
+		fire: '/images/icons/fire.png',
 		level_badges_0: '/images/icons/level-badges/0.png',
 		level_badges_1: '/images/icons/level-badges/1.png',
 		level_badges_2: '/images/icons/level-badges/2.png',

@@ -1,4 +1,4 @@
-FROM node:18-alpine AS build
+FROM node:24-alpine AS build
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -11,7 +11,7 @@ COPY . .
 
 RUN pnpm run build
 
-FROM node:18-alpine AS runtime
+FROM node:24-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/pnpm-lock.yaml ./

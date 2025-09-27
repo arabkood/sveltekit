@@ -9,11 +9,23 @@ import {
 
 // Infer types
 export type User = typeof usersInAuth.$inferSelect;
+type UserPrivate = Pick<
+	User,
+	| 'id'
+	| 'email'
+	| 'username'
+	| 'role'
+	| 'emailVerified'
+	| 'createdAt'
+	| 'premiumActive'
+	| 'polarCustomerId'
+>;
+
 export type UserStats = typeof statsInUsers.$inferSelect;
 export type UserDailyStats = typeof dailyStatsInUsers.$inferSelect;
 
 export class UserRepository {
-	public async getUserBySessionToken(token: string): Promise<User | null> {
+	public async getUserBySessionToken(token: string): Promise<UserPrivate | null> {
 		const session = await db.query.sessionTokensInAuth.findFirst({
 			where: and(
 				eq(sessionTokensInAuth.token, token),

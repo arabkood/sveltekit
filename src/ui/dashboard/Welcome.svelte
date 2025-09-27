@@ -5,6 +5,7 @@
 	import Button from '$ui/common/Button.svelte';
 	import IconPng from '$ui/common/IconPng.svelte';
 	import type { UserTrack } from '$lib/server/db/repos/class';
+	import { slide, fade } from 'svelte/transition';
 
 	const {
 		userTracks,
@@ -38,7 +39,8 @@
 	};
 
 	let currentDate = $state(getCurrentDate());
-	let greeting = $state(getGreeting());
+	let greeting = $state('');
+
 	onMount(() => {
 		currentDate = getCurrentDate();
 		greeting = getGreeting();
@@ -49,17 +51,24 @@
 	<div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 		<div class="space-y-3">
 			<p class="opacity-60">{currentDate}</p>
-			<div class="flex items-center gap-3">
-				{#if !is_user_premium}
-					<IconPng name="premium" size={24} />
-				{/if}
-				<h1 class="text-3xl font-bold">
-					{greeting}
-					<span dir="ltr" class="font-mono">
-						@{name}
-					</span>!
-				</h1>
-			</div>
+			{#if greeting !== ''}
+				<div
+					class="flex items-center gap-3"
+					in:slide={{
+						axis: 'x'
+					}}
+				>
+					{#if !is_user_premium}
+						<IconPng name="premium" size={24} />
+					{/if}
+					<h1 class="text-3xl font-bold whitespace-nowrap">
+						{greeting}
+						<span dir="ltr" class="font-mono">
+							@{name}
+						</span>!
+					</h1>
+				</div>
+			{/if}
 		</div>
 		{#if hasAnyTracks && handleContinueLearning}
 			<Button onclick={handleContinueLearning} startIcon="play" variant="secondary">

@@ -95,6 +95,14 @@ export default {
 		}
 	},
 	common: {
+		streak: {
+			broken: "انقطع الستريك",
+			start: "ابدأ ستريكك اليوم",
+			highscore: "رقم قياسي جديد!",
+			continue: "استمر في ستريكك"
+		},
+		consecutive_days: "أيام متتالية",
+		your_longest_streak: "رقمك القياسي",
 		choose_correct_answer: 'اختر الإجابة الصحيحة',
 		progress: 'التقدم',
 		solution_explanation: 'شرح الحل',
@@ -251,7 +259,6 @@ export default {
 	},
 	dashboard: {
 		continue_learning: 'أكمل التعلّم',
-
 		achievements: 'إنجازاتك',
 		highest_streak: 'أطول فترة متتالية',
 		highest_rank: 'أعلى رتبة',
@@ -267,6 +274,7 @@ export default {
 		premium_description:
 			'تمتع بوصول فوري وغير محدود لجميع المسارات المتقدمة والمشاريع الحصرية لتسريع رحلتك الاحترافية.',
 		level: 'المستوى',
+		toLevel: 'إلى المستوى',
 		xp: 'نقاط الخبرة',
 		streak: 'شعلة النشاط',
 		rank: 'الترتيب',

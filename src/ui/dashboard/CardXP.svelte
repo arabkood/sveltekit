@@ -6,6 +6,7 @@
 	import { Spring } from 'svelte/motion';
 	import { fly } from 'svelte/transition';
 	import { getRankForLevel, type Rank } from '$utils/xp-level';
+	import { i18n } from '$i18n/i18n';
 
 	let { totalXp }: { totalXp: number } = $props();
 
@@ -44,14 +45,7 @@
 	</div>
 
 	<div
-		class={cn(
-			'group relative overflow-hidden rounded-2xl border p-6 shadow-lg backdrop-blur-sm transition-all duration-500',
-			currentRank.theme.bg,
-			currentRank.theme.border,
-			currentRank.theme.glow,
-			currentRank.theme.hoverGlow,
-			currentRank.theme.hoverBorder
-		)}
+		class={'group relative h-[230px] overflow-hidden rounded-2xl border-1 border-gray-200 p-6 shadow-lg transition-all duration-500 dark:border-gray-700'}
 	>
 		<div class="absolute inset-0 opacity-5">
 			<svg class="h-full w-full" viewBox="0 0 100 100">
@@ -80,17 +74,16 @@
 		></div>
 
 		<div class="relative pt-8 text-center">
-			<h2
-				class={cn('text-lg font-bold tracking-widest uppercase opacity-60', currentRank.theme.text)}
-			>
+			<h2 class={cn('text-lg font-bold tracking-wide opacity-60', currentRank.theme.text)}>
 				{currentRank.name}
 			</h2>
 
-			<p class={cn('text-6xl font-black transition-all duration-500', currentRank.theme.text)}>
-				Level {xp.currentLevel}
+			<p class={cn('mt-4 text-5xl font-bold transition-all duration-500', currentRank.theme.text)}>
+				{i18n.t('dashboard.level')}
+				{xp.currentLevel}
 			</p>
 
-			<div class="mt-6 space-y-2" in:fly={{ y: 20, duration: 600, delay: 600 }}>
+			<div class="mt-6 space-y-2" in:fly={{ y: 20, duration: 600, delay: 300 }}>
 				<div class="relative h-2.5 overflow-hidden rounded-full bg-slate-700/10 dark:bg-white/10">
 					<div
 						class={cn('h-full rounded-full', currentRank.theme.progress)}
@@ -98,7 +91,7 @@
 					></div>
 				</div>
 
-				<div class="flex items-center justify-between text-xs">
+				<div class="flex items-center justify-between text-xs" dir="ltr">
 					<span class={cn('font-medium', currentRank.theme.text, 'opacity-70')}>
 						{Math.floor(displayXp.current).toLocaleString()} / {Math.floor(
 							xp.xpNeededForNextLevel
@@ -106,7 +99,8 @@
 						XP
 					</span>
 					<span class={cn('font-bold', currentRank.theme.text)}>
-						To Level {xp.nextLevel}
+						{i18n.t('dashboard.toLevel')}
+						{xp.nextLevel}
 					</span>
 				</div>
 			</div>
