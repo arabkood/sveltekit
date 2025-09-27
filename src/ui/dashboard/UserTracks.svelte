@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { i18n } from '$i18n/i18n';
-	import type { GetAllCourses } from '$lib/server/db/helpers/class';
-	import type { SelectUserTracks } from '$lib/server/db/schema/users';
 	import { toPublicUrl } from '$utils/s3-public-assets';
 	import Button from '$ui/common/Button.svelte';
 	import Icon from '$ui/common/Icon.svelte';
+	import type { AllCourses, UserTrack } from '$lib/server/db/repos/class';
 
 	let {
 		userTracks = [],
-		courses
+		courses,
+		is_user_premium
 	}: {
-		userTracks: SelectUserTracks[];
-		courses: GetAllCourses;
+		userTracks: UserTrack[];
+		courses: AllCourses;
+		is_user_premium: boolean;
 	} = $props();
 
 	const merged = $derived(
@@ -30,8 +31,6 @@
 			};
 		})
 	);
-
-	const is_user_premium = false;
 </script>
 
 <div class="space-y-6">
@@ -44,7 +43,7 @@
 	{#if userTracks.length > 0}
 		<div class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
 			{#each merged as { track, ...userTrack }}
-				{@const isLocked = track?.premium_only && !is_user_premium}
+				{@const isLocked = track?.premiumOnly && !is_user_premium}
 
 				<a
 					href={`/courses/${track?.slug}`}

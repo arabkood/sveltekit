@@ -109,7 +109,7 @@
 								</h4>
 								<pre
 									dir="auto"
-									class="whitespace-pre-wrap break-words rounded-md bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-900 dark:text-gray-200"><code
+									class="rounded-md bg-gray-100 p-4 text-sm break-words whitespace-pre-wrap text-gray-800 dark:bg-gray-900 dark:text-gray-200"><code
 										>{step.expectedOutput}</code
 									></pre>
 							</div>
@@ -123,7 +123,7 @@
 								</h4>
 								<pre
 									dir="auto"
-									class="whitespace-pre-wrap break-words rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-500/10 dark:text-red-200"><code
+									class="rounded-md bg-red-50 p-4 text-sm break-words whitespace-pre-wrap text-red-800 dark:bg-red-500/10 dark:text-red-200"><code
 										>{step.actualOutput}</code
 									></pre>
 							</div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { API_ENDPOINTS } from '$api/config';
 	import { i18n } from '$i18n/i18n';
-	import type { SelectUser } from '$lib/server/db/schema/auth';
+	import type { User } from '$lib/server/db/repos/user';
 	import type { ApiError } from '$types/api';
 	import Banner from '$ui/common/Banner.svelte';
 	import Button from '$ui/common/Button.svelte';
@@ -13,7 +13,7 @@
 	let {
 		user
 	}: {
-		user: SelectUser;
+		user: User;
 	} = $props();
 
 	const schema = z.object({
@@ -54,7 +54,7 @@
 				return;
 			}
 
-			const data: SelectUser = await response.json();
+			const data: User = await response.json();
 
 			if (data.username === values.username) {
 				status = 'success';

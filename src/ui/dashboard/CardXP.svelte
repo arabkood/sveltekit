@@ -100,7 +100,9 @@
 
 				<div class="flex items-center justify-between text-xs">
 					<span class={cn('font-medium', currentRank.theme.text, 'opacity-70')}>
-						{Math.floor(displayXp.current).toLocaleString()} / {xp.xpNeededForNextLevel.toLocaleString()}
+						{Math.floor(displayXp.current).toLocaleString()} / {Math.floor(
+							xp.xpNeededForNextLevel
+						).toLocaleString()}
 						XP
 					</span>
 					<span class={cn('font-bold', currentRank.theme.text)}>

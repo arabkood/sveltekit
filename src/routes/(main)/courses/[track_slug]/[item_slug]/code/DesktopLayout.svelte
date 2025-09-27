@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { Submission } from '$lib/server/db/schema/submission';
-
 	// Components
 	import SplitPane from '$ui/common/SplitPane.svelte';
 	import Problem from '$ui/code-editor/Problem.svelte';
@@ -14,6 +12,7 @@
 	import InputPanel from '$ui/code-editor/InputPanel.svelte';
 	import OutputPanel from '$ui/code-editor/OutputPanel.svelte';
 	import ResultsPanel from '$ui/code-editor/ResultsPanel.svelte';
+	import type { UserSubmission } from '$lib/server/db/repos/class';
 
 	// --- Props ---
 	let {
@@ -35,7 +34,7 @@
 		problemDocs: Array<{ title: string; content: string }>;
 		files: any;
 		codeConfig: any;
-		submission: Submission | null;
+		submission: UserSubmission | null;
 		runStatus: 'idle' | 'loading' | 'success' | 'error';
 		submitStatus: 'idle' | 'loading' | 'success' | 'error';
 		runCooldown: number;

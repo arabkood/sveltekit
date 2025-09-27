@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Submission } from '$lib/server/db/schema/submission';
+	import type { UserSubmission } from '$lib/server/db/repos/class';
 
 	// Components
 	import Problem from '$ui/code-editor/Problem.svelte';
@@ -35,7 +35,7 @@
 		problemDocs: Array<{ title: string; content: string }>;
 		files: any;
 		codeConfig: any;
-		submission: Submission | null;
+		submission: UserSubmission | null;
 		runStatus: 'idle' | 'loading' | 'success' | 'error';
 		submitStatus: 'idle' | 'loading' | 'success' | 'error';
 		submitError: string | null;

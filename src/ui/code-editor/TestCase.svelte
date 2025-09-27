@@ -152,7 +152,7 @@
 					{#if showTestCode}
 						<div transition:slide={{ duration: 250 }}>
 							<pre
-								class="whitespace-pre-wrap break-words rounded-lg border border-gray-100 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900"><code
+								class="rounded-lg border border-gray-100 bg-gray-50 p-3 break-words whitespace-pre-wrap dark:border-gray-800 dark:bg-gray-900"><code
 									class="font-mono text-sm leading-relaxed text-gray-800 dark:text-gray-200"
 									>{testCase.test_code}</code
 								></pre>

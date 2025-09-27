@@ -1,44 +1,51 @@
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { env } from '$env/dynamic/private';
 import pg from 'pg';
+import { APP_ENV } from '$config';
+import * as schema from './generated/drizzle/schema';
+import * as relations from './generated/drizzle/relations';
+
+const combinedSchema = { ...schema, ...relations };
 
 const { Pool } = pg;
 
-export let db: NodePgDatabase;
+type DB = NodePgDatabase<typeof combinedSchema>;
 
-export function initDB(): NodePgDatabase {
-	if (db) {
-		return db;
-	}
+export let db: DB;
 
-	console.log('Initializing new database connection...');
+export function initDB(): DB {
+  if (db) {
+    return db;
+  }
 
-	const dbURL = env.DATABASE_URL;
+  console.log('Initializing new database connection...');
 
-	if (!dbURL) {
-		console.error('FATAL: Missing required database environment variables DATABASE_URL');
-		// throw new Error('Database configuration is incomplete.');
-	}
+  const dbURL = env.DATABASE_URL;
 
-	try {
-		const pool = new Pool({
-			connectionString: dbURL
-		});
+  if (!dbURL) {
+    console.error('FATAL: Missing required database environment variables DATABASE_URL');
+    // throw new Error('Database configuration is incomplete.');
+  }
 
-		pool.on('error', (err) => {
-			console.error('Unexpected error on idle database client', err);
-			// Consider strategy: maybe reset dbInstance to null to force re-init on next request?
-			// dbInstance = null;
-		});
+  try {
+    const pool = new Pool({
+      connectionString: dbURL
+    });
 
-		// Create and store the Drizzle instance
-		db = drizzle(pool, { logger: false /* Enable logger in dev if needed */ });
+    pool.on('error', (err) => {
+      console.error('Unexpected error on idle database client', err);
+      // Consider strategy: maybe reset dbInstance to null to force re-init on next request?
+      // dbInstance = null;
+    });
 
-		console.log('Database connection initialized successfully.');
-		return db;
-	} catch (error) {
-		console.error('FATAL: Failed to create database pool or Drizzle instance:', error);
-		// Re-throw the error to signal failure
-		throw error;
-	}
+    // Create and store the Drizzle instance
+    db = drizzle(pool, { logger: false, schema: combinedSchema });
+
+    console.log('Database connection initialized successfully.');
+    return db;
+  } catch (error) {
+    console.error('FATAL: Failed to create database pool or Drizzle instance:', error);
+    // Re-throw the error to signal failure
+    throw error;
+  }
 }

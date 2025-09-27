@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Spring } from 'svelte/motion';
-	import type { SelectUsersStats } from '$lib/server/db/schema/users';
 	import { getRankForLevel, type Rank } from '$utils/xp-level';
 	import { useXp } from '$utils/xp';
 	import { cn } from '$utils/classnames';
 	import IconPng from '$ui/common/IconPng.svelte';
+	import type { UserStats } from '$lib/server/db/repos/user';
 
-	let { userStats }: { userStats: SelectUsersStats } = $props();
+	let { userStats }: { userStats: UserStats } = $props();
 
 	const xp = $derived(useXp(userStats.totalXp));
 	const currentRank: Rank = $derived(getRankForLevel(xp.currentLevel));

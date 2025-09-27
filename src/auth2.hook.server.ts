@@ -1,5 +1,5 @@
 import { auth as authConfig } from '$config';
-import { getUserBySessionToken } from '$lib/server/db/helpers/auth';
+import { userRepository } from '$lib/server/db/repos/user';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 const PRIVATE_ROUTES = new Set(['/(main)/dashboard', '/(main)/server', '/(main)/settings']);
@@ -19,7 +19,7 @@ export const authHandle2: Handle = async ({ event, resolve }) => {
 	const sessionToken = event.cookies.get(authConfig.sessionCookieName);
 
 	if (sessionToken) {
-		event.locals.user = await getUserBySessionToken(sessionToken);
+		event.locals.user = await userRepository.getUserBySessionToken(sessionToken);
 		if (event.locals.user) {
 			if (!event.locals.user?.emailVerified) {
 				if (!currentRouteId || !canAnonVisit(currentRouteId)) {

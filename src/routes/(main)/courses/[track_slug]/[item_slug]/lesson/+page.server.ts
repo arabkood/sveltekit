@@ -26,9 +26,9 @@ export const load: PageServerLoad = async ({ params, parent, locals }) => {
 	const { item } = await parent();
 
 	let steps: LessonStep[] = [];
-	if (item.s3_path) {
+	if (item.s3Path) {
 		const buffs = await Promise.all([
-			getS3TopicObjectAsBuffer(path.join(item.s3_path, 'lesson.bundle.zip'))
+			getS3TopicObjectAsBuffer(path.join(item.s3Path, 'lesson.bundle.zip'))
 		]);
 
 		if (buffs[0]) {
@@ -50,7 +50,7 @@ export const load: PageServerLoad = async ({ params, parent, locals }) => {
 					})
 					.filter((x): x is LessonMarkdown | LessonInteractive => x !== undefined);
 			} catch (e) {
-				console.error('bad lesson.bundle.zip at', item.s3_path, e);
+				console.error('bad lesson.bundle.zip at', item.s3Path, e);
 				error(404, 'Not found');
 			}
 		}

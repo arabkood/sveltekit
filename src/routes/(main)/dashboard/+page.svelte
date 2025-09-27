@@ -5,14 +5,13 @@
 	import type { PageData } from '../settings/$types';
 	import Footer from '$ui/shared/Footer.svelte';
 	import CardXp from '$ui/dashboard/CardXP.svelte';
-	import CardStreak from '$ui/dashboard/CardStreak.svelte';
+	// import CardStreak from '$ui/dashboard/CardStreak.svelte';
 
 	const {
 		data
 	}: {
 		data: PageData;
 	} = $props();
-	console.debug(data.userStats);
 </script>
 
 <div class="bg-page min-h-screen">
@@ -21,17 +20,20 @@
 			userTracks={data.userTracks!}
 			name={data.user!.username}
 			is_user_premium={data.user?.premiumActive ?? false}
-			completedLessons={data.userStats?.completedItems}
 		/>
 		<div class="mb-8 grid gap-6 lg:grid-cols-3">
 			<CardXp totalXp={data.userStats!.totalXp} />
 			<div class="m-auto w-full">
-				<CardStreak userStreak={data.userStreak!} />
+				<!-- <CardStreak userStreak={data.userStreak!} /> -->
 			</div>
 		</div>
 
 		<div class="mb-12">
-			<UserTracks userTracks={data.userTracks!} courses={data.courses!} />
+			<UserTracks
+				userTracks={data.userTracks!}
+				courses={data.courses!}
+				is_user_premium={data.user?.premiumActive || false}
+			/>
 		</div>
 		{#if !data.user?.premiumActive}
 			<BannerPremium />

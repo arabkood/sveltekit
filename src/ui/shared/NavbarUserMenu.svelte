@@ -3,18 +3,18 @@
 	import { slide } from 'svelte/transition';
 	import { i18n } from '$i18n/i18n';
 	import Avatar from '$ui/common/Avatar.svelte';
-	import type { SelectUser } from '$lib/server/db/schema/auth';
 	import Button from '$ui/common/Button.svelte';
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import IconPng from '$ui/common/IconPng.svelte';
+	import type { User } from '$lib/server/db/repos/user';
 
 	let {
 		variant = 'desktop',
 		user
 	}: {
 		variant?: 'desktop' | 'mobile';
-		user: SelectUser;
+		user: User;
 	} = $props();
 
 	let showMenu = $state(false);
@@ -153,7 +153,7 @@
 			size="md"
 		>
 			<Avatar
-				src={user.avatar || undefined}
+				src={user?.avatar || undefined}
 				alt={user.username}
 				fallback={user.username}
 				showStatusIndicator={true}

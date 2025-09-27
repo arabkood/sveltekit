@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { i18n } from '$i18n/i18n';
-	import type { ItemWithSubmission, ModuleWithItems } from '$lib/server/db/helpers/class';
-	import type { Track } from '$lib/server/db/schema/class';
+	import type { ItemWithSubmission, ModuleWithItems, Track } from '$lib/server/db/repos/class';
 	import Button from '$ui/common/Button.svelte';
 	import Icon from '$ui/common/Icon.svelte';
 
@@ -27,7 +26,7 @@
 	{@const radius = 20}
 	{@const circumference = 2 * Math.PI * radius}
 	{@const offset = circumference - (moduleProgress / 100) * circumference}
-	<details class="group mb-4 w-full max-w-full" open={module.id === nextItem?.module_id}>
+	<details class="group mb-4 w-full max-w-full" open={module.id === nextItem?.moduleId}>
 		<summary
 			class="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl bg-slate-100 p-3 transition-colors duration-200 group-open:mb-8 hover:bg-slate-200 sm:gap-4 sm:p-4 dark:bg-slate-800/50 dark:hover:bg-slate-700"
 		>
@@ -74,7 +73,7 @@
 		{#each module.items as item, index}
 			{@const isNextItem = nextItem && nextItem.slug === item.slug}
 			<div class="relative w-full">
-				{#if item.premium_only && !isPremium && !item.submission}
+				{#if item.premiumOnly && !isPremium && !item.submission}
 					<!-- Locked Item -->
 					<a
 						href={'/pricing'}
@@ -121,7 +120,7 @@
 							<div class="min-w-0">
 								<h3 class="flex items-center gap-2 font-bold text-slate-800 dark:text-white">
 									{item.title}
-									{#if item.premium_only}
+									{#if item.premiumOnly}
 										<Icon name="star" size={16} class="flex-shrink-0 text-amber-400" />
 									{/if}
 								</h3>
@@ -141,7 +140,7 @@
 									dir="ltr"
 									class="!h-10 w-30 font-mono text-lg font-bold tracking-wide"
 								>
-									+{item.base_xp}XP
+									+{item.baseXp}XP
 								</Button>
 							{/if}
 						</div>

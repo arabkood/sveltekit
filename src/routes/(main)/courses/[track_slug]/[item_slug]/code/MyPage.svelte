@@ -6,12 +6,12 @@
 
 	// Services
 	import { submissionService } from './submission.service';
-	import type { Submission } from '$lib/server/db/schema/submission';
 	import Header from './Header.svelte';
 	import DesktopLayout from './DesktopLayout.svelte';
 	import MobileLayout from './MobileLayout.svelte';
 	import { onMount } from 'svelte';
 	import SuccessPopup from '$ui/popup/SuccessPopup.svelte';
+	import type { UserSubmission } from '$lib/server/db/repos/class';
 
 	// --- Props ---
 	let { data, finishPlayer }: { data: PageData; finishPlayer?: Sound } = $props();
@@ -71,7 +71,7 @@
 		}[]
 	>([]);
 
-	let newSubmission = $state<Submission>();
+	let newSubmission = $state<UserSubmission>();
 
 	let activeTabResults = $state<'input' | 'output' | 'result'>('input');
 	let activeMobileView = $state<'problem' | 'code' | 'results'>('problem');
@@ -105,7 +105,7 @@
 
 	// --- Derived State ---
 	let files = $derived((data.submission?.data as any)?.files ?? data.code.files);
-	let submission: Submission | null = $derived(newSubmission ?? data.submission);
+	let submission: UserSubmission | null = $derived(newSubmission ?? data.submission);
 
 	let problemDocs = $derived(
 		Object.entries(data.code.docs)
@@ -238,7 +238,7 @@
 			onClose={() => (showSuccessPopup = false)}
 			nextHref={`/courses/${data?.track.slug}`}
 			sound={finishPlayer}
-			score={submission?.xp_reward ?? 0}
+			score={submission?.xpReward ?? 0}
 			courseTitle={data.track.title}
 		/>
 	{/if}

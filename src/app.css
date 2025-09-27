@@ -44,6 +44,8 @@
 		'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Sans Arabic', 'Segoe UI', Tahoma,
 		'Traditional Arabic', 'Arabic Typesetting', sans-serif;
 
+	--font-mono: 'Fira Code', 'Source Code Pro', 'Consolas', 'Menlo', monospace;
+
 	--animate-shake: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 
 	@keyframes shake {

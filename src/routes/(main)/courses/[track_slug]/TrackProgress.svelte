@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { i18n } from '$i18n/i18n';
-	import type { ModuleWithItems } from '$lib/server/db/helpers/class';
+	import type { ModuleWithItems } from '$lib/server/db/repos/class';
 	import Icon from '$ui/common/Icon.svelte';
 
 	const { modules }: { modules: ModuleWithItems[] } = $props();
@@ -24,7 +24,7 @@
 	let earnedXP = $derived(
 		allItems.reduce((sum, item) => sum + (item.submission?.xp_reward || 0), 0)
 	);
-	let totalXP = $derived(allItems.reduce((sum, item) => sum + item.base_xp, 0));
+	let totalXP = $derived(allItems.reduce((sum, item) => sum + (item?.baseXp || 0), 0));
 	let xpProgress = $derived(totalXP > 0 ? (earnedXP / totalXP) * 100 : 0);
 </script>
 

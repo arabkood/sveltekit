@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from "$api/config";
-import { i18n } from "$i18n/i18n";
+import { API_ENDPOINTS } from '$api/config';
+import { i18n } from '$i18n/i18n';
 
 export class SubmissionService {
   private readonly POLLING_CONFIG = {
@@ -9,8 +9,7 @@ export class SubmissionService {
     maxAttempts: 20
   };
 
-  constructor(
-  ) { }
+  constructor() { }
 
   async runCode(itemId: string, files: any, inputs: string[]): Promise<any> {
     const response = await fetch(API_ENDPOINTS.item.run(itemId), {
@@ -28,8 +27,6 @@ export class SubmissionService {
       const error = await response.json();
       throw new Error(i18n.error(error.error) || 'Failed to run code');
     }
-
-    console.log(response)
 
     const res = await response.json();
     return this.pollForRunResult(res.task_id);
@@ -99,13 +96,11 @@ export class SubmissionService {
 
   private delay(attempt: number): Promise<void> {
     const ms = Math.min(
-      this.POLLING_CONFIG.initialDelay *
-      Math.pow(this.POLLING_CONFIG.backoffFactor, attempt),
+      this.POLLING_CONFIG.initialDelay * Math.pow(this.POLLING_CONFIG.backoffFactor, attempt),
       this.POLLING_CONFIG.maxDelay
     );
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
 
 export const submissionService = new SubmissionService();
-

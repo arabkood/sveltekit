@@ -1,5 +1,5 @@
 import { json, text } from '@sveltejs/kit';
-import { getSubmission } from '$lib/server/db/helpers/submission';
+import { classRepository } from '$lib/server/db/repos/class.js';
 
 export async function GET({ url, locals }) {
 	const id = url.searchParams.get('id');
@@ -7,7 +7,7 @@ export async function GET({ url, locals }) {
 		return text('not allowed', { status: 400 });
 	}
 
-	const submission = await getSubmission(locals.user.id, id);
+	const submission = await classRepository.getUserSubmissionById(locals.user.id, id);
 
 	return json({ submission });
 }

@@ -92,14 +92,14 @@
 
 	let result = $state({
 		showPopup: false,
-		xp: item.base_xp,
+		xp: item.baseXp,
 		status: 'wait'
 	});
 
 	let showSignupPopup = $state(false);
 
 	let percentCorrect = 100;
-	let gainedXp = $derived((percentCorrect / 100) * item.base_xp);
+	let gainedXp = $derived((percentCorrect / 100) * (item.baseXp || 0));
 
 	async function submit() {
 		if (!item.id || currentStepIndex < lesson.steps.length - 1) {

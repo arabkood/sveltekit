@@ -1,13 +1,13 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 
-import type { SelectUser } from '$lib/server/db/schema/auth';
+import type { User } from '$lib/server/db/repos/user';
 
 declare global {
-  namespace App {
-    interface Locals {
-      user: SelectUser | null;
-    }
-  }
+	namespace App {
+		interface Locals {
+			user: User | null;
+		}
+	}
 }
 
-export { };
+export {};

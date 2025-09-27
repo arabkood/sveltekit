@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Item, Module, Track } from '$lib/server/db/schema/class';
+	import type { Item, Module, Track } from '$lib/server/db/repos/class';
 	import Icon from '$ui/common/Icon.svelte';
 
 	const {

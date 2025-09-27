@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { i18n } from '$i18n/i18n';
-	import type { SelectUser } from '$lib/server/db/schema/auth';
-	import type { SelectUsersStats } from '$lib/server/db/schema/users';
 	import Button from '$ui/common/Button.svelte';
 	import Icon from '$ui/common/Icon.svelte';
 	import Logo from '$ui/common/Logo.svelte';
@@ -10,12 +8,13 @@
 	import { slide, scale } from 'svelte/transition';
 	import { quintOut, backOut } from 'svelte/easing';
 	import NavbarLevel from './NavbarLevel.svelte';
+	import type { User, UserStats } from '$lib/server/db/repos/user';
 
 	let {
 		user,
 		userStats,
 		transition = true
-	}: { user?: SelectUser; userStats?: SelectUsersStats; transition?: boolean } = $props();
+	}: { user?: User; userStats?: UserStats; transition?: boolean } = $props();
 
 	let isOpen = $state(false);
 	let isScrolled = $state(false);
@@ -117,7 +116,7 @@
 						size="sm"
 						rounded
 						class="relative"
-						startIcon={link.icon}
+						startIcon={link.icon as any}
 					>
 						{link.name}
 						{#if isActive}
@@ -167,7 +166,7 @@
 							size="sm"
 							class="w-full justify-start py-5"
 							onclick={() => (isOpen = false)}
-							startIcon={link.icon}
+							startIcon={link.icon as any}
 						>
 							<span class="whitespace-nowrap">{link.name}</span>
 						</Button>

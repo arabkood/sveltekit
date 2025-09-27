@@ -3,11 +3,11 @@
 	import TestCase from './TestCase.svelte';
 	import Ansi from './Ansi.svelte';
 	import { i18n } from '$i18n/i18n';
-	import type { Submission } from '$lib/server/db/schema/submission';
 	import type { JobResult, TestResult } from '$types/code';
 	import Icon from '$ui/common/Icon.svelte';
+	import type { UserSubmission } from '$lib/server/db/repos/class';
 
-	let { submission, error = null }: { submission?: Submission | null; error?: string | null } =
+	let { submission, error = null }: { submission?: UserSubmission | null; error?: string | null } =
 		$props();
 
 	// --- Derived ---
