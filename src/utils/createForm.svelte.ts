@@ -1,5 +1,4 @@
-import { z } from 'zod';
-import type { ZodObject, ZodRawShape, ZodEffects } from 'zod';
+import { z, type ZodType } from 'zod';
 
 interface FormState<T> {
 	values: T;
@@ -9,13 +8,13 @@ interface FormState<T> {
 	isValid: boolean;
 }
 
-type SchemaType = ZodObject<ZodRawShape> | ZodEffects<ZodObject<ZodRawShape>>;
+type SchemaType<T> = ZodType<T>;
 
 export { z };
 
 export function createForm<T extends Record<string, unknown>>(
 	initialValues: T,
-	schema: SchemaType,
+	schema: SchemaType<T>,
 	onSubmit: (values: T) => Promise<void> | void
 ) {
 	// Form state
@@ -27,39 +26,37 @@ export function createForm<T extends Record<string, unknown>>(
 		isValid: true
 	});
 
-	// Get the base schema without refinements
-	const baseSchema = schema instanceof z.ZodEffects ? schema._def.schema : schema;
+	const baseSchema = schema;
 
 	// Validate single field
 	function validateField(name: keyof T) {
-		// First validate against the base schema
-		const partial = z.object({
-			[name]: (baseSchema.shape as Record<keyof T, unknown>)[name] as z.ZodType<unknown>
-		});
-		const result = partial.safeParse({ [name]: state.values[name] });
-
-		if (!result.success) {
-			state.errors[name] = result.error.errors[0]?.message || 'Invalid value';
-			state.isValid = false;
-		} else {
-			// If base validation passes, check refinements
-			const fullResult = schema.safeParse(state.values);
-			if (!fullResult.success) {
-				const refinementErrors = fullResult.error.errors.filter((error) => {
-					// Check if this refinement error affects our field
-					return error.path[0] === name;
-				});
-
-				if (refinementErrors.length > 0) {
-					state.errors[name] = refinementErrors[0].message;
-					state.isValid = false;
+		// We still need this type guard because baseSchema is of a general type
+		if ('shape' in baseSchema && baseSchema.shape) {
+			const partial = z.object({
+				[name]: (baseSchema.shape as Record<keyof T, unknown>)[name] as z.ZodType<unknown>
+			});
+			const result = partial.safeParse({ [name]: state.values[name] });
+			if (!result.success) {
+				state.errors[name] = result.error.issues[0]?.message || 'Invalid value';
+				state.isValid = false;
+			} else {
+				// If base validation passes, check refinements on the original schema
+				const fullResult = schema.safeParse(state.values);
+				if (!fullResult.success) {
+					const refinementErrors = fullResult.error.issues.filter((issue) => {
+						return issue.path[0] === name;
+					});
+					if (refinementErrors.length > 0) {
+						state.errors[name] = refinementErrors[0].message;
+						state.isValid = false;
+					} else {
+						delete state.errors[name];
+						state.isValid = Object.keys(state.errors).length === 0;
+					}
 				} else {
 					delete state.errors[name];
 					state.isValid = Object.keys(state.errors).length === 0;
 				}
-			} else {
-				delete state.errors[name];
-				state.isValid = Object.keys(state.errors).length === 0;
 			}
 		}
 	}
@@ -69,19 +66,15 @@ export function createForm<T extends Record<string, unknown>>(
 		const target = event.target as HTMLInputElement;
 		const name = target.name as keyof T;
 		const value = target.type === 'checkbox' ? target.checked : target.value;
-
-		// Type assertion here since we know the value will match the schema
 		state.values[name] = value as T[keyof T];
 		state.touched[name] = true;
 
-		// Validate both the changed field and any fields that might be affected by refinements
 		validateField(name);
 
-		// Check for related fields in refinements
 		const fullResult = schema.safeParse(state.values);
 		if (!fullResult.success) {
-			fullResult.error.errors.forEach((error) => {
-				const affectedField = error.path[0] as keyof T;
+			fullResult.error.issues.forEach((issue) => {
+				const affectedField = issue.path[0] as keyof T;
 				if (affectedField !== name) {
 					validateField(affectedField);
 				}
@@ -94,21 +87,20 @@ export function createForm<T extends Record<string, unknown>>(
 		event.preventDefault();
 		state.isSubmitting = true;
 
-		// Validate all fields including refinements
 		const result = schema.safeParse(state.values);
 		if (!result.success) {
 			state.errors = {};
-			result.error.errors.forEach((error) => {
-				const path = error.path[0] as keyof T;
-				state.errors[path] = error.message;
+			result.error.issues.forEach((issue) => {
+				const path = issue.path[0] as keyof T;
+				state.errors[path] = issue.message;
 			});
 			state.isValid = false;
 			state.isSubmitting = false;
 			return;
 		}
+
 		state.errors = {};
 		state.isValid = true;
-
 		try {
 			await onSubmit(state.values);
 		} catch (error) {
