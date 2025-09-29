@@ -22,6 +22,10 @@ const config = {
 			$types: 'src/types',
 			$assets: 'src/assets',
 			$config: 'src/config.ts'
+		},
+
+		version: {
+			name: process.env.npm_package_version || Date.now().toString()
 		}
 	}
 };

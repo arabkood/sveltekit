@@ -513,8 +513,8 @@ print(greeting)`,
 							أخيرًا محتوى عربي ينافس المنصات العالمية."
 						</p>
 						<div class="flex items-center">
-							<img
-								src="/images/testimony/1.png"
+							<enhanced:img
+								src="$assets/images/testimony/1.png"
 								alt="علياء"
 								class="ml-4 h-12 w-12 rounded-full object-cover"
 							/>
@@ -530,8 +530,8 @@ print(greeting)`,
 							تمامًا. الشرح واضح والمنصة سهلة الاستخدام جدًا."
 						</p>
 						<div class="flex items-center">
-							<img
-								src="/images/testimony/2.png"
+							<enhanced:img
+								src="$assets/images/testimony/2.png"
 								alt="ماجد"
 								class="ml-4 h-12 w-12 rounded-full object-cover"
 							/>
@@ -547,8 +547,8 @@ print(greeting)`,
 							المشاكل من أول يوم. أنصح بها بشدة."
 						</p>
 						<div class="flex items-center">
-							<img
-								src="/images/testimony/3.png"
+							<enhanced:img
+								src="$assets/images/testimony/3.png"
 								alt="حسن"
 								class="ml-4 h-12 w-12 rounded-full object-cover"
 							/>
@@ -582,8 +582,8 @@ print(greeting)`,
 							متاح الآن
 						</div>
 						<div class="mb-5 flex h-16 w-16 items-center justify-center">
-							<img
-								src="/images/logos/python.png"
+							<enhanced:img
+								src="$assets/images/logos/python.png"
 								alt="python logo"
 								class="h-14 w-14 object-contain"
 							/>
@@ -609,8 +609,8 @@ print(greeting)`,
 							متاح الآن
 						</div>
 						<div class="mb-5 flex h-16 w-16 items-center justify-center">
-							<img
-								src="/images/logos/internet.png"
+							<enhanced:img
+								src="$assets/images/logos/internet.png"
 								alt="internet logo"
 								class="h-14 w-14 object-contain"
 							/>
@@ -636,8 +636,8 @@ print(greeting)`,
 							قريباً
 						</div>
 						<div class="mb-5 flex h-16 w-16 items-center justify-center">
-							<img
-								src="/images/logos/python.png"
+							<enhanced:img
+								src="$assets/images/logos/python.png"
 								alt="python logo"
 								class="h-14 w-14 object-contain"
 							/>
@@ -663,8 +663,8 @@ print(greeting)`,
 							قريباً
 						</div>
 						<div class="mb-5 flex h-16 w-16 items-center justify-center">
-							<img
-								src="/images/logos/javascript.png"
+							<enhanced:img
+								src="$assets/images/logos/javascript.png"
 								alt="javascript logo"
 								class="h-14 w-14 object-contain"
 							/>
