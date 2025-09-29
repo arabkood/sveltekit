@@ -2,6 +2,9 @@
 	const icons = {
 		premium: '/images/icons/premium.png',
 		fire: '/images/icons/fire.png',
+		bolt: '/images/icons/bolt.png',
+		terminal: '/images/icons/terminal.png',
+		'book-close': '/images/icons/book-close.png',
 		level_badges_0: '/images/icons/level-badges/0.png',
 		level_badges_1: '/images/icons/level-badges/1.png',
 		level_badges_2: '/images/icons/level-badges/2.png',
@@ -38,5 +41,15 @@
 </script>
 
 {#if src}
-	<img {src} alt={name} width={size} height={size} class={class_name} {...rest} />
+	<div
+		class={`relative flex items-center justify-center overflow-hidden ${class_name}`}
+		style={`width: ${size}px; height: ${size}px;`}
+	>
+		<img
+			{src}
+			alt={name}
+			style="max-width: 100%; max-height: 100%; object-fit: contain;"
+			{...rest}
+		/>
+	</div>
 {/if}

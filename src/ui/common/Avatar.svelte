@@ -8,7 +8,10 @@
 		md: 'h-9 w-9 text-base',
 		lg: 'h-12 w-12 text-lg',
 		xl: 'h-16 w-16 text-xl',
-		'2xl': 'h-20 w-20 text-2xl'
+		'2xl': 'h-20 w-20 text-2xl',
+		'3xl': 'h-28 w-28 text-2xl',
+		'4xl': 'h-32 w-32 text-2xl',
+		'5xl': 'h-36 w-36 text-2xl'
 	} as const;
 
 	type SizeVariant = keyof typeof sizeClasses;
@@ -72,12 +75,8 @@
 					return 'h-3 w-3';
 				case 'lg':
 					return 'h-4 w-4';
-				case 'xl':
-					return 'h-5 w-5';
-				case '2xl':
-					return 'h-6 w-6';
 				default:
-					return 'h-2.5 w-2.5';
+					return 'h-5 w-5';
 			}
 		})()
 	);
@@ -142,9 +141,7 @@
 
 	{#if showStatusIndicator && status}
 		<div
-			class="absolute -right-0.5 -bottom-0.5 rounded-full border-2
-                   border-white dark:border-gray-800
-                   {statusIndicatorSize} {statusIndicatorColor}"
+			class="absolute -right-0.5 -bottom-0.5 rounded-full {statusIndicatorSize} {statusIndicatorColor}"
 			aria-label="Status: {status}"
 		></div>
 	{/if}

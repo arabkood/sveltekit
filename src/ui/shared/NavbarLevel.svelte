@@ -31,16 +31,16 @@
 >
 	<div class={cn('flex h-8 items-center gap-1.5 ps-2 font-bold', currentRank.theme.accent)}>
 		<span class="text-xs opacity-80">مستوى</span>
-		<span class="text-sm">{xp.currentLevel}</span>
+		<span class="font-hacker text-sm">{xp.currentLevel}</span>
 	</div>
 
 	<IconPng name={currentRank.icon} size={40} class="shrink-0 drop-shadow-lg" />
 
 	<div class="flex-1 text-right">
-		<div class={cn('text-sm leading-none font-bold', currentRank.theme.text)}>
+		<div class={cn('font-hacker text-sm leading-none font-bold', currentRank.theme.text)}>
 			{userStats.totalXp.toLocaleString()}
 		</div>
-		<div class="text-xs leading-none text-slate-500 dark:text-slate-400">XP</div>
+		<div class="font-hacker text-xs leading-none text-slate-500 dark:text-slate-400">XP</div>
 	</div>
 
 	<div class="relative h-8 w-2 overflow-hidden rounded-full bg-black/10 dark:bg-white/30">

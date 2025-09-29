@@ -80,7 +80,9 @@
 
 			<p class={cn('mt-4 text-5xl font-bold transition-all duration-500', currentRank.theme.text)}>
 				{i18n.t('dashboard.level')}
-				{xp.currentLevel}
+				<span class="font-hacker">
+					{xp.currentLevel}
+				</span>
 			</p>
 
 			<div class="mt-6 space-y-2" in:fly={{ y: 20, duration: 600, delay: 300 }}>
@@ -92,7 +94,7 @@
 				</div>
 
 				<div class="flex items-center justify-between text-xs" dir="ltr">
-					<span class={cn('font-medium', currentRank.theme.text, 'opacity-70')}>
+					<span class={cn('font-hacker font-medium', currentRank.theme.text, 'opacity-70')}>
 						{Math.floor(displayXp.current).toLocaleString()} / {Math.floor(
 							xp.xpNeededForNextLevel
 						).toLocaleString()}
@@ -100,7 +102,9 @@
 					</span>
 					<span class={cn('font-bold', currentRank.theme.text)}>
 						{i18n.t('dashboard.toLevel')}
-						{xp.nextLevel}
+						<span class="font-hacker">
+							{xp.nextLevel}
+						</span>
 					</span>
 				</div>
 			</div>

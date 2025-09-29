@@ -99,7 +99,10 @@
 
 <!-- Desktop -->
 <div class="mx-auto hidden min-h-screen max-w-7xl grid-cols-[1fr_380px] lg:grid">
-	<main class="p-4">
+	<main class="mt-4 p-4">
+		<h2 class="mb-6 text-xl font-bold text-slate-800 dark:text-white">
+			{i18n.t('common.track_content')}
+		</h2>
 		<Track
 			isPremium={data.user?.premiumActive}
 			modules={data.modules}
@@ -107,7 +110,10 @@
 			track={data.track}
 		/>
 	</main>
-	<aside class="p-4">
+	<aside class="mt-4 p-4">
+		<h2 class="mb-6 text-xl font-bold text-slate-800 dark:text-white">
+			{i18n.t('common.your_progress')}
+		</h2>
 		<TrackProgress modules={data.modules} />
 	</aside>
 </div>
@@ -116,8 +122,8 @@
 <div class="mx-auto min-h-screen max-w-7xl lg:hidden">
 	<Tabs variant="default" size="lg">
 		<TabList>
-			<Tab index={0}>{i18n.t('common.track')}</Tab>
-			<Tab index={1}>{i18n.t('common.progress')}</Tab>
+			<Tab index={0}>{i18n.t('common.track_content')}</Tab>
+			<Tab index={1}>{i18n.t('common.your_progress')}</Tab>
 		</TabList>
 		<TabPanel index={0} transition="slide">
 			<main class="p-4">

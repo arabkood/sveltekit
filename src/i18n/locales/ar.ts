@@ -95,6 +95,7 @@ export default {
 		}
 	},
 	common: {
+		track_content: 'المسار الدراسي',
 		streak: {
 			broken: "انقطع الستريك",
 			start: "ابدأ ستريكك اليوم",

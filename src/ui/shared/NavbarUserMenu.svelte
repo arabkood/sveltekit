@@ -156,8 +156,6 @@
 				src={user?.avatar || undefined}
 				alt={user.username}
 				fallback={user.username}
-				showStatusIndicator={true}
-				status="online"
 				size="sm"
 				className="me-1"
 			/>

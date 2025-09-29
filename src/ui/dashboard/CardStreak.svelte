@@ -122,11 +122,11 @@
 	<div class="flex items-center justify-between">
 		<div class="flex items-center gap-4">
 			<!-- Fire Icon -->
-			<div class={'relative p-4'}>
+			<div class={'relative p-1'}>
 				<IconPng
 					class={cn('relative z-10', { 'grayscale filter': streakStatus === 'broken' })}
 					name="fire"
-					size={34}
+					size={60}
 				/>
 				{#if streakStatus !== 'broken'}
 					<div
@@ -141,8 +141,10 @@
 			<!-- Number & Status Text -->
 			<div>
 				<div class="text-4xl font-bold text-gray-900 tabular-nums dark:text-white">
-					{currentStreak}
-					<span class="-gray-600 text-lg dark:text-gray-400"
+					<span class="font-hacker">
+						{currentStreak}
+					</span>
+					<span class="text-lg text-gray-600 dark:text-gray-400"
 						>{i18n.t('common.consecutive_days')}</span
 					>
 				</div>
@@ -165,7 +167,7 @@
 				<div class="mb-1 text-xs text-gray-400 dark:text-gray-500">
 					{i18n.t('common.your_longest_streak')}
 				</div>
-				<div class="text-2xl font-semibold text-gray-700 dark:text-gray-300">
+				<div class="font-hacker text-2xl font-semibold text-gray-700 dark:text-gray-300">
 					{longestStreak}
 				</div>
 			</div>

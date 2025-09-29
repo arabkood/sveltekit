@@ -55,7 +55,7 @@
 						/>
 					</svg>
 					<span
-						class="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-700 sm:text-sm dark:text-slate-200"
+						class="font-hacker absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-700 sm:text-base dark:text-slate-200"
 					>
 						{module.position}
 					</span>
