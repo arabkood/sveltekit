@@ -57,16 +57,12 @@
 </script>
 
 {#if src}
-	<div
+	<!-- svelte-ignore hydration_attribute_changed -->
+	<enhanced:img
+		{src}
+		alt={name}
 		class={`relative flex items-center justify-center overflow-hidden ${class_name}`}
-		style={`width: ${size}px; height: ${size}px;`}
-	>
-		<!-- svelte-ignore hydration_attribute_changed -->
-		<enhanced:img
-			{src}
-			alt={name}
-			style="max-width: 100%; max-height: 100%; object-fit: contain;"
-			{...rest}
-		/>
-	</div>
+		style={`max-width: 100%; max-height: 100%; object-fit: contain; width: ${size}px; height: ${size}px;`}
+		{...rest}
+	/>
 {/if}
