@@ -11,6 +11,7 @@ Disallow: /`;
 	// Production robots.txt
 	return `User-agent: *
 Disallow: /settings/
+Disallow: /api/
 
 Sitemap: ${SITE}/sitemap.xml`;
 }
