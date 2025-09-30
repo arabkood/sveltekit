@@ -9,7 +9,7 @@ import {
 
 // Infer types
 export type User = typeof usersInAuth.$inferSelect;
-type UserPrivate = Pick<
+export type UserPrivate = Pick<
 	User,
 	| 'id'
 	| 'email'

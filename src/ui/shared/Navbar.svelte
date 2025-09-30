@@ -8,13 +8,13 @@
 	import { slide, scale } from 'svelte/transition';
 	import { quintOut, backOut } from 'svelte/easing';
 	import NavbarLevel from './NavbarLevel.svelte';
-	import type { User, UserStats } from '$lib/server/db/repos/user';
+	import type { UserPrivate, UserStats } from '$lib/server/db/repos/user';
 
 	let {
 		user,
 		userStats,
 		transition = true
-	}: { user?: User; userStats?: UserStats; transition?: boolean } = $props();
+	}: { user?: UserPrivate; userStats?: UserStats; transition?: boolean } = $props();
 
 	let isOpen = $state(false);
 	let isScrolled = $state(false);

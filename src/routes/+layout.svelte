@@ -10,7 +10,7 @@
 
 	export const load = async () => {
 		if (browser && APP_ENV === 'production') {
-			// @ts-expect-error no typing
+			// if (browser) {
 			window.posthog = posthog.init('phc_XzgJDy16KOk6p0vYtoRxOtetjOfhoIjgbzT50chF7RR', {
 				defaults: '2025-05-24',
 				api_host: 'https://tatabo3.akood.com',

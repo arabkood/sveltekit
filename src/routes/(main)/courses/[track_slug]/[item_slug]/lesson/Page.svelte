@@ -21,6 +21,7 @@
 		QuizAnswer
 	} from '$types/lesson';
 	import Bug from '$ui/lesson/bug/Bug.svelte';
+	import { page } from '$app/state';
 
 	let {
 		data,
@@ -32,7 +33,31 @@
 	const { lesson, track, item, submission, user, module } = data;
 
 	let currentStepIndex = $state(0);
-	const goToStep = (i: number) => (currentStepIndex = i);
+	let lessonStartTime = Date.now();
+	let stepStartTime = Date.now();
+
+	const goToStep = (i: number) => {
+		const timeSpentOnStep = Math.floor((Date.now() - stepStartTime) / 1000);
+
+		window.posthog?.capture('step_navigated', {
+			lesson_id: item.id,
+			lesson_title: item.title,
+			from_step: currentStepIndex,
+			to_step: i,
+			time_spent_seconds: timeSpentOnStep,
+			track_slug: track.slug,
+			module_slug: module.position
+		});
+
+		currentStepIndex = i;
+
+		stepStartTime = Date.now(); // Reset timer
+
+		// change param to indicate current step for tracking
+		const url = new URL(page.url);
+		url.searchParams.set('s', i.toString());
+		window.history.replaceState({}, '', url);
+	};
 	const currentStep = $derived(lesson.steps[currentStepIndex]);
 
 	const getInitialAnswers = (): LessonInteractiveAnswers => {
@@ -118,6 +143,13 @@
 
 		// Check for a logged-in user before submitting
 		if (!user) {
+			// Track that user tried to submit without login
+			window.posthog?.capture('submission_blocked_no_login', {
+				lesson_id: item.id,
+				lesson_title: item.title,
+				steps_completed: currentStepIndex + 1
+			});
+
 			showSignupPopup = true;
 			return;
 		}
@@ -137,10 +169,32 @@
 		if (!response.ok) {
 			const error: ApiError = await response.json();
 			console.error('KOOD', error);
+
+			// Track submission failure
+			window.posthog?.capture('lesson_submission_failed', {
+				lesson_id: item.id,
+				lesson_title: item.title,
+				error_code: response.status,
+				track_slug: track.slug
+			});
 			return;
 		}
 
 		const res = await response.json();
+
+		// Track successful submission
+		const totalTimeSpent = Math.floor((Date.now() - lessonStartTime) / 1000);
+		window.posthog?.capture('lesson_completed', {
+			lesson_id: item.id,
+			lesson_title: item.title,
+			track_slug: track.slug,
+			module_pos: module?.position,
+			score: percentCorrect,
+			xp_earned: res.submission.xp_reward,
+			total_steps: lesson.steps.length,
+			time_spent_seconds: totalTimeSpent,
+			submission_status: res.submission.status
+		});
 
 		result.showPopup = true;
 		result.xp = res.submission.xp_reward;
@@ -167,9 +221,35 @@
 	};
 
 	onMount(() => {
+		// Track lesson start
+		window.posthog?.capture('lesson_started', {
+			lesson_id: item.id,
+			lesson_title: item.title,
+			track_slug: track.slug,
+			module_pos: module.position,
+			total_steps: lesson.steps.length,
+			previously_status: submission?.status
+		});
+
 		setTimeout(() => {
 			window.scrollTo(0, 0);
 		}, 100);
+
+		// Track abandonment on component cleanup
+		return () => {
+			if (submission?.status !== 'pass' && result.status !== 'pass' && currentStepIndex > 0) {
+				const timeSpent = Math.floor((Date.now() - lessonStartTime) / 1000);
+				window.posthog?.capture('lesson_abandoned', {
+					lesson_id: item.id,
+					lesson_title: item.title,
+					track_slug: track.slug,
+					last_step_reached: currentStepIndex,
+					total_steps: lesson.steps.length,
+					completion_percentage: Math.floor(((currentStepIndex + 1) / lesson.steps.length) * 100),
+					time_spent_seconds: timeSpent
+				});
+			}
+		};
 	});
 
 	beforeNavigate(({ cancel }) => {
