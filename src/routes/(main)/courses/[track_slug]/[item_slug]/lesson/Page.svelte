@@ -7,7 +7,7 @@
 	import SignupPopup from '$ui/popup/SignupPopup.svelte';
 	import { API_ENDPOINTS } from '$api/config';
 	import type { ApiError } from '$types/api';
-	import { goto } from '$app/navigation';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Quiz from '$ui/lesson/quiz/Quiz.svelte';
 	import Fill from '$ui/lesson/fill/Fill.svelte';
@@ -170,6 +170,32 @@
 		setTimeout(() => {
 			window.scrollTo(0, 0);
 		}, 100);
+	});
+
+	beforeNavigate(({ cancel }) => {
+		if (submission?.status !== 'pass' && result.status !== 'pass' && currentStepIndex > 0) {
+			const shouldLeave = confirm('لديك تقدم غير محفوظ. هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟');
+
+			if (!shouldLeave) {
+				cancel();
+			}
+		}
+	});
+
+	onMount(() => {
+		const handleBeforeUnload = (e: any) => {
+			if (submission?.status !== 'pass' && result.status !== 'pass' && currentStepIndex > 0) {
+				e.preventDefault();
+				e.returnValue = '';
+				return '';
+			}
+		};
+
+		window.addEventListener('beforeunload', handleBeforeUnload);
+
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
 	});
 </script>
 
