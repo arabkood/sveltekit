@@ -101,6 +101,16 @@
 	let percentCorrect = 100;
 	let gainedXp = $derived((percentCorrect / 100) * (item.baseXp || 0));
 
+	let maxStepIndex = $state(submission && submission.status === 'pass' ? answers.length - 1 : 0);
+
+	$effect(() => {
+		if (submission && submission.status === 'pass') {
+			maxStepIndex = answers.length - 1;
+		} else {
+			maxStepIndex = Math.max(currentStepIndex, maxStepIndex);
+		}
+	});
+
 	async function submit() {
 		if (!item.id || currentStepIndex < lesson.steps.length - 1) {
 			return;
@@ -194,6 +204,7 @@
 		currentStep={currentStepIndex}
 		totalSteps={lesson.steps.length}
 		{goToStep}
+		{maxStepIndex}
 	/>
 	<div class="flex flex-1 flex-col items-center justify-center p-4">
 		{#if typeof currentStep !== 'string'}

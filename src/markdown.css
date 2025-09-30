@@ -278,3 +278,62 @@
 .markdown-body.markdown-inline li {
 	margin-bottom: 0;
 }
+
+
+/* Markdown Alert */
+
+.markdown-alert {
+	border-radius: 0.5rem;
+	border-left-width: 4px;
+	padding: 1rem;
+	margin: 1rem 0;
+}
+
+/* TIP Alert */
+.markdown-alert-tip {
+	background-color: #fffbeb;
+	border-left-color: #f59e0b;
+}
+
+.markdown-alert-tip .markdown-alert-title {
+	color: #b45309;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+/* NEXT Alert */
+.markdown-alert-next {
+	background-color: #f0f9ff;
+	border-left-color: #0ea5e9;
+}
+
+.markdown-alert-next .markdown-alert-title {
+	color: #0369a1;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+	.markdown-alert-tip {
+		background-color: rgba(120, 53, 15, 0.3);
+		border-left-color: #f59e0b;
+	}
+	
+	.markdown-alert-tip .markdown-alert-title {
+		color: #fbbf24;
+	}
+
+	.markdown-alert-next {
+		background-color: rgba(7, 89, 133, 0.3);
+		border-left-color: #0ea5e9;
+	}
+	
+	.markdown-alert-next .markdown-alert-title {
+		color: #38bdf8;
+	}
+}

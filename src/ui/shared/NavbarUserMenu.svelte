@@ -160,7 +160,7 @@
 				className="me-1"
 			/>
 			{user.username}
-			{#if !user.premiumActive}
+			{#if user.premiumActive}
 				<IconPng name="premium" size={24} alt="Premium" class="inline" />
 			{/if}
 		</Button>

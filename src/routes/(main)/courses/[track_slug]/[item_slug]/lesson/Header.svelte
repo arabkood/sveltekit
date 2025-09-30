@@ -8,6 +8,7 @@
 		track,
 		module,
 		item,
+		maxStepIndex,
 		goToStep
 	}: {
 		currentStep: number;
@@ -15,6 +16,7 @@
 		module: Module;
 		item: Item;
 		totalSteps: number;
+		maxStepIndex: number;
 		goToStep: (i: number) => void;
 	} = $props();
 </script>
@@ -57,21 +59,23 @@
 			<button
 				type="button"
 				class="focus-visible:ring-primary-500 h-2.5 w-2.5 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800"
-				class:bg-primary-500={i < currentStep}
-				class:bg-primary-400={i === currentStep}
+				class:bg-primary-500={i <= maxStepIndex}
+				class:bg-primary-400={i === maxStepIndex}
 				class:scale-125={i === currentStep}
-				class:bg-slate-300={i > currentStep}
-				class:dark:bg-slate-600={i > currentStep}
-				class:cursor-pointer={i < currentStep}
-				class:hover:bg-primary-600={i < currentStep}
-				aria-label={i < currentStep
+				class:ring-2={i === currentStep}
+				class:ring-slate-500={i === currentStep}
+				class:bg-slate-300={i > maxStepIndex}
+				class:dark:bg-slate-600={i > maxStepIndex}
+				class:cursor-pointer={i <= maxStepIndex}
+				class:hover:bg-primary-600={i <= maxStepIndex}
+				aria-label={i <= maxStepIndex
 					? `Go to step ${stepNumber}`
 					: `Step ${stepNumber}${i === currentStep ? ' (Current)' : ''}`}
-				disabled={i >= currentStep}
 				onclick={() => goToStep(i)}
+				disabled={i > maxStepIndex}
 			>
 				<span class="sr-only">
-					{i < currentStep ? `Go to step ${stepNumber}` : `Step ${stepNumber}`}
+					{i <= maxStepIndex ? `Go to step ${stepNumber}` : `Step ${stepNumber}`}
 					{i === currentStep ? ' (Current)' : ''}
 				</span>
 			</button>
