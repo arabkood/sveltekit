@@ -271,7 +271,7 @@ export default {
 		start_track_prompt: 'ابدأ مسارك الأول',
 		browse_tracks: 'تصفح المسارات',
 		premium_offer: 'العضوية المميزة',
-		unlock_premium: 'ارتقِ بتعلمك إلى المستوى التالي', // "Take your learning to the next level" - More inspiring and benefit-driven
+		unlock_premium: 'ارتقِ بتعلمك إلى المستوى التالي',
 		premium_description:
 			'تمتع بوصول فوري وغير محدود لجميع المسارات المتقدمة والمشاريع الحصرية لتسريع رحلتك الاحترافية.',
 		level: 'المستوى',
@@ -286,6 +286,7 @@ export default {
 		current_tracks: 'مساراتك الحالية',
 		your_tracks: 'مساراتك',
 		daily_challenge: 'تحدي اليوم',
+		challenge: 'تحدي',
 		daily_challenge_desc: 'حل تحدي البرمجة اليومي واكسب نقاط إضافية',
 		community: 'المجتمع',
 		join_community: 'انضم إلى مجتمعنا',

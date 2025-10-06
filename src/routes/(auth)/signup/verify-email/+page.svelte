@@ -47,7 +47,6 @@
 		const code = verificationCode.join('');
 
 		try {
-			console.log(user);
 			const response = await fetch(API_ENDPOINTS.auth.verifyEmail, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },

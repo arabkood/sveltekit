@@ -88,6 +88,13 @@
 							<div class="min-w-0">
 								<h3 class="flex items-center gap-2 font-bold text-slate-800 dark:text-white">
 									{item.title}
+									{#if item.type === 'code'}
+										<span
+											class="ml-1 rounded-md bg-amber-100 px-2 py-0.5 text-xs font-bold tracking-wider text-amber-800 uppercase dark:bg-amber-900/70 dark:text-amber-300"
+										>
+											{i18n.t('dashboard.challenge')}
+										</span>
+									{/if}
 									<Icon name="star" size={16} class="flex-shrink-0 text-amber-400" />
 								</h3>
 							</div>
@@ -110,23 +117,35 @@
 					>
 						<div class="flex min-w-0 items-center gap-3 sm:gap-4">
 							<div
-								class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700"
+								class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full {item.type ===
+								'code'
+									? 'bg-amber-500/10 dark:bg-amber-500/20'
+									: 'bg-slate-200 dark:bg-slate-700'}"
 							>
 								<Icon
 									name={item.type === 'lesson' ? 'book-open' : 'code'}
-									class="h-5 w-5 text-slate-600 dark:text-slate-300"
+									class="h-5 w-5 {item.type === 'code'
+										? 'text-amber-600 dark:text-amber-400'
+										: 'text-slate-600 dark:text-slate-300'}"
 								/>
 							</div>
 							<div class="min-w-0">
 								<h3 class="flex items-center gap-2 font-bold text-slate-800 dark:text-white">
 									{item.title}
+
+									{#if item.type === 'code'}
+										<span
+											class="ml-1 rounded-md bg-amber-100 px-2 py-0.5 text-xs font-bold tracking-wider text-amber-800 uppercase dark:bg-amber-900/70 dark:text-amber-300"
+										>
+											{i18n.t('dashboard.challenge')}
+										</span>
+									{/if}
 									{#if item.premiumOnly}
 										<Icon name="star" size={16} class="flex-shrink-0 text-amber-400" />
 									{/if}
 								</h3>
 							</div>
 						</div>
-
 						<div class="flex-shrink-0">
 							{#if item.submission?.status === 'pass'}
 								<Button variant="boring" rounded={true} size="md" class="!h-9 w-30 text-lg">
@@ -138,9 +157,9 @@
 									rounded={true}
 									size="md"
 									dir="ltr"
-									class="!h-10 w-30 font-mono text-lg font-bold tracking-wide"
+									class="font-hacker !h-10 w-30 text-lg font-bold"
 								>
-									+{item.baseXp}XP
+									{item.baseXp}<span class="align-text-top font-mono text-xs">XP</span>
 								</Button>
 							{/if}
 						</div>

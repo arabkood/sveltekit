@@ -160,21 +160,21 @@
 					>
 						{#each course.tracks as track}
 							<svelte:element
-								this={track.coming_soon ? 'div' : 'a'}
-								href={track.coming_soon ? undefined : 'courses/' + track.slug}
-								title={track.coming_soon
+								this={track.comingSoon ? 'div' : 'a'}
+								href={track.comingSoon ? undefined : 'courses/' + track.slug}
+								title={track.comingSoon
 									? track.title + ' - ' + i18n.t('common.coming_soon')
 									: track.title}
-								class="group block h-[240px] w-[220px] flex-shrink-0 {track.coming_soon
+								class="group block h-[240px] w-[220px] flex-shrink-0 {track.comingSoon
 									? 'cursor-not-allowed'
 									: ''}"
 							>
 								<div
-									class="relative flex h-full flex-col overflow-hidden rounded-2xl border backdrop-blur-sm transition-all duration-500 ease-out {track.coming_soon
+									class="relative flex h-full flex-col overflow-hidden rounded-2xl border backdrop-blur-sm transition-all duration-500 ease-out {track.comingSoon
 										? 'border-gray-200/40 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:border-gray-700/30 dark:from-gray-800/50 dark:to-gray-900/50'
 										: 'border-gray-200/60 bg-gradient-to-br from-white to-gray-50/50 group-hover:-translate-y-2 group-hover:scale-[1.02] dark:border-gray-700/50 dark:from-gray-800 dark:to-gray-900/80'}"
 								>
-									{#if track.coming_soon}
+									{#if track.comingSoon}
 										<div class="absolute top-3 left-3 z-10">
 											<span
 												class="inline-flex items-center gap-1 rounded-full border border-orange-200/50 bg-gradient-to-r from-orange-400 to-amber-500 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm"
@@ -191,10 +191,10 @@
 										</div>
 									{/if}
 
-									{#if track.premium_only}
-										<div class="absolute top-3 z-10 {track.coming_soon ? 'right-3' : 'left-3'}">
+									{#if track.premiumOnly}
+										<div class="absolute top-3 z-10 {track.comingSoon ? 'right-3' : 'left-3'}">
 											<span
-												class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm {track.coming_soon
+												class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm {track.comingSoon
 													? 'border-white/10 bg-gradient-to-r from-purple-400/70 to-pink-400/70 opacity-60'
 													: 'border-white/20 bg-gradient-to-r from-purple-500 to-pink-500'}"
 											>
@@ -214,13 +214,13 @@
 												<img
 													src={toPublicUrl(track.logo)}
 													alt=""
-													class="max-h-[140px] max-w-[140px] object-contain transition-all duration-500 {track.coming_soon
+													class="max-h-[140px] max-w-[140px] object-contain transition-all duration-500 {track.comingSoon
 														? 'opacity-40 grayscale filter'
 														: 'group-hover:scale-110 group-hover:brightness-110'}"
 													height="140"
 													width="140"
 												/>
-												{#if track.coming_soon}
+												{#if track.comingSoon}
 													<div class="absolute inset-0 flex items-center justify-center">
 														<div class="rounded-full bg-white/80 p-3 shadow-lg dark:bg-gray-800/80">
 															<svg
@@ -245,14 +245,14 @@
 
 									<div class="px-4 pb-5">
 										<h3
-											class="text-center text-sm leading-tight font-semibold {track.coming_soon
+											class="text-center text-sm leading-tight font-semibold {track.comingSoon
 												? 'text-gray-500 dark:text-gray-400'
 												: 'group-hover:text-primary-600 dark:group-hover:text-primary-400 text-gray-900 transition-colors duration-300 dark:text-white'}"
 										>
 											{track.title}
 										</h3>
 										<div
-											class="mx-auto mt-2 h-0.5 rounded-full {track.coming_soon
+											class="mx-auto mt-2 h-0.5 rounded-full {track.comingSoon
 												? 'w-8 bg-gradient-to-r from-orange-400 to-amber-500 opacity-60'
 												: 'from-primary-500 w-0 bg-gradient-to-r to-purple-500 transition-all duration-500 group-hover:w-12'}"
 										></div>
