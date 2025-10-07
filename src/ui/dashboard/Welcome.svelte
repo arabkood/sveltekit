@@ -61,7 +61,7 @@
 					{#if is_user_premium}
 						<IconPng name="premium" size={40} />
 					{/if}
-					<h1 class="text-3xl font-bold whitespace-nowrap">
+					<h1 class="text-3xl font-bold">
 						{greeting}
 						<span dir="ltr" class="font-hacker">{name}</span><span class="font-hacker">!</span>
 					</h1>
