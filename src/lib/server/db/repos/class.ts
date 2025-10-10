@@ -9,7 +9,6 @@ import {
 	tracksInClass
 } from '../generated/drizzle/schema';
 
-// Infer types
 export type Topic = typeof topicsInClass.$inferSelect;
 export type Track = typeof tracksInClass.$inferSelect;
 export type Module = typeof modulesInClass.$inferSelect;
@@ -85,8 +84,8 @@ export class ClassRepository {
 			})
 			.from(tracksInClass)
 			.where(eq(tracksInClass.slug, slug))
-			.innerJoin(modulesInClass, eq(tracksInClass.id, modulesInClass.trackId))
-			.innerJoin(itemsInClass, eq(modulesInClass.id, itemsInClass.moduleId))
+			.leftJoin(modulesInClass, eq(tracksInClass.id, modulesInClass.trackId))
+			.leftJoin(itemsInClass, eq(modulesInClass.id, itemsInClass.moduleId))
 			.leftJoin(
 				submissionInUsers,
 				and(
@@ -100,12 +99,15 @@ export class ClassRepository {
 		}
 
 		type ModulesWithItemsObj = Record<string, ModuleWithItems>;
-
 		const result = rows.reduce<{ track: Track; modules: ModulesWithItemsObj }>(
 			(acc, row) => {
 				const module = row.modules;
 				const item = row.items;
 				const submission = row.submissions;
+
+				if (!module) {
+					return acc;
+				}
 
 				if (!acc.modules[module.id]) {
 					acc.modules[module.id] = {
@@ -114,13 +116,15 @@ export class ClassRepository {
 					};
 				}
 
-				// Create item with submission data
-				const itemWithSubmission: ItemWithSubmission = {
-					...item,
-					submission: submission?.id ? submission : null
-				};
+				if (item) {
+					const itemWithSubmission: ItemWithSubmission = {
+						...item,
+						submission: submission?.id ? submission : null
+					};
 
-				acc.modules[module.id].items.push(itemWithSubmission);
+					acc.modules[module.id].items.push(itemWithSubmission);
+				}
+
 				return acc;
 			},
 			{

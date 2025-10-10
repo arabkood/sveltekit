@@ -26,7 +26,7 @@
 		runCooldown,
 		submitCooldown,
 		userInputs = $bindable(),
-		activeTabResults = 'input',
+		activeTabResults = 'output',
 		activeView = $bindable(),
 		runOutput,
 		handleRun,
@@ -89,7 +89,9 @@
 						? 'loading'
 						: submitCooldown > 0
 							? 'disabled'
-							: 'idle'}
+							: !handleSubmit
+								? 'disabled'
+								: 'idle'}
 					runCooldownDuration={runCooldown}
 					submitCooldownDuration={submitCooldown}
 				/>
@@ -104,14 +106,14 @@
 					<Tabs variant="default" bind:activeTab>
 						<div class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
 							<TabList class="flex w-full">
-								<Tab index={0} class="flex-1 px-2 py-3 text-center text-sm font-medium">
-									المدخلات
-								</Tab>
 								<Tab index={1} class="flex-1 px-2 py-3 text-center text-sm font-medium">
 									المخرجات
 								</Tab>
 								<Tab index={2} class="flex-1 px-2 py-3 text-center text-sm font-medium">
 									نتائج الاختبار
+								</Tab>
+								<Tab index={0} class="flex-1 px-2 py-3 text-center text-sm font-medium">
+									المدخلات
 								</Tab>
 							</TabList>
 						</div>

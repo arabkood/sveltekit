@@ -28,7 +28,7 @@
 		runOutput,
 		userInputs = $bindable(),
 		handleRun,
-		activeTabResults = 'input',
+		activeTabResults = 'output',
 		handleSubmit
 	}: {
 		problemDocs: Array<{ title: string; content: string }>;
@@ -97,7 +97,9 @@
 										? 'loading'
 										: submitCooldown > 0
 											? 'disabled'
-											: 'idle'}
+											: !handleSubmit
+												? 'disabled'
+												: 'idle'}
 									runCooldownDuration={runCooldown}
 									submitCooldownDuration={submitCooldown}
 								/>
@@ -113,9 +115,9 @@
 							{#if runStatus !== 'loading' && submitStatus !== 'loading'}
 								<Tabs variant="default" bind:activeTab>
 									<TabList>
-										<Tab index={0}>المدخلات</Tab>
 										<Tab index={1}>المخرجات</Tab>
 										<Tab index={2}>نتائج الاختبار</Tab>
+										<Tab index={0}>المدخلات</Tab>
 									</TabList>
 
 									<TabPanel index={0}>

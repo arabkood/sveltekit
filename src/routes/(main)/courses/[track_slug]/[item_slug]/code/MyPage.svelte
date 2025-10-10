@@ -73,7 +73,7 @@
 
 	let newSubmission = $state<UserSubmission>();
 
-	let activeTabResults = $state<'input' | 'output' | 'result'>('input');
+	let activeTabResults = $state<'input' | 'output' | 'result'>('output');
 	let activeMobileView = $state<'problem' | 'code' | 'results'>('problem');
 
 	// --- Lifecycle ---
@@ -191,6 +191,20 @@
 			setSubmit('cooldown', COOLDOWN_SECONDS.submit);
 		}
 	}
+
+	const runOutput = $derived.by(() => {
+		let out = '';
+		if (run.result?.stdout && run.result?.stdout.length > 0) {
+			out += run.result.stdout;
+		}
+		if (run.result?.stderr && run.result?.stderr.length > 0) {
+			if (run.result?.stdout && run.result?.stdout.length > 0) {
+				out += '\n';
+			}
+			out += run.result.stderr;
+		}
+		return out;
+	});
 </script>
 
 <main class="bg-page flex h-screen flex-col">
@@ -206,12 +220,12 @@
 			submitStatus={submit.status}
 			submitError={submit.error}
 			bind:userInputs
-			{handleSubmit}
+			handleSubmit={data.submission?.status === 'pass' ? undefined : handleSubmit}
 			{handleRun}
 			runCooldown={run.cooldown}
 			submitCooldown={submit.cooldown}
 			{activeTabResults}
-			runOutput={run.result?.stdout + '\n' + run.result?.stderr}
+			{runOutput}
 		/>
 	{:else}
 		<MobileLayout
@@ -223,13 +237,13 @@
 			submitStatus={submit.status}
 			submitError={submit.error}
 			bind:userInputs
-			{handleSubmit}
+			handleSubmit={data.submission?.status === 'pass' ? undefined : handleSubmit}
 			{handleRun}
 			runCooldown={run.cooldown}
 			submitCooldown={submit.cooldown}
 			bind:activeView={activeMobileView}
 			{activeTabResults}
-			runOutput={run.result?.stdout + '\n' + run.result?.stderr}
+			{runOutput}
 		/>
 	{/if}
 
