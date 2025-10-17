@@ -1,4 +1,5 @@
 import { S3Client, GetObjectCommand, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
+import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import { s3 } from '../config';
 import path from 'node:path';
@@ -153,6 +154,9 @@ export async function getS3ObjectStream(
 	}
 }
 
+
+// ----------- BLOG
+
 // Helper functions using the topics bucket
 export const getS3TopicObjectStream = (key: string) =>
 	getS3ObjectStream(s3.PvBucketName, path.normalize(path.join('topics', key)));
@@ -160,3 +164,91 @@ export const getS3TopicObjectAsString = (key: string) =>
 	getS3ObjectAsString(s3.PvBucketName, path.normalize(path.join('topics', key)));
 export const getS3TopicObjectAsBuffer = (key: string) =>
 	getS3ObjectAsBuffer(s3.PvBucketName, path.normalize(path.join('topics', key)));
+
+
+
+// Helper functions using the blog bucket
+export const getS3PostObjectAsString = (key: string) =>
+	getS3ObjectAsString(s3.BlogBucketName, path.normalize(path.join('public/blog/posts', key)));
+
+export const getS3PostObjectAsBuffer = (key: string) =>
+	getS3ObjectAsBuffer(s3.BlogBucketName, path.normalize(path.join('public/blog/posts', key)));
+
+export const getS3PostObjectStream = (key: string) =>
+	getS3ObjectStream(s3.BlogBucketName, path.normalize(path.join('public/blog/posts', key)));
+
+/**
+ * Fetch a specific blog post (metadata + markdown content)
+ * @param slug The post slug (e.g., "first-post")
+ * @returns Post object with metadata and content, or null if not found
+ */
+export async function getBlogPost(slug: string) {
+	try {
+		const metadataJson = await getS3PostObjectAsString(`${slug}/metadata.json`);
+		const markdown = await getS3PostObjectAsString(`${slug}/index.md`);
+
+		if (!metadataJson || !markdown) {
+			return null;
+		}
+
+		const metadata = JSON.parse(metadataJson);
+
+		return {
+			...metadata,
+			content: markdown,
+			slug
+		};
+	} catch (error) {
+		console.error(`Error fetching blog post ${slug}:`, error);
+		return null;
+	}
+}
+
+/**
+ * List all published blog posts (metadata only, for fast queries)
+ * @returns Array of published posts sorted by date (newest first)
+ */
+export async function listBlogPosts() {
+	const command = new ListObjectsV2Command({
+		Bucket: s3.BlogBucketName,
+		Prefix: 'public/blog/posts/',
+		Delimiter: '/'
+	});
+
+	try {
+		const response = await s3Client.send(command);
+
+		const posts = [];
+
+		// Iterate through each post folder
+		for (const prefix of response.CommonPrefixes || []) {
+			const slug = prefix.Prefix?.split('/')[3];
+			const metadataJson = await getS3PostObjectAsString(`${slug}/metadata.json`);
+
+			if (!metadataJson) continue;
+
+			const metadata = JSON.parse(metadataJson);
+			posts.push({
+				...metadata,
+				slug
+			});
+		}
+
+		// Filter published posts and sort by date (newest first)
+		return posts
+			.filter((post) => post.published === true)
+			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	} catch (error) {
+		console.error('Error listing blog posts:', error);
+		return [];
+	}
+}
+
+/**
+ * Get blog post OG image as buffer (for serving or manipulation)
+ * @param slug The post slug
+ * @returns Buffer containing the image, or null if not found
+ */
+export async function getBlogPostOgImage(slug: string) {
+	return getS3PostObjectAsBuffer(`${slug}/og-image.jpg`);
+}

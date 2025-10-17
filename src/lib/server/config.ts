@@ -15,5 +15,6 @@ export const s3 = {
 	Region: penv.S3_REGION!,
 	AccessKeyId: penv.S3_ACCESS_KEY_ID!,
 	SecretAccessKey: penv.S3_SECRET_ACCESS_KEY!,
-	PvBucketName: penv.S3_PV_BUCKET_NAME!
+	PvBucketName: penv.S3_PV_BUCKET_NAME!,
+	BlogBucketName: penv.S3_PV_BUCKET_NAME!
 };

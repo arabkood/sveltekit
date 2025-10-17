@@ -22,7 +22,7 @@
 				</p>
 				<div class="flex gap-4">
 					<a
-						href="https://x.com/arabkood"
+						href="https://x.com/akood_com"
 						target="_blank"
 						class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors hover:bg-emerald-500"
 					>
@@ -49,6 +49,7 @@
 			<div>
 				<h4 class="mb-4 font-bold">المنصة</h4>
 				<ul class="space-y-2 text-gray-400">
+					<li><a href="/blog" class="transition-colors hover:text-white">مدونة أكود (blog)</a></li>
 					<li><a href="/courses" class="transition-colors hover:text-white">المسارات</a></li>
 					<li><a href="/signup" class="transition-colors hover:text-white">ابدأ مجاناً</a></li>
 				</ul>
@@ -58,14 +59,15 @@
 				<h4 class="mb-4 font-bold">الدعم</h4>
 				<ul class="space-y-2 text-gray-400">
 					<li>
-						<a href="https://x.com/arabkood" class="transition-colors hover:text-white"
+						<a href="https://x.com/akood_com" class="transition-colors hover:text-white"
 							>تواصل معنا</a
 						>
 					</li>
-					<li>
-						<a href="/privacy" class="transition-colors hover:text-white">سياسة الخصوصية</a>
-					</li>
-					<li><a href="/terms" class="transition-colors hover:text-white">شروط الخدمة</a></li>
+					<!-- FIX: -->
+					<!-- <li> -->
+					<!-- 	<a href="/privacy" class="transition-colors hover:text-white">سياسة الخصوصية</a> -->
+					<!-- </li> -->
+					<!-- <li><a href="/terms" class="transition-colors hover:text-white">شروط الخدمة</a></li> -->
 				</ul>
 			</div>
 		</div>
