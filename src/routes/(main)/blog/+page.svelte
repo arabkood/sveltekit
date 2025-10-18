@@ -70,9 +70,9 @@
 								{posts[0].title.charAt(0)}
 							</div>
 						{/if}
-						<div class="absolute top-4 left-4 rounded-lg bg-orange-500 px-4 py-2">
-							<span class="text-sm font-bold text-white">مميز</span>
-						</div>
+						<!-- <div class="absolute top-4 left-4 rounded-lg bg-orange-500 px-4 py-2"> -->
+						<!-- 	<span class="text-sm font-bold text-white">مميز</span> -->
+						<!-- </div> -->
 					</div>
 
 					<div class="p-8 md:w-1/2">

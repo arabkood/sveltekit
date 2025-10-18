@@ -12,6 +12,8 @@ Disallow: /`;
 	return `User-agent: *
 Disallow: /settings/
 Disallow: /api/
+Disallow: /s3/
+Disallow: /signout/
 
 Sitemap: ${SITE}/sitemap.xml`;
 }
