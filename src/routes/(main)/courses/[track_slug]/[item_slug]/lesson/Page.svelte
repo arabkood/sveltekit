@@ -22,6 +22,7 @@
 	} from '$types/lesson';
 	import Bug from '$ui/lesson/bug/Bug.svelte';
 	import { page } from '$app/state';
+	import Seo from '$ui/others/SEO.svelte';
 
 	let {
 		data,
@@ -31,6 +32,18 @@
 	}: { data: PageData; successPlayer?: Sound; failPlayer?: Sound; finishPlayer?: Sound } = $props();
 
 	const { lesson, track, item, submission, user, module } = data;
+
+	// SEO data
+	const cleanTitle = $derived(
+		item.title.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '').trim()
+	);
+	const seoTitle = $derived(`${cleanTitle} - ${track.title} | أكود`);
+	const seoDescription = $derived(
+		`تعلم ${cleanTitle} ضمن مسار ${track.title} على منصة أكود - درس تفاعلي بـ ${lesson.steps.length} خطوة للمبتدئين`
+	);
+	const seoKeywords = $derived(
+		`${cleanTitle}, ${track.title}, تعلم البرمجة, بايثون بالعربي, برمجة للمبتدئين, أكود`
+	);
 
 	let currentStepIndex = $state(0);
 	let lessonStartTime = Date.now();
@@ -278,6 +291,8 @@
 		};
 	});
 </script>
+
+<Seo title={seoTitle} description={seoDescription} keywords={seoKeywords} />
 
 {#if showSignupPopup}
 	<SignupPopup onClose={() => (showSignupPopup = false)} redirectUrl={`/courses/${track.slug}`} />

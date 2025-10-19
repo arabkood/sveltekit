@@ -14,6 +14,7 @@ Disallow: /settings/
 Disallow: /api/
 Disallow: /s3/
 Disallow: /signout/
+Disallow: /cdn-cgi/
 
 Sitemap: ${SITE}/sitemap.xml`;
 }

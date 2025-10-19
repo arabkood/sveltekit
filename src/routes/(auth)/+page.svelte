@@ -13,6 +13,7 @@
 	import { fade } from 'svelte/transition';
 	import type { FillQuestion } from '$types/lesson';
 	import Seo from '$ui/others/SEO.svelte';
+	import { SITE } from '$config';
 
 	let mobileMenuOpen = $state(false);
 	const closeMenu = () => {
@@ -154,6 +155,7 @@ print(greeting)`,
 	keywords={seoKeywords}
 	schema={homepageSchema}
 	lang="ar"
+	image={SITE + '/default.jpg'}
 />
 
 <svelte:body class:overflow-hidden={mobileMenuOpen} />
@@ -511,7 +513,7 @@ print(greeting)`,
 						</p>
 						<div class="flex items-center">
 							<enhanced:img
-								src="$assets/images/testimony/1.png"
+								src="$assets/images/testimony/1.webp"
 								alt="علياء"
 								class="ml-4 h-12 w-12 rounded-full object-cover"
 							/>
@@ -528,7 +530,7 @@ print(greeting)`,
 						</p>
 						<div class="flex items-center">
 							<enhanced:img
-								src="$assets/images/testimony/2.png"
+								src="$assets/images/testimony/2.webp"
 								alt="ماجد"
 								class="ml-4 h-12 w-12 rounded-full object-cover"
 							/>
@@ -545,7 +547,7 @@ print(greeting)`,
 						</p>
 						<div class="flex items-center">
 							<enhanced:img
-								src="$assets/images/testimony/3.png"
+								src="$assets/images/testimony/3.webp"
 								alt="حسن"
 								class="ml-4 h-12 w-12 rounded-full object-cover"
 							/>

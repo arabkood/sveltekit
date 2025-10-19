@@ -12,9 +12,22 @@
 	import { onMount } from 'svelte';
 	import SuccessPopup from '$ui/popup/SuccessPopup.svelte';
 	import type { UserSubmission } from '$lib/server/db/repos/class';
+	import Seo from '$ui/others/SEO.svelte';
 
 	// --- Props ---
 	let { data, finishPlayer }: { data: PageData; finishPlayer?: Sound } = $props();
+
+	// SEO data
+	const cleanTitle = $derived(
+		data.item.title.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '').trim()
+	);
+	const seoTitle = $derived(`تحدي: ${cleanTitle} - ${data.track.title} | أكود`);
+	const seoDescription = $derived(
+		`حل تحدي البرمجة ${cleanTitle} في مسار ${data.track.title} - اختبر مهاراتك في البرمجة على منصة أكود`
+	);
+	const seoKeywords = $derived(
+		`${cleanTitle}, تحدي برمجة, ${data.track.title}, حل تمارين برمجة, تعلم البرمجة بالممارسة, أكود`
+	);
 
 	const COOLDOWN_SECONDS = {
 		run: 10,
@@ -206,6 +219,8 @@
 		return out;
 	});
 </script>
+
+<Seo title={seoTitle} description={seoDescription} keywords={seoKeywords} />
 
 <main class="bg-page flex h-screen flex-col">
 	<Header trackSlug={data.track?.slug} trackTitle={data.track.title} itemTitle={data.item.title} />
