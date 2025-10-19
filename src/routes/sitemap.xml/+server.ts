@@ -2,7 +2,7 @@ import { SITE } from '$config';
 import type { RequestHandler } from './$types';
 
 const STATIC_PAGES = ['', 'courses', 'pages/glossary', 'signup', 'signin', 'blog/what-is-akood'];
-const DYNAMIC_COURSES = ['courses/beginner@python', 'courses/internet@web'];
+const DYNAMIC_COURSES = ['courses/python-beginner', 'courses/python-practice', 'courses/web-internet'];
 
 function generateSitemap() {
 	const today = new Date().toISOString().split('T')[0];

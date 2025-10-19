@@ -130,11 +130,24 @@ print(greeting)`,
 						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: 'https://www.akood.com/courses/beginner@python'
+					url: 'https://www.akood.com/courses/python-beginner'
 				},
 				{
 					'@type': 'Course',
 					position: 2,
+					name: 'تمارين بايثون',
+					description:
+						"هربت من دوامة الشروحات؟ حان وقت التطبيق الحقيقي! 100 تحدي عملي مصمم خصيصاً لتحويلك من 'أفهم الكود' إلى 'أكتب الكود بنفسي'.",
+					provider: {
+						'@type': 'Organization',
+						name: 'أكود - Akood'
+					},
+					educationalLevel: 'مبتدئ',
+					url: 'https://www.akood.com/courses/python-practice'
+				},
+				{
+					'@type': 'Course',
+					position: 3,
 					name: 'كيف يعمل الإنترنت',
 					description: 'فهم أساسيات الشبكة العالمية',
 					provider: {
@@ -142,7 +155,7 @@ print(greeting)`,
 						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: 'https://www.akood.com/courses/internet@web'
+					url: 'https://www.akood.com/courses/web-internet'
 				}
 			]
 		}
@@ -572,7 +585,34 @@ print(greeting)`,
 
 				<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
 					<a
-						href="/courses/beginner@python"
+						href="/signup"
+						class="group relative flex h-full transform flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-slate-200/60"
+					>
+						<div
+							class="absolute top-4 right-4 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 rtl:right-auto rtl:left-4"
+						>
+							مشهور
+						</div>
+						<div class="mb-5 flex h-16 w-16 items-center justify-center">
+							<enhanced:img
+								src="$assets/images/logos/python.png"
+								alt="python logo"
+								class="h-14 w-14 object-contain"
+							/>
+						</div>
+						<h3 class="mb-3 text-xl font-bold text-slate-900">تدريبات بايثون</h3>
+						<p class="mb-6 flex-grow leading-relaxed text-slate-600">
+							لصقل مهاراتك في بايثون عبر حل مجموعة من التحديات البرمجية المتدرجة في الصعوبة.
+						</p>
+						<div
+							class="mt-auto w-full rounded-lg bg-emerald-500 py-2.5 text-center font-semibold text-white transition-colors duration-300 group-hover:bg-emerald-600"
+						>
+							ابدأ التعلم
+						</div>
+					</a>
+
+					<a
+						href="/signup"
 						class="group relative flex h-full transform flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-slate-200/60"
 					>
 						<div
@@ -599,7 +639,7 @@ print(greeting)`,
 					</a>
 
 					<a
-						href="/courses/internet@web"
+						href="/signup"
 						class="group relative flex h-full transform flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-slate-200/60"
 					>
 						<div
@@ -624,33 +664,6 @@ print(greeting)`,
 							ابدأ التعلم
 						</div>
 					</a>
-
-					<!-- Track Card 3: Practice Python (WIP) -->
-					<div
-						class="relative flex h-full cursor-not-allowed flex-col rounded-2xl border border-slate-200 bg-white p-8 opacity-70 grayscale-[50%]"
-					>
-						<div
-							class="absolute top-4 right-4 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 rtl:right-auto rtl:left-4"
-						>
-							قريباً
-						</div>
-						<div class="mb-5 flex h-16 w-16 items-center justify-center">
-							<enhanced:img
-								src="$assets/images/logos/python.png"
-								alt="python logo"
-								class="h-14 w-14 object-contain"
-							/>
-						</div>
-						<h3 class="mb-3 text-xl font-bold text-slate-900">تدريبات بايثون</h3>
-						<p class="mb-6 flex-grow leading-relaxed text-slate-600">
-							صقل مهاراتك في بايثون عبر حل مجموعة من التحديات البرمجية المتدرجة في الصعوبة.
-						</p>
-						<div
-							class="mt-auto w-full rounded-lg bg-slate-200 py-2.5 text-center font-semibold text-slate-500"
-						>
-							قيد التطوير
-						</div>
-					</div>
 
 					<!-- Track Card 4: JavaScript (WIP) -->
 					<div

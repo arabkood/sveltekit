@@ -119,34 +119,39 @@
 				{
 					'@type': 'Course',
 					position: 1,
-					name: 'بايثون للمبتدئين - تطبيق تفاعلي',
-					description: 'تعلم بايثون من خلال كتابة الكود وحل التحديات البرمجية المباشرة',
-					courseMode: 'online',
-					educationalCredentialAwarded: 'Certificate of Completion',
-					interactionType: 'hands-on practice',
-					teaches: ['Python basics', 'Problem solving', 'Code writing'],
+					name: 'بايثون للمبتدئين',
+					description: 'تعلم أساسيات البرمجة مع لغة بايثون',
 					provider: {
 						'@type': 'Organization',
-						name: SITE_NAME_FULL
+						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: `${SITE}/courses/beginner@python`
+					url: 'https://www.akood.com/courses/python-beginner'
 				},
 				{
 					'@type': 'Course',
 					position: 2,
-					name: 'كيف يعمل الإنترنت - استكشاف تفاعلي',
-					description: 'اكتشف أسرار الإنترنت من خلال التجارب التفاعلية والأنشطة العملية',
-					courseMode: 'online',
-					educationalCredentialAwarded: 'Certificate of Completion',
-					interactionType: 'interactive exploration',
-					teaches: ['Internet protocols', 'DNS', 'HTTP', 'Web fundamentals'],
+					name: 'تمارين بايثون',
+					description:
+						"هربت من دوامة الشروحات؟ حان وقت التطبيق الحقيقي! 100 تحدي عملي مصمم خصيصاً لتحويلك من 'أفهم الكود' إلى 'أكتب الكود بنفسي'.",
 					provider: {
 						'@type': 'Organization',
-						name: SITE_NAME_FULL
+						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: `${SITE}/courses/internet@web`
+					url: 'https://www.akood.com/courses/python-practice'
+				},
+				{
+					'@type': 'Course',
+					position: 3,
+					name: 'كيف يعمل الإنترنت',
+					description: 'فهم أساسيات الشبكة العالمية',
+					provider: {
+						'@type': 'Organization',
+						name: 'أكود - Akood'
+					},
+					educationalLevel: 'مبتدئ',
+					url: 'https://www.akood.com/courses/web-internet'
 				}
 			]
 		}
