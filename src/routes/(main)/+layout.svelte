@@ -16,7 +16,7 @@
 	onMount(() => {
 		setTimeout(() => {
 			if (data.user && browser) {
-				window.posthog?.identify(data.user.id, {
+				window.posthog?.identify(data.user.email, {
 					email: data.user.email,
 					username: data.user.username,
 					premium: data.user.premiumActive,
