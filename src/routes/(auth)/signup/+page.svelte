@@ -9,6 +9,7 @@
 	import Button from '$ui/common/Button.svelte';
 	import { SITE_NAME_AR } from '$config';
 	import Seo from '$ui/others/SEO.svelte';
+	import { onMount } from 'svelte';
 
 	let status = $state('idle');
 	let submitError = $state<null | string>(null);
@@ -37,6 +38,12 @@
 			path: ['confirmPassword']
 		});
 
+	onMount(() => {
+		window.posthog?.capture('signup_started', {
+			method: 'email'
+		});
+	});
+
 	const form = createForm(
 		{
 			username: '',
@@ -61,6 +68,12 @@
 				const error: ApiError = await response.json();
 				submitError = error.error;
 				status = 'idle';
+
+				window.posthog?.capture('signup_failed', {
+					method: 'email',
+					email: values.email,
+					error: JSON.stringify(error)
+				});
 				return;
 			}
 
@@ -71,6 +84,12 @@
 			};
 
 			status = 'success';
+
+			window.posthog?.capture('signup_completed', {
+				method: 'email',
+				email: data.email,
+				emailVerified: data.emailVerified
+			});
 
 			setTimeout(() => {
 				if (data.emailVerified) {

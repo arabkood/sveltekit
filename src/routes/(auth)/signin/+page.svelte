@@ -9,6 +9,7 @@
 	import Button from '$ui/common/Button.svelte';
 	import { SITE_NAME_AR } from '$config';
 	import Seo from '$ui/others/SEO.svelte';
+	import { onMount } from 'svelte';
 
 	let status = $state('idle');
 	let submitError = $state<null | string>(null);
@@ -23,6 +24,12 @@
 			.min(1, i18n.t('validation.password.required'))
 			.max(100, i18n.t('validation.password.maxLength')),
 		rememberMe: z.boolean().optional()
+	});
+
+	onMount(() => {
+		window.posthog?.capture('signin_started', {
+			method: 'email'
+		});
 	});
 
 	const form = createForm(
@@ -48,6 +55,12 @@
 				const error: ApiError = await response.json();
 				submitError = error.error;
 				status = 'idle';
+
+				window.posthog?.capture('signin_failed', {
+					method: 'email',
+					identifier: values.identifier,
+					error: JSON.stringify(error)
+				});
 				return;
 			}
 
@@ -57,6 +70,12 @@
 			};
 
 			status = 'success';
+
+			window.posthog?.capture('signin_completed', {
+				method: 'email',
+				email: data.email,
+				emailVerified: data.emailVerified
+			});
 
 			setTimeout(() => {
 				const storedRedirect = sessionStorage.getItem('redirectTo');

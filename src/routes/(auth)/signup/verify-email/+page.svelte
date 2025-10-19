@@ -24,11 +24,18 @@
 		});
 	}
 	let cooldown = $state<number>(30);
+	let startTime = $state<number>(Date.now());
 
 	onMount(() => {
 		const i = setInterval(() => {
 			cooldown--;
 		}, 1000);
+
+		startTime = Date.now();
+
+		window.posthog?.capture('email_verification_started', {
+			email: user.email
+		});
 
 		return () => clearInterval(i);
 	});
@@ -59,10 +66,21 @@
 				console.log(error);
 				submitError = error.error;
 				status = 'idle';
+
+				window.posthog?.capture('email_verification_failed', {
+					email: user.email,
+					error: JSON.stringify(error)
+				});
+
 				return;
 			}
 
 			status = 'success';
+
+			window.posthog?.capture('email_verification_completed', {
+				email: user.email,
+				duration_seconds: Math.floor((Date.now() - startTime) / 1000)
+			});
 			setTimeout(() => {
 				location.href = '/';
 			}, 1500);
@@ -79,6 +97,10 @@
 	const resendCode = async () => {
 		if (cooldown > 0) return;
 		try {
+			window.posthog?.capture('email_verification_resend_code', {
+				email: user.email
+			});
+
 			await fetch(API_ENDPOINTS.auth.resendEmailVerification, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
