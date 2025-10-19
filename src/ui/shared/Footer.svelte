@@ -36,7 +36,7 @@
 						<Icon name="linkedin" size={22} />
 					</a>
 					<a
-						href="https://facebook.com/arabkood"
+						href="https://facebook.com/akood_com"
 						target="_blank"
 						class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors hover:bg-emerald-500"
 					>

@@ -87,14 +87,11 @@ print(greeting)`,
 			'@type': 'Organization',
 			name: 'أكود - Akood',
 			alternateName: ['أكود', 'Akood'],
-			url: 'https://akood.com',
-			logo: 'https://akood.com/images/logo.png',
+			url: 'https://www.akood.com',
+			logo: 'https://www.akood.com/images/logo.png',
 			description: seoDescription,
 			foundingDate: '2024',
-			sameAs: [
-				'https://twitter.com/akoodlearn', // Add your social media
-				'https://github.com/akood'
-			],
+			sameAs: ['https://x.com/akood_com', 'https://github.com/arabkood'],
 			contactPoint: {
 				'@type': 'ContactPoint',
 				contactType: 'customer service',
@@ -106,12 +103,12 @@ print(greeting)`,
 			'@context': 'https://schema.org',
 			'@type': 'WebSite',
 			name: 'أكود - منصة تعلم البرمجة',
-			url: 'https://akood.com',
+			url: 'https://www.akood.com',
 			description: seoDescription,
 			inLanguage: 'ar',
 			potentialAction: {
 				'@type': 'SearchAction',
-				target: 'https://akood.com/courses?q={search_term_string}',
+				target: 'https://www.akood.com/courses?q={search_term_string}',
 				'query-input': 'required name=search_term_string'
 			}
 		},
@@ -132,7 +129,7 @@ print(greeting)`,
 						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: 'https://akood.com/courses/beginner@python'
+					url: 'https://www.akood.com/courses/beginner@python'
 				},
 				{
 					'@type': 'Course',
@@ -144,7 +141,7 @@ print(greeting)`,
 						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: 'https://akood.com/courses/internet@web'
+					url: 'https://www.akood.com/courses/internet@web'
 				}
 			]
 		}
