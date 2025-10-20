@@ -3,6 +3,7 @@
 	import type { ItemWithSubmission, ModuleWithItems, Track } from '$lib/server/db/repos/class';
 	import Button from '$ui/common/Button.svelte';
 	import Icon from '$ui/common/Icon.svelte';
+	import { getDraftItem } from './[item_slug]/draftStorage';
 
 	const {
 		track,
@@ -31,7 +32,6 @@
 			class="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl bg-slate-100 p-3 transition-colors duration-200 group-open:mb-8 hover:bg-slate-200 sm:gap-4 sm:p-4 dark:bg-slate-800/50 dark:hover:bg-slate-700"
 		>
 			<div class="flex min-w-0 items-center gap-3 sm:gap-4">
-				<!-- Smaller circle and font on mobile, larger on sm+ -->
 				<div class="relative h-10 w-10 flex-shrink-0 sm:h-12 sm:w-12">
 					<svg class="h-full w-full -rotate-90" viewBox="0 0 44 44">
 						<circle
@@ -72,6 +72,7 @@
 
 		{#each module.items as item, index}
 			{@const isNextItem = nextItem && nextItem.slug === item.slug}
+			{@const draft = getDraftItem(item.id)}
 			<div class="relative w-full">
 				{#if item.premiumOnly && !isPremium && !item.submission}
 					<!-- Locked Item -->
@@ -144,6 +145,24 @@
 										<Icon name="star" size={16} class="flex-shrink-0 text-amber-400" />
 									{/if}
 								</h3>
+								<!-- Add draft indicator here -->
+								{#if draft && !item.submission}
+									<div class="mt-1.5 flex items-center gap-2">
+										<div
+											class="h-1.5 w-24 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
+										>
+											<div
+												class="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
+												style="width: {Math.round(
+													Math.min(((draft.csi + 1) / draft.tt) * 100, 95)
+												)}%"
+											></div>
+										</div>
+										<span class="text-xs font-semibold text-amber-600 dark:text-amber-400">
+											{Math.round(Math.min(((draft.csi + 1) / draft.tt) * 100, 99))}%
+										</span>
+									</div>
+								{/if}
 							</div>
 						</div>
 						<div class="flex-shrink-0">

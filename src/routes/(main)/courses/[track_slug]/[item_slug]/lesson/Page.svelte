@@ -23,6 +23,8 @@
 	import Bug from '$ui/lesson/bug/Bug.svelte';
 	import { page } from '$app/state';
 	import Seo from '$ui/others/SEO.svelte';
+	import { getDraftItem, removeDraftItem, setDraftItem, type DraftItem } from '../draftStorage';
+	import { debounce } from '$utils/debounce';
 
 	let {
 		data,
@@ -45,7 +47,24 @@
 		`${cleanTitle}, ${track.title}, تعلم البرمجة, بايثون بالعربي, برمجة للمبتدئين, أكود`
 	);
 
-	let currentStepIndex = $state(0);
+	let currentStepIndex = $state(
+		(() => {
+			const draft = getDraftItem(item.id);
+			if (typeof draft?.csi === 'number') {
+				if (draft.csi < lesson.steps.length && draft.csi > 0) {
+					const url = new URL(page.url);
+
+					if (url.searchParams.get('s') != draft.csi.toString()) {
+						url.searchParams.set('s', draft.csi.toString());
+						window.history.replaceState({}, '', url);
+					}
+
+					return draft.csi;
+				}
+			}
+			return 0;
+		})()
+	);
 	let lessonStartTime = Date.now();
 	let stepStartTime = Date.now();
 
@@ -73,41 +92,52 @@
 	};
 	const currentStep = $derived(lesson.steps[currentStepIndex]);
 
+	const validateStepAnswer = (step: any, savedAnswer: any) => {
+		if (typeof step !== 'object') return null;
+
+		if (step.type === 'fill') {
+			if (
+				Array.isArray(savedAnswer) &&
+				savedAnswer.length === step.solution.length &&
+				savedAnswer.every((a) => typeof a === 'string')
+			) {
+				return savedAnswer;
+			}
+			return new Array(step.solution.length).fill('');
+		}
+
+		if (step.type === 'order') {
+			if (
+				Array.isArray(savedAnswer) &&
+				savedAnswer.length === step.code.length &&
+				savedAnswer.every((a) => typeof a === 'number')
+			) {
+				return savedAnswer;
+			}
+			return new Array(step.code.length);
+		}
+
+		if (step.type === 'quiz' || step.type === 'bug') {
+			if (typeof savedAnswer === 'number') {
+				return savedAnswer;
+			}
+			return -1;
+		}
+
+		return null;
+	};
+
 	const getInitialAnswers = (): LessonInteractiveAnswers => {
 		if (submission?.status === 'pass') {
 			const savedAnswers = (submission?.data as any).answers as LessonInteractiveAnswers;
 			// Validate that saved answers match current step types
-			return lesson.steps.map((step, index) => {
-				if (typeof step === 'object') {
-					const savedAnswer = savedAnswers[index];
+			return lesson.steps.map((step, index) => validateStepAnswer(step, savedAnswers[index]));
+		}
 
-					if (step.type === 'fill') {
-						if (
-							Array.isArray(savedAnswer) &&
-							savedAnswer.length === step.solution.length &&
-							savedAnswer.every((a) => typeof a === 'string')
-						) {
-							return savedAnswer;
-						}
-						return new Array(step.solution.length).fill('');
-					} else if (step.type === 'order') {
-						if (
-							Array.isArray(savedAnswer) &&
-							savedAnswer.length === step.code.length &&
-							savedAnswer.every((a) => typeof a === 'number')
-						) {
-							return savedAnswer;
-						}
-						return new Array(step.code.length);
-					} else if (step.type === 'quiz' || step.type === 'bug') {
-						if (typeof savedAnswer === 'number') {
-							return savedAnswer;
-						}
-						return -1;
-					}
-				}
-				return null;
-			});
+		const draft = getDraftItem(item.id);
+		if (draft) {
+			// Validate that draft answers match current step types
+			return lesson.steps.map((step, index) => validateStepAnswer(step, draft.a?.[index]));
 		}
 
 		return lesson.steps.map((s) => {
@@ -127,6 +157,21 @@
 	};
 
 	let answers = $state<LessonInteractiveAnswers>(getInitialAnswers());
+
+	// Store lesson state for X time
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+
+		answers;
+		currentStepIndex;
+		debounce(() => {
+			setDraftItem<DraftItem>(item.id, {
+				a: answers,
+				csi: Math.max(currentStepIndex, maxStepIndex),
+				tt: lesson.steps.length
+			});
+		}, 200)();
+	});
 
 	let result = $state({
 		showPopup: false,
@@ -208,6 +253,8 @@
 			time_spent_seconds: totalTimeSpent,
 			submission_status: res.submission.status
 		});
+
+		removeDraftItem(item.id);
 
 		result.showPopup = true;
 		result.xp = res.submission.xp_reward;
