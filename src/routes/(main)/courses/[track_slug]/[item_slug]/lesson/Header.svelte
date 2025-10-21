@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { i18n } from '$i18n/i18n';
 	import type { Item, Module, Track } from '$lib/server/db/repos/class';
 	import Icon from '$ui/common/Icon.svelte';
 	import IconPng from '$ui/common/IconPng.svelte';
+	import { cn } from '$utils/classnames';
 	import { quintOut } from 'svelte/easing';
 	import { Tween } from 'svelte/motion';
 
@@ -52,7 +54,7 @@
 	function floatUp(node: HTMLElement, params?: { duration?: number }) {
 		return {
 			duration: params?.duration || 2000,
-			css: (t: any) => {
+			css: (t: number) => {
 				const eased = quintOut(t);
 				return `
 					opacity: ${1 - eased};
@@ -65,7 +67,7 @@
 	function pulse(node: HTMLElement) {
 		return {
 			duration: 600,
-			css: (t: any) => {
+			css: (t: number) => {
 				const eased = quintOut(t);
 				const scale = 1 + Math.sin(eased * Math.PI) * 0.15;
 				return `
@@ -78,7 +80,23 @@
 
 	function handleAnimationEnd() {
 		showIncrement = false;
-		xpIncrement = 0; // Reset via binding
+		xpIncrement = 0;
+	}
+
+	const progressPercentage = $derived(Math.round(((currentStep + 1) / totalSteps) * 100));
+	const isNearCompletion = $derived(progressPercentage >= 80);
+	const stepsRemaining = $derived(totalSteps - currentStep - 1);
+
+	function prevStep() {
+		if (currentStep > 0) {
+			goToStep(currentStep - 1);
+		}
+	}
+
+	function nextStep() {
+		if (currentStep < maxStepIndex) {
+			goToStep(currentStep + 1);
+		}
 	}
 </script>
 
@@ -87,7 +105,10 @@
 >
 	<nav class="me-auto hidden min-w-0 items-center gap-1 text-sm md:flex">
 		<a
-			class="truncate rounded px-2 py-1 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+			class={cn(
+				'truncate rounded px-2 py-1 transition-colors',
+				'text-gray-500 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+			)}
 			href={`/courses/${track?.slug}`}
 			title={module.title}>{String(module.position).padStart(3, '0')} - {module.title}</a
 		>
@@ -97,9 +118,28 @@
 		>
 	</nav>
 
+	<!-- Mobile Navigation -->
+	<a class="me-auto flex min-w-0 items-center md:hidden" href={`/courses/${track?.slug}`}>
+		<span
+			class={cn(
+				'me-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors',
+				'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600'
+			)}
+		>
+			<Icon name="arrow-right" size={20} />
+		</span>
+		<span
+			class="truncate text-sm font-medium text-slate-800 dark:text-slate-100"
+			title={item.title}
+		>
+			العودة للمسار
+		</span>
+	</a>
+
+	<!-- XP Display -->
 	<div
 		dir="ltr"
-		class="font-hacker relative flex rounded-3xl border-1 border-yellow-700 bg-yellow-950 px-2 py-0.5 transition-all"
+		class="font-hacker relative flex items-center rounded-3xl border border-yellow-700 bg-yellow-950 px-2 py-0.5 transition-all"
 	>
 		{#if showIncrement && xpIncrement > 0}
 			<div class="absolute inset-0 rounded-3xl" in:pulse></div>
@@ -117,53 +157,156 @@
 		{/if}
 	</div>
 
-	<div class="flex min-w-0 items-center md:hidden">
-		<a
-			href={`/courses/${track?.slug}`}
-			class="me-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600"
-			aria-label="Back to track"
-			title={track.title}
+	<!-- Progress Bar Navigation (Desktop) -->
+	<div class="hidden max-w-lg flex-1 items-center gap-3 md:flex">
+		<!-- Previous Button -->
+		<button
+			type="button"
+			onclick={prevStep}
+			disabled={currentStep === 0}
+			class={cn(
+				'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-40',
+				'bg-slate-100 text-slate-600 hover:scale-105 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600'
+			)}
+			aria-label="الخطوة السابقة"
 		>
-			<Icon name="arrow-right" size={20} />
-		</a>
-		<span
-			class="truncate text-sm font-medium text-slate-800 dark:text-slate-100"
-			title={item.title}
-		>
-			{item.title}
-		</span>
-	</div>
+			<Icon name="chevron-right" size={20} />
+		</button>
 
-	<div class="hidden items-center space-x-2 md:flex">
-		{#each { length: totalSteps } as _, i}
-			{@const stepNumber = i + 1}
-			<button
-				type="button"
-				class="focus-visible:ring-primary-500 h-2.5 w-2.5 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-800"
-				class:bg-primary-500={i <= maxStepIndex}
-				class:bg-primary-400={i === maxStepIndex}
-				class:scale-125={i === currentStep}
-				class:ring-2={i === currentStep}
-				class:ring-slate-500={i === currentStep}
-				class:bg-slate-300={i > maxStepIndex}
-				class:dark:bg-slate-600={i > maxStepIndex}
-				class:cursor-pointer={i <= maxStepIndex}
-				class:hover:bg-primary-600={i <= maxStepIndex}
-				aria-label={i <= maxStepIndex
-					? `Go to step ${stepNumber}`
-					: `Step ${stepNumber}${i === currentStep ? ' (Current)' : ''}`}
-				onclick={() => goToStep(i)}
-				disabled={i > maxStepIndex}
+		<!-- Progress Container -->
+		<div class="group relative flex-1 py-6">
+			<!-- Progress Info -->
+			<div
+				class={cn({
+					'absolute start-0 top-0 z-10 flex items-center gap-3 transition-all duration-200 group-hover:opacity-100': true,
+					'opacity-0': stepsRemaining > 0
+				})}
 			>
-				<span class="sr-only">
-					{i <= maxStepIndex ? `Go to step ${stepNumber}` : `Step ${stepNumber}`}
-					{i === currentStep ? ' (Current)' : ''}
-				</span>
-			</button>
-		{/each}
+				{#if stepsRemaining > 0}
+					<span class="text-sm font-bold text-slate-700 dark:text-slate-300">
+						متبقي {stepsRemaining}
+						{stepsRemaining === 1 ? 'خطوة' : stepsRemaining === 2 ? 'خطوتان' : 'خطوات'}
+					</span>
+				{:else}
+					<span class="text-sm font-bold text-green-600 dark:text-green-400"> ✓ مكتمل! </span>
+				{/if}
+
+				{#if isNearCompletion && stepsRemaining > 0}
+					<span
+						class="font-hacker animate-pulse text-sm font-bold text-orange-600 dark:text-orange-400"
+					>
+						🔥 أوشكت على الإنتهاء
+					</span>
+				{/if}
+			</div>
+
+			<!-- Progress Bar -->
+			<div class="relative h-2.5 rounded-full bg-slate-200 shadow-inner dark:bg-slate-700">
+				<!-- Fill -->
+				<div
+					class={cn(
+						'absolute inset-y-0 rounded-full shadow-sm transition-all duration-500 ease-out',
+						!isNearCompletion && 'bg-emerald-500',
+						isNearCompletion && 'bg-gradient-to-l from-emerald-500 to-orange-500'
+					)}
+					style="inset-inline-start: 0; width: {progressPercentage}%"
+				></div>
+
+				<!-- Current Position Indicator -->
+				<div
+					class="pointer-events-none absolute top-1/2 -translate-y-1/2 transition-all duration-500 ease-out"
+					style="inset-inline-start: calc({progressPercentage}% - 0.375rem)"
+				>
+					<div
+						class={cn(
+							'flex h-5 w-5 items-center justify-center rounded-full border-[3px] bg-white shadow-lg ring-2 ring-white transition-all dark:bg-slate-800 dark:ring-slate-800',
+							!isNearCompletion && 'border-emerald-500',
+							isNearCompletion && 'scale-110 border-orange-500'
+						)}
+					>
+						<div
+							class={cn(
+								'h-2 w-2 rounded-full transition-all',
+								!isNearCompletion && 'bg-emerald-500',
+								isNearCompletion && 'bg-orange-500'
+							)}
+						></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Step counter below bar -->
+			<div
+				class={cn({
+					'font-hacker absolute start-0 bottom-0 flex items-center gap-2 text-xs transition-all duration-200 group-hover:opacity-100': true,
+					'opacity-0': stepsRemaining > 0
+				})}
+			>
+				<span class="font-bold text-slate-500 dark:text-slate-400">{totalSteps}</span>
+				<span class="text-slate-400">/</span>
+				<span class="font-bold text-emerald-600 dark:text-emerald-400">{currentStep + 1}</span>
+			</div>
+		</div>
+
+		<!-- Next Button -->
+		<button
+			type="button"
+			onclick={nextStep}
+			disabled={currentStep >= maxStepIndex}
+			class={cn(
+				'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-40',
+				currentStep < maxStepIndex &&
+					'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 hover:scale-105 hover:bg-emerald-600',
+				currentStep >= maxStepIndex &&
+					'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
+			)}
+			aria-label="الخطوة التالية"
+		>
+			<Icon name="chevron-left" size={20} />
+		</button>
 	</div>
 
-	<div class="text-sm font-medium text-slate-500 md:hidden dark:text-slate-400">
-		{currentStep + 1} / {totalSteps}
+	<!-- Mobile Progress -->
+	<div class="flex items-center gap-2 md:hidden">
+		<button
+			type="button"
+			onclick={prevStep}
+			disabled={currentStep === 0}
+			class={cn(
+				'flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-30',
+				'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400'
+			)}
+			aria-label="الخطوة السابقة"
+		>
+			<Icon name="chevron-right" size={18} />
+		</button>
+
+		<div class="flex flex-col items-center">
+			<span class="font-hacker text-sm font-bold text-emerald-600 dark:text-emerald-400">
+				{currentStep + 1}/{totalSteps}
+			</span>
+			{#if stepsRemaining > 0}
+				<span class="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+					متبقي {stepsRemaining}
+				</span>
+			{:else}
+				<span class="text-[10px] font-bold text-green-600 dark:text-green-400"> مكتمل ✓ </span>
+			{/if}
+		</div>
+
+		<button
+			type="button"
+			onclick={nextStep}
+			disabled={currentStep >= maxStepIndex}
+			class={cn(
+				'flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-30',
+				currentStep < maxStepIndex && 'bg-emerald-500 text-white hover:bg-emerald-600',
+				currentStep >= maxStepIndex &&
+					'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
+			)}
+			aria-label="الخطوة التالية"
+		>
+			<Icon name="chevron-left" size={18} />
+		</button>
 	</div>
 </header>

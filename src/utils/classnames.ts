@@ -1,4 +1,4 @@
-type ClassValue = string | null | undefined | Record<string, boolean>;
+type ClassValue = string | null | boolean | undefined | Record<string, boolean>;
 
 export function cn(...inputs: ClassValue[]): string {
 	const classes = inputs.filter(Boolean);
@@ -15,5 +15,6 @@ export function cn(...inputs: ClassValue[]): string {
 			return '';
 		})
 		.filter(Boolean)
+		.filter((v) => typeof v !== "boolean")
 		.join(' ');
 }
