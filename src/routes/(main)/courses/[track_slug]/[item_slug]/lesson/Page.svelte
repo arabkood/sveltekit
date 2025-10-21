@@ -185,15 +185,7 @@
 	const xpPerStep = $derived(distributeXP(lesson.steps, item.baseXp || 0));
 
 	let userXP = $state(
-		(() => {
-			// calculate xp until maxStepIndex
-			return xpPerStep.reduce((p, cv, ci) => {
-				if (ci <= maxStepIndex) {
-					return p;
-				}
-				return p + cv;
-			}, 0);
-		})()
+		xpPerStep.slice(0, Math.max(currentStepIndex, maxStepIndex)).reduce((sum, xp) => sum + xp, 0)
 	);
 	let xpGain = $state(0);
 
@@ -285,8 +277,8 @@
 
 	const increaseUIXp = (amount: number) => {
 		console.log('+' + amount + 'XP');
-		xpGain += amount;
 		userXP += amount;
+		xpGain = amount;
 	};
 
 	const handleSuccess = () => {
