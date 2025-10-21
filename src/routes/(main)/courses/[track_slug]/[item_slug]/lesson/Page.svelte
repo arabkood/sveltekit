@@ -25,6 +25,7 @@
 	import Seo from '$ui/others/SEO.svelte';
 	import { getDraftItem, removeDraftItem, setDraftItem, type DraftItem } from '../draftStorage';
 	import { debounce } from '$utils/debounce';
+	import { distributeXP } from './xpPerStep';
 
 	let {
 		data,
@@ -180,11 +181,24 @@
 	});
 
 	let showSignupPopup = $state(false);
+	let maxStepIndex = $state(submission && submission.status === 'pass' ? answers.length - 1 : 0);
+	const xpPerStep = $derived(distributeXP(lesson.steps, item.baseXp || 0));
+
+	let userXP = $state(
+		(() => {
+			// calculate xp until maxStepIndex
+			return xpPerStep.reduce((p, cv, ci) => {
+				if (ci <= maxStepIndex) {
+					return p;
+				}
+				return p + cv;
+			}, 0);
+		})()
+	);
+	let xpGain = $state(0);
 
 	let percentCorrect = 100;
 	let gainedXp = $derived((percentCorrect / 100) * (item.baseXp || 0));
-
-	let maxStepIndex = $state(submission && submission.status === 'pass' ? answers.length - 1 : 0);
 
 	$effect(() => {
 		if (submission && submission.status === 'pass') {
@@ -266,6 +280,18 @@
 			submit();
 		} else {
 			goto(`/courses/${track.slug}`);
+		}
+	};
+
+	const increaseUIXp = (amount: number) => {
+		console.log('+' + amount + 'XP');
+		xpGain += amount;
+		userXP += amount;
+	};
+
+	const handleSuccess = () => {
+		if (currentStepIndex >= maxStepIndex && maxStepIndex < lesson.steps.length - 1) {
+			increaseUIXp(xpPerStep[currentStepIndex]);
 		}
 	};
 
@@ -373,6 +399,8 @@
 		totalSteps={lesson.steps.length}
 		{goToStep}
 		{maxStepIndex}
+		xp={userXP}
+		xpIncrement={xpGain}
 	/>
 	<div class="flex flex-1 flex-col items-center justify-center p-4">
 		{#if typeof currentStep !== 'string'}
@@ -384,6 +412,7 @@
 						{failPlayer}
 						step={currentStep}
 						onNext={handleNext}
+						onSuccess={handleSuccess}
 					/>
 				{:else if currentStep.type === 'quiz'}
 					<Quiz
@@ -392,6 +421,7 @@
 						{failPlayer}
 						step={currentStep}
 						onNext={handleNext}
+						onSuccess={handleSuccess}
 					/>
 				{:else if currentStep.type === 'order'}
 					<Order
@@ -400,6 +430,7 @@
 						{failPlayer}
 						step={currentStep}
 						onNext={handleNext}
+						onSuccess={handleSuccess}
 					/>
 				{:else if currentStep.type === 'bug'}
 					<Bug
@@ -408,12 +439,19 @@
 						{failPlayer}
 						step={currentStep}
 						onNext={handleNext}
+						onSuccess={handleSuccess}
 					/>
 				{/if}
 			{/key}
 		{/if}
 		{#if typeof currentStep === 'string'}
-			<Lesson step={currentStep} onNext={handleNext} />
+			<Lesson
+				step={currentStep}
+				onNext={() => {
+					handleSuccess();
+					handleNext();
+				}}
+			/>
 		{/if}
 	</div>
 </div>

@@ -10,12 +10,14 @@
 	let {
 		step,
 		onNext,
+		onSuccess,
 		successPlayer,
 		failPlayer,
 		answer = $bindable()
 	}: {
 		step: QuizQuestion;
 		onNext: () => void;
+		onSuccess?: () => void;
 		successPlayer?: Sound;
 		failPlayer?: Sound;
 		answer: number | null;
@@ -53,6 +55,7 @@
 			status = 'correct';
 			answer = selectedAnswer;
 			successPlayer?.play();
+			onSuccess?.();
 		} else {
 			status = 'incorrect';
 			shakingOption = selectedAnswer;

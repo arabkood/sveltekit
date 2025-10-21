@@ -9,12 +9,15 @@
 	let {
 		step,
 		onNext,
+		onSuccess,
 		successPlayer,
 		failPlayer,
 		answer = $bindable([])
 	}: {
 		step: OrderQuestion;
 		onNext: () => void;
+		onSuccess?: () => void;
+
 		successPlayer?: Sound;
 		failPlayer?: Sound;
 		answer: OrderAnswer;
@@ -81,6 +84,7 @@
 			incorrectPositions = [];
 			status = 'correct';
 			successPlayer?.play();
+			onSuccess?.();
 		} else {
 			status = 'incorrect';
 			incorrectPositions = getIncorrectPositions(userOrder);

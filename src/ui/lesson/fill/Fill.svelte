@@ -11,12 +11,14 @@
 	let {
 		step,
 		onNext,
+		onSuccess,
 		successPlayer,
 		failPlayer,
 		answer = $bindable([])
 	}: {
 		step: FillQuestion;
 		onNext: () => void;
+		onSuccess?: () => void;
 		successPlayer?: Sound;
 		failPlayer?: Sound;
 		answer: FillAnswer;
@@ -64,6 +66,7 @@
 		if (currentIncorrectIndexes.length === 0) {
 			status = 'correct';
 			successPlayer?.play();
+			onSuccess?.();
 		} else {
 			status = 'incorrect';
 			incorrectIndexes = currentIncorrectIndexes;

@@ -10,12 +10,14 @@
 	let {
 		step,
 		onNext,
+		onSuccess,
 		successPlayer,
 		failPlayer,
 		answer = $bindable(undefined)
 	}: {
 		step: BugQuestion;
 		onNext: () => void;
+		onSuccess?: () => void;
 		successPlayer?: Sound;
 		failPlayer?: Sound;
 		answer: BugAnswer | undefined;
@@ -41,6 +43,7 @@
 			answer = userSelection;
 			status = 'correct';
 			successPlayer?.play();
+			onSuccess?.();
 		} else {
 			status = 'incorrect';
 			incorrectSelections = incorrectSelections.add(userSelection);
