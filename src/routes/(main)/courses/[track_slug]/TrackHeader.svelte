@@ -37,7 +37,9 @@
 	];
 </script>
 
-<div class="w-full bg-gradient-to-r from-transparent via-purple-900/60 to-transparent text-white">
+<div
+	class="w-full bg-gradient-to-r from-transparent via-gray-200/60 to-transparent text-gray-900 dark:via-purple-900/60 dark:text-white"
+>
 	<div class="mx-auto max-w-7xl px-6 py-12 sm:py-16 lg:px-8">
 		<div class="flex flex-col items-center gap-10 lg:flex-row lg:gap-12">
 			<div class="w-full max-w-3xl flex-1 text-center lg:text-start">
@@ -45,7 +47,7 @@
 					class="mb-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:justify-start"
 				>
 					<span
-						class={'inline-flex items-center gap-x-3 rounded-full border-2 border-white/50 px-4 py-1.5 text-sm font-semibold ' +
+						class={'inline-flex items-center gap-x-3 rounded-full border-2 border-gray-300 px-4 py-1.5 text-sm font-semibold dark:border-white/50 ' +
 							levelClass}
 					>
 						{level}
@@ -57,26 +59,27 @@
 									width="3"
 									height={bar.h}
 									rx="1"
-									fill={i < levelBars ? 'currentColor' : 'rgba(255,255,255,0.3)'}
+									opacity={i < levelBars ? '100' : '0.3'}
+									fill="currentColor"
 								/>
 							{/each}
 						</svg>
 					</span>
 					<div class="flex gap-2">
 						{#each category as cat}
-							<span class="text-sm font-semibold tracking-wider text-white/80 uppercase">
+							<span class="text-sm font-semibold tracking-wider uppercase dark:text-white/80">
 								{cat}
 							</span>
 						{/each}
 					</div>
 				</div>
 				<h1
-					class="text-4xl leading-tight font-bold tracking-tight text-white drop-shadow-[5px_5px_0_rgba(0,0,0,0.2)] sm:text-5xl lg:text-6xl"
+					class="text-4xl leading-tight font-bold tracking-tight drop-shadow-[5px_5px_0_rgba(0,0,0,0.2)] sm:text-5xl lg:text-6xl dark:text-white"
 				>
 					{title}
 				</h1>
 				{#if !!description}
-					<p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/90 lg:mx-0">
+					<p class="mx-auto mt-6 max-w-2xl text-lg leading-8 lg:mx-0 dark:text-white/90">
 						{description}
 					</p>
 				{/if}
