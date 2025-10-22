@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { LessonMarkdown } from '$types/lesson';
 	import Markdown from '$ui/common/Markdown.svelte';
-	import QuizFooter from '../quiz/QuizFooter.svelte';
+	import Footer from '../shared/Footer.svelte';
 
 	const {
 		step,
@@ -10,14 +10,14 @@
 		step: LessonMarkdown;
 		onNext: () => void;
 	} = $props();
-
-	let status = $state<'idle' | 'success' | 'fail' | 'explanation'>('idle');
 </script>
 
-<main
-	class="shadow-card-lg w-full max-w-2xl space-y-6 overflow-hidden rounded-xl border border-gray-700/20 bg-white p-6 dark:border-gray-100/20 dark:bg-gray-800"
+<div
+	class="shadow-card-lg flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-gray-700/20 bg-white dark:border-gray-100/20 dark:bg-gray-800"
 >
-	<Markdown evalPublicAssets={true} markdown={step} />
+	<main class="space-y-6 p-6 pb-8">
+		<Markdown evalPublicAssets={true} markdown={step} />
+	</main>
+</div>
 
-	<QuizFooter {status} {onNext} />
-</main>
+<Footer {onNext} />

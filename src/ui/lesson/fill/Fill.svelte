@@ -2,11 +2,9 @@
 	import type { FillAnswer, FillQuestion } from '$types/lesson';
 	import CodeBlock from '../shared/CodeBlock.svelte';
 	import type { Sound } from '$utils/sound';
-	import { i18n } from '$i18n/i18n';
 	import Markdown from '$ui/common/Markdown.svelte';
-	import { fly } from 'svelte/transition';
-	import Button from '$ui/common/Button.svelte';
 	import RandExp from 'randexp';
+	import Footer from '../shared/Footer.svelte';
 
 	let {
 		step,
@@ -111,9 +109,9 @@
 </script>
 
 <div
-	class="shadow-card-lg flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-gray-700/20 bg-white dark:border-gray-100/20 dark:bg-gray-800"
+	class="lesson-box-shared-fill shadow-card-lg flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-gray-700/20 bg-white dark:border-gray-100/20 dark:bg-gray-800"
 >
-	<main class="space-y-6 p-6">
+	<main class="space-y-6 p-6 pb-8">
 		<div>
 			<Markdown inline={true} markdown={step.question} />
 		</div>
@@ -131,53 +129,14 @@
 			/>
 		</div>
 	</main>
-
-	<footer class="mt-auto border-t border-gray-200 dark:border-gray-700">
-		{#if status === 'correct'}
-			<div
-				class="bg-green-50 p-6 text-green-800 dark:bg-green-500/10 dark:text-green-200"
-				transition:fly={{ y: 20, duration: 250 }}
-			>
-				<h3 class="mb-4 text-lg font-bold">{i18n.t('lessons.correctAnswer')}!</h3>
-				<Button type="button" onclick={onNext} fullWidth={true}>
-					{i18n.t('lessons.continue')}
-				</Button>
-			</div>
-		{:else}
-			<div
-				class="flex min-h-[88px] items-center justify-between gap-4 bg-gray-50/50 p-4 dark:bg-gray-800/50"
-			>
-				<div>
-					{#if status === 'incorrect'}
-						<p
-							class="flex-1 text-sm font-semibold text-gray-700 dark:text-gray-300"
-							aria-live="polite"
-							transition:fly={{ y: 10, duration: 200 }}
-						>
-							{i18n.t('lessons.tryAgain')}
-						</p>
-					{/if}
-				</div>
-				<div class="flex items-center gap-2">
-					{#if failCount >= 3}
-						<Button variant="outline" type="button" onclick={getAnswer}>
-							{i18n.t('lessons.getAnswer', { defaultValue: 'Get Answer' })}
-						</Button>
-					{/if}
-					<Button
-						loading={isChecking}
-						type="button"
-						disabled={!canCheck || isChecking}
-						onclick={handleCheck}
-					>
-						{#if isChecking}
-							{i18n.t('lessons.checking')}
-						{:else}
-							{i18n.t('lessons.checkAnswer')}
-						{/if}
-					</Button>
-				</div>
-			</div>
-		{/if}
-	</footer>
 </div>
+
+<Footer
+	{status}
+	{isChecking}
+	{canCheck}
+	{failCount}
+	onCheck={handleCheck}
+	{onNext}
+	onGetAnswer={getAnswer}
+/>

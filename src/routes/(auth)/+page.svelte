@@ -325,13 +325,15 @@ print(greeting)`,
 					</div>
 
 					<div
-						class="relative rounded-2xl border-slate-200 bg-white/70 py-4 shadow-slate-300/30 md:border md:p-4 md:shadow-2xl"
+						class="relative rounded-2xl border-slate-200 bg-white/70 px-2 py-4 shadow-slate-300/30 md:border md:p-4 md:shadow-2xl"
 					>
 						<div class="mb-3 text-center">
 							<h2 class="text-lg font-bold text-slate-800">جرب بنفسك الآن!</h2>
 							<p class="text-sm text-slate-500">اكتب الكود الصحيح لإكمال التحدي</p>
 						</div>
-						<div class="max-w-sm md:max-w-2xl">
+						<div
+							class="relative mx-auto h-full w-full max-w-2xl overflow-hidden rounded-xl bg-white pb-28 dark:bg-gray-800"
+						>
 							<Fill
 								{successPlayer}
 								{failPlayer}
@@ -852,3 +854,13 @@ print(greeting)`,
 		<Footer />
 	</main>
 </div>
+
+<style>
+	:global(.lesson-box-shared-footer) {
+		position: absolute !important;
+	}
+
+	:global(.lesson-box-shared-fill) {
+		border: none;
+	}
+</style>

@@ -18,7 +18,8 @@
 		| 'link-pill-active'
 		| 'continue'
 		| 'attention'
-		| 'fire';
+		| 'fire'
+		| 'neutral';
 
 	type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
@@ -54,6 +55,14 @@
 		href?: string;
 		[key: string]: unknown;
 	} = $props();
+
+	const spinnerSize = {
+		xs: 'xs',
+		sm: 'sm',
+		md: 'md',
+		lg: 'md',
+		xl: 'lg'
+	};
 
 	const defaultIconSizes = {
 		xs: 12,
@@ -180,7 +189,17 @@
    disabled:bg-orange-300 disabled:text-white/70 disabled:shadow-none
    dark:bg-orange-600 dark:hover:bg-orange-500 dark:active:bg-orange-700
    dark:shadow-orange-700/40 dark:hover:shadow-orange-600/50
- `
+ `,
+		neutral: `
+		bg-gray-700 text-white shadow-md shadow-gray-700/20
+		hover:bg-gray-800 hover:shadow-lg hover:shadow-gray-800/30
+		focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2
+		active:bg-gray-900
+		disabled:bg-gray-400 disabled:text-white/70 disabled:shadow-none disabled:cursor-not-allowed
+		dark:bg-gray-600 dark:hover:bg-gray-500 dark:active:bg-gray-700
+		dark:shadow-gray-800/30 dark:hover:shadow-gray-700/40
+		transition-all duration-200 ease-out
+	`
 	};
 
 	const sizeClasses = {
@@ -240,7 +259,10 @@
 
 {#snippet inner()}
 	{#if loading}
-		<Spinner size={size !== 'icon' ? size : 'sm'} class="me-2" />
+		<Spinner
+			size={size !== 'icon' ? (spinnerSize[size as keyof typeof spinnerSize] as any) : 'sm'}
+			class="me-2"
+		/>
 	{/if}
 
 	{#if startIcon && !loading}

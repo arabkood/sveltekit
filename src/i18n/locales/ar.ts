@@ -1,17 +1,22 @@
 export default {
 	lessons: {
-		tryAgain: 'الإجابة خاطئة. حاول مرة أخرى ',
-		checking: 'جارٍ التحقق...',
-		checkAnswer: 'تحقق من الإجابة',
 		answerHere: 'اكتب هنا',
 		expectedOutput: 'الناتج المتوقع',
 		actualOutput: 'الناتج الفعلي',
 		selectLine: 'اختر سطراً للمتابعة',
-		showHint: 'عرض التلميح',
-		hideHint: 'إخفاء التلميح',
-		correctAnswer: 'إجابة صحيحة',
-		continue: 'متابعة',
-		getAnswer: 'احصل على الإجابة'
+		"correctAnswer": "إجابة صحيحة!",
+		"tryAgain": "حاول مرة أخرى",
+		"tryAgainKeepGoing": "ليس تماما بعد - استمر!",
+		"gettingCloser": "واصل المحاولة!",
+		"letMeHelp": "هل تريد بعض المساعدة؟",
+		"hint": "تلميح",
+		"showHint": "عرض التلميح",
+		"hideHint": "إخفاء التلميح",
+		"continue": "متابعة",
+		"checkAnswer": "تحقق من الإجابة",
+		"checking": "جار التحقق...",
+		"getAnswer": "أحصل على الإجابة",
+		"why": "شرح الإجابة"
 	},
 	forgotPassword: {
 		success: 'إذا كان البريد الإلكتروني صحيحاً، سنرسل لك رابطاً لإعادة تعيين كلمة المرور',

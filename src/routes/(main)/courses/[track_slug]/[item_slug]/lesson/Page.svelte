@@ -394,7 +394,7 @@
 		xp={userXP}
 		xpIncrement={xpGain}
 	/>
-	<div class="flex flex-1 flex-col items-center justify-center p-4">
+	<div class="flex flex-1 items-start justify-center p-4 pt-8 pb-32 md:pt-[16vh]">
 		{#if typeof currentStep !== 'string'}
 			{#key currentStep}
 				{#if currentStep.type === 'fill'}
