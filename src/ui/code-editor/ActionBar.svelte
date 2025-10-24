@@ -31,7 +31,9 @@
 	const showSubmitCooldown = $derived(submitStatus !== 'loading' && submitCooldownDuration > 0);
 </script>
 
-<footer class="flex items-center justify-between bg-gray-100 p-2 p-4 dark:bg-gray-800">
+<footer
+	class="fixed right-0 bottom-0 flex items-center justify-between bg-gray-100 p-4 md:relative dark:bg-gray-800"
+>
 	<div class="flex items-center gap-4">
 		<Button
 			onclick={onSubmit}
