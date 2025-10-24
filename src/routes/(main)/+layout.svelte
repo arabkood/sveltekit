@@ -27,7 +27,7 @@
 	});
 
 	const hideNavbarFor = new Set([
-		// '/(main)/courses/[track_slug]/[item_slug]/lesson',
+		'/(main)/onboarding',
 		'/(main)/courses/[track_slug]/[item_slug]/code'
 	]);
 	const disableNavbar = $derived(
