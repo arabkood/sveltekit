@@ -15,7 +15,17 @@
 <header
 	class="flex shrink-0 items-center justify-between border-b border-gray-200 px-2 py-2 sm:px-4 dark:border-gray-700"
 >
-	<div class="flex min-w-0 flex-1 items-center">
+	<div class="flex min-w-0 flex-1 items-center md:hidden">
+		<a
+			href={`/courses/${trackSlug}`}
+			class="ms-2 flex shrink-0 items-center justify-center gap-3 rounded-md p-1 text-gray-700 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-800"
+			title={trackTitle}
+		>
+			<Icon name="arrow-right" size={22} class="-mb-1" />
+			<span>رجوع الى المسار</span>
+		</a>
+	</div>
+	<div class="hidden min-w-0 flex-1 items-center md:flex">
 		<a
 			href="/"
 			class="mr-2 hidden shrink-0 items-center justify-center rounded-md p-1 text-gray-700 hover:bg-gray-200 md:flex dark:text-gray-200 dark:hover:bg-gray-800"

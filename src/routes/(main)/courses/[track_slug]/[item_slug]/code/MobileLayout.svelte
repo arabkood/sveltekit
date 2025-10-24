@@ -60,8 +60,10 @@
 
 	// Helper function for button classes
 	function getButtonClass(view: string) {
-		const baseClass = 'p-3 font-medium transition-colors';
-		const activeClass = 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50';
+		const baseClass =
+			'flex gap-2 justify-center items-center px-1 py-3 font-medium border-b dark:border-gray-700 border-gray-200  transition-colors';
+		const activeClass =
+			'bg-blue-50 text-gray-900 dark:bg-blue-950 dark:text-gray-50 !border-b-blue-500 !dark:border-b-blue-500';
 		const inactiveClass =
 			'text-gray-500 hover:bg-gray-100/50 dark:text-gray-400 dark:hover:bg-gray-800/50';
 
@@ -70,6 +72,42 @@
 </script>
 
 <div class="flex flex-1 flex-col overflow-hidden">
+	<nav class="bg-page safe-area-padding-bottom grid grid-cols-3 text-sm">
+		<button onclick={() => (activeView = 'problem')} class={getButtonClass('problem')}>
+			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+				></path>
+			</svg>
+			المسألة
+		</button>
+		<button onclick={() => (activeView = 'code')} class="{getButtonClass('code')} border-x">
+			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+				></path>
+			</svg>
+			الكود
+		</button>
+		<button onclick={() => (activeView = 'results')} class={getButtonClass('results')}>
+			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+				></path>
+			</svg>
+			النتائج
+		</button>
+	</nav>
+
 	<!-- Content Area -->
 	<div class="bg-page flex-1 overflow-y-auto dark:bg-gray-900">
 		{#if activeView === 'problem'}
@@ -97,97 +135,35 @@
 				/>
 			</div>
 		{:else if activeView === 'results'}
-			<div class="h-full bg-gray-50 dark:bg-gray-900">
+			<div class="h-full bg-gray-50 pb-14 dark:bg-gray-900">
 				<!-- Loading State -->
 				<Loading status={submitStatus === 'idle' ? runStatus : submitStatus} estimatedSeconds={3} />
 
 				{#if runStatus !== 'loading' && submitStatus !== 'loading'}
 					<!-- Results Sub-tabs -->
-					<Tabs variant="default" bind:activeTab>
-						<div class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-							<TabList class="flex w-full">
-								<Tab index={1} class="flex-1 px-2 py-3 text-center text-sm font-medium">
-									المخرجات
-								</Tab>
-								<Tab index={2} class="flex-1 px-2 py-3 text-center text-sm font-medium">
-									نتائج الاختبار
-								</Tab>
-								<Tab index={0} class="flex-1 px-2 py-3 text-center text-sm font-medium">
-									المدخلات
-								</Tab>
-							</TabList>
-						</div>
-
+					<Tabs variant="pills" bind:activeTab>
 						<TabPanel index={0}>
-							<div class="p-4">
-								<InputPanel bind:inputs={userInputs} />
-							</div>
+							<InputPanel bind:inputs={userInputs} />
 						</TabPanel>
 
 						<TabPanel index={1}>
-							<div class="p-4">
-								<OutputPanel output={runOutput} />
-							</div>
+							<OutputPanel output={runOutput} />
 						</TabPanel>
 
 						<TabPanel index={2}>
-							<div class="p-4">
-								<ResultsPanel {submission} error={submitError} />
-							</div>
+							<ResultsPanel {submission} error={submitError} />
 						</TabPanel>
+
+						<TabList class="fixed bottom-0 flex w-full">
+							<Tab index={1} class="text-sm">المخرجات</Tab>
+							<Tab index={2} class="text-sm">نتائج الاختبار</Tab>
+							<Tab index={0} class="text-sm">المدخلات</Tab>
+						</TabList>
 					</Tabs>
 				{/if}
 			</div>
 		{/if}
 	</div>
-
-	<!-- Fixed Bottom Navigation -->
-	<nav
-		class="bg-page safe-area-padding-bottom grid grid-cols-3 border-t border-gray-200 text-sm dark:border-gray-700"
-	>
-		<button onclick={() => (activeView = 'problem')} class={getButtonClass('problem')}>
-			<div class="flex flex-col items-center gap-1">
-				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-					></path>
-				</svg>
-				<span class="text-xs">المسألة</span>
-			</div>
-		</button>
-		<button
-			onclick={() => (activeView = 'code')}
-			class="{getButtonClass('code')} border-x border-gray-200 dark:border-gray-700"
-		>
-			<div class="flex flex-col items-center gap-1">
-				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-					></path>
-				</svg>
-				<span class="text-xs">الكود</span>
-			</div>
-		</button>
-		<button onclick={() => (activeView = 'results')} class={getButtonClass('results')}>
-			<div class="flex flex-col items-center gap-1">
-				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-					></path>
-				</svg>
-				<span class="text-xs">النتائج</span>
-			</div>
-		</button>
-	</nav>
 </div>
 
 <style>
