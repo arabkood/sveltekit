@@ -174,39 +174,41 @@
 
 		<!-- Stats Grid -->
 		<div class="p-4 sm:p-6 lg:p-8">
-			<div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
 				<!-- Rank Stat -->
 				<div
-					class="rounded-lg border border-gray-200 bg-gray-50 p-4 pb-3 dark:border-gray-700 dark:bg-gray-800"
+					class="rounded-lg border border-gray-200 bg-gray-50 p-3 pb-3 sm:p-4 dark:border-gray-700 dark:bg-gray-800"
 				>
-					<div class="flex items-center gap-3">
+					<div class="flex items-center gap-2 sm:gap-3">
 						<div class="shrink-0">
-							<IconPng name={currentRank.icon} size={60} />
+							<IconPng name={currentRank.icon} size={48} class="sm:h-[60px] sm:w-[60px]" />
 						</div>
 						<div class="min-w-0 flex-1">
-							<div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+							<div class="text-xs font-medium text-gray-500 sm:text-sm dark:text-gray-400">
 								{i18n.t('dashboard.rank')}
 							</div>
-							<div class={`truncate text-lg font-bold ${currentRank.theme.text}`}>
+							<div class={`truncate text-base font-bold sm:text-lg ${currentRank.theme.text}`}>
 								{currentRank.name}
 							</div>
 						</div>
 					</div>
 				</div>
-
 				<!-- XP Stat -->
 				<div
-					class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800"
+					class="rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4 dark:border-gray-700 dark:bg-gray-800"
 				>
-					<div class="flex items-center gap-3">
+					<div class="flex items-center gap-2 sm:gap-3">
 						<div class="shrink-0">
-							<IconPng name="bolt" size={56} />
+							<IconPng name="bolt" size={48} class="sm:h-[56px] sm:w-[56px]" />
 						</div>
-						<div class="flex min-w-0 flex-1 items-center justify-between">
-							<div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+						<div class="flex min-w-0 flex-1 items-center justify-between gap-2">
+							<div class="text-xs font-medium text-gray-500 sm:text-sm dark:text-gray-400">
 								{i18n.t('leaderboard.labels.xp')}
 							</div>
-							<div class="font-hacker text-xl font-bold text-gray-900 dark:text-gray-100" dir="ltr">
+							<div
+								class="font-hacker text-lg font-bold text-gray-900 sm:text-xl dark:text-gray-100"
+								dir="ltr"
+							>
 								{userStats.totalXp.toLocaleString('en-US')}
 							</div>
 						</div>
@@ -214,36 +216,41 @@
 				</div>
 				<!-- Streak Stat -->
 				<div
-					class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800"
+					class="rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4 dark:border-gray-700 dark:bg-gray-800"
 				>
-					<div class="flex items-center gap-3">
+					<div class="flex items-center gap-2 sm:gap-3">
 						<div class="shrink-0">
-							<IconPng name="fire" size={56} />
+							<IconPng name="fire" size={48} class="sm:h-[56px] sm:w-[56px]" />
 						</div>
-						<div class="flex min-w-0 flex-1 items-center justify-between">
-							<div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+						<div class="flex min-w-0 flex-1 items-center justify-between gap-2">
+							<div class="text-xs font-medium text-gray-500 sm:text-sm dark:text-gray-400">
 								{i18n.t('common.streak.label')}
 							</div>
-							<div class="font-hacker text-xl font-bold text-gray-900 dark:text-gray-100" dir="ltr">
+							<div
+								class="font-hacker text-lg font-bold text-gray-900 sm:text-xl dark:text-gray-100"
+								dir="ltr"
+							>
 								{userStats.currentStreak}
 							</div>
 						</div>
 					</div>
 				</div>
-
 				<!-- Completed Items Stat -->
 				<div
-					class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800"
+					class="rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4 dark:border-gray-700 dark:bg-gray-800"
 				>
-					<div class="flex items-center gap-3">
+					<div class="flex items-center gap-2 sm:gap-3">
 						<div class="shrink-0">
-							<IconPng name="terminal" size={56} />
+							<IconPng name="terminal" size={48} class="sm:h-[56px] sm:w-[56px]" />
 						</div>
-						<div class="flex min-w-0 flex-1 items-center justify-between">
-							<div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+						<div class="flex min-w-0 flex-1 items-center justify-between gap-2">
+							<div class="text-xs font-medium text-gray-500 sm:text-sm dark:text-gray-400">
 								{i18n.t('common.completedItems')}
 							</div>
-							<div class="font-hacker text-xl font-bold text-gray-900 dark:text-gray-100" dir="ltr">
+							<div
+								class="font-hacker text-lg font-bold text-gray-900 sm:text-xl dark:text-gray-100"
+								dir="ltr"
+							>
 								{userStats.completedItems}
 							</div>
 						</div>
