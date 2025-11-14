@@ -4,6 +4,7 @@ import {
 	dailyStatsInUsers,
 	sessionTokensInAuth,
 	statsInUsers,
+	trackInUsers,
 	usersInAuth
 } from '../generated/drizzle/schema';
 
@@ -23,6 +24,14 @@ export type UserPrivate = Pick<
 
 export type UserStats = typeof statsInUsers.$inferSelect;
 export type UserDailyStats = typeof dailyStatsInUsers.$inferSelect;
+export type UserTrack = typeof trackInUsers.$inferSelect & {
+	track?: {
+		id: string;
+		title: string;
+		slug: string;
+		logo: string | null;
+	} | null;
+};
 
 export class UserRepository {
 	public async getUserBySessionToken(token: string): Promise<UserPrivate | null> {
@@ -70,6 +79,45 @@ export class UserRepository {
 			where: and(eq(dailyStatsInUsers.userId, userId), gte(dailyStatsInUsers.date, fromWhen)),
 			orderBy: desc(dailyStatsInUsers.date)
 		});
+	}
+
+	public async findByUsername(username: string): Promise<UserPrivate | null> {
+		const user = await db.query.usersInAuth.findFirst({
+			where: eq(usersInAuth.username, username),
+			columns: {
+				id: true,
+				email: true,
+				username: true,
+				role: true,
+				emailVerified: true,
+				createdAt: true,
+				premiumActive: true,
+				polarCustomerId: true
+			}
+		});
+
+		return user || null;
+	}
+
+	public async getUserTracks(userId: string): Promise<UserTrack[]> {
+		const tracks = await db.query.trackInUsers.findMany({
+			where: eq(trackInUsers.userId, userId),
+			with: {
+				tracksInClass: {
+					columns: {
+						id: true,
+						title: true,
+						slug: true,
+						logo: true
+					}
+				}
+			}
+		});
+
+		return tracks.map((t) => ({
+			...t,
+			track: t.tracksInClass || null
+		}));
 	}
 }
 

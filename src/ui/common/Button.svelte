@@ -270,9 +270,7 @@
 	{/if}
 
 	{#if children}
-		<span>
-			{@render children?.()}
-		</span>
+		{@render children?.()}
 	{/if}
 
 	{#if endIcon && !loading}

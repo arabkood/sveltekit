@@ -105,10 +105,19 @@ export default {
 			broken: "انقطع الستريك",
 			start: "ابدأ ستريكك اليوم",
 			highscore: "رقم قياسي جديد!",
-			continue: "استمر في ستريكك"
+			continue: "استمر في ستريكك",
+			label: "الستريك"
 		},
 		consecutive_days: "أيام متتالية",
 		your_longest_streak: "رقمك القياسي",
+		completedItems: "تمارين مكتملة",
+		share: "مشاركة",
+		copyLink: "نسخ الرابط",
+		shareOn: "مشاركة على",
+		twitter: "تويتر",
+		linkedin: "لينكد إن",
+		facebook: "فيسبوك",
+		joined: "انضم في",
 		choose_correct_answer: 'اختر الإجابة الصحيحة',
 		progress: 'التقدم',
 		solution_explanation: 'شرح الحل',
@@ -343,6 +352,38 @@ export default {
 			shawwal: 'شوال',
 			dhuAlQidah: 'ذو القعدة',
 			dhuAlHijjah: 'ذو الحجة'
+		}
+	},
+	leaderboard: {
+		title: 'لوحة المتصدرين',
+		description: 'تنافس مع المتعلمين حول العالم واصعد إلى القمة!',
+		timeframe: {
+			allTime: 'كل الأوقات',
+			monthly: 'هذا الشهر',
+			weekly: 'هذا الأسبوع'
+		},
+		stats: {
+			totalLearners: 'إجمالي المتعلمين',
+			yourRank: 'ترتيبك',
+			topXp: 'أعلى نقاط خبرة'
+		},
+		labels: {
+			level: 'المستوى',
+			dayStreak: 'سلسلة أيام',
+			tracks: 'مسارات',
+			xp: 'نقاط خبرة',
+			you: 'أنت',
+			rank: 'المركز'
+		},
+		empty: {
+			title: 'لا توجد بيانات للوحة المتصدرين',
+			description: 'تحقق مرة أخرى لاحقاً لرؤية الترتيبات!'
+		},
+		cta: {
+			title: 'هل تريد الصعود أعلى؟',
+			description: 'أكمل المزيد من المسارات، واحتفظ بسلسلة نشاطك، واكسب نقاط الخبرة للصعود في الترتيب!',
+			browseTracks: 'تصفح المسارات',
+			viewDashboard: 'عرض لوحة التحكم'
 		}
 	}
 } as const;

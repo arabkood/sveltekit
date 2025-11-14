@@ -152,17 +152,17 @@
 			aria-controls="user-menu"
 			size="md"
 		>
+			{#if user.premiumActive}
+				<IconPng name="premium" size={24} alt="Premium" class="inline" />
+			{/if}
+			{user.username}
 			<Avatar
 				src={user?.avatar || undefined}
 				alt={user.username}
 				fallback={user.username}
 				size="sm"
-				className="me-1"
+				className="ms-3"
 			/>
-			{user.username}
-			{#if user.premiumActive}
-				<IconPng name="premium" size={24} alt="Premium" class="inline" />
-			{/if}
 		</Button>
 
 		{#if showMenu}

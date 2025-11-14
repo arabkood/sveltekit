@@ -1,19 +1,15 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import type { User } from '$lib/server/db/repos/user';
+	import type { PageData } from './$types';
 	import Header from './Header.svelte';
-	import Stats from './Stats.svelte';
+	import CompletedCourses from './CompletedCourses.svelte';
 
-	const user: Partial<User> & {
-		avatar?: string;
-	} = {
-		username: page.params.username,
-		avatar: 'https://i.pinimg.com/736x/a0/36/d9/a036d937e3e53c54a62dab90a674362d.jpg'
-	};
+	let { data }: { data: PageData } = $props();
 </script>
 
-<Header {user} />
+<Header user={data.user} userStats={data.userStats} />
 
-<div class="mx-auto my-8 flex max-w-7xl">
-	<Stats />
-</div>
+{#if data.completedTracks.length > 0}
+	<div class="mx-auto my-8 max-w-7xl px-4">
+		<CompletedCourses tracks={data.completedTracks} />
+	</div>
+{/if}

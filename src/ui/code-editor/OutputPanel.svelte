@@ -8,15 +8,11 @@
 
 	let { output = '', enableWrap = true }: Props = $props();
 
-	let showCopiedMessage = $state(false);
-
 	const fancyAnsi = new FancyAnsi();
 
 	const coloredOutput = $derived.by(() => {
 		return output ? fancyAnsi.toHtml(output) : '';
 	});
-
-	console.log('bbb', output, typeof output, output.length);
 </script>
 
 <div class="h-full w-full bg-gray-50 p-4 text-gray-800 dark:bg-gray-900 dark:text-gray-200">

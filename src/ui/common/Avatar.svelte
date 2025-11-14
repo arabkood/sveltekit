@@ -29,18 +29,11 @@
 		loading = false
 	} = $props();
 
-	const initials = $derived(
-		fallback
-			? fallback
-					.trim()
-					.split(/\s+/)
-					.filter((word) => word.length > 0)
-					.map((word) => word[0])
-					.join('')
-					.toUpperCase()
-					.slice(0, 2)
-			: ''
-	);
+	const dicebearUrl = $derived.by(() => {
+		if (!fallback) return '';
+		const seed = encodeURIComponent(fallback.trim());
+		return `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${seed}`;
+	});
 
 	let imageError = $state(false);
 	let imageLoaded = $state(false);
@@ -119,7 +112,11 @@
 				></div>
 			{/if}
 		{:else if fallback && !showFallbackIcon}
-			<span class="font-semibold tracking-tight select-none">{initials}</span>
+			<img
+				src={dicebearUrl}
+				{alt}
+				class="h-full w-full rounded-full object-cover transition-opacity duration-200"
+			/>
 		{:else}
 			<Icon
 				name="user"
