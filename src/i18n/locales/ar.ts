@@ -292,7 +292,13 @@ export default {
 		toLevel: 'إلى المستوى',
 		xp: 'نقاط الخبرة',
 		streak: 'شعلة النشاط',
-		rank: 'الترتيب',
+		rank: {
+			title: 'ترتيبك العالمي',
+			top: 'ضمن أفضل',
+			viewLeaderboard: 'عرض لوحة المتصدرين',
+			noRank: 'ليس لديك ترتيب بعد',
+			earnXpToRank: 'اكسب نقاط خبرة للظهور في لوحة المتصدرين'
+		},
 		solved: 'تمارين محلولة',
 		tracks: 'مسارات مكتملة',
 		exercises: 'تمرين',

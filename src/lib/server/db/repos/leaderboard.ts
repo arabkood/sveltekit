@@ -72,24 +72,31 @@ export class LeaderboardRepository {
 	/**
 	 * Get a user's rank in the all-time leaderboard
 	 * @param userId User ID to look up
-	 * @returns The user's rank and XP, or null if not found
+	 * @returns The user's rank, XP, and total users, or null if not found
 	 */
-	public async getUserAllTimeRank(userId: string): Promise<{ rank: number; xp: number } | null> {
-		const result = await db.execute<{ rank: number; xp: number }>(sql`
+	public async getUserAllTimeRank(userId: string): Promise<{ rank: number; xp: number; totalUsers: number } | null> {
+		const result = await db.execute<{ rank: number; xp: number; total_users: number }>(sql`
 			WITH ranked_users AS (
 				SELECT
 					s.user_id,
 					s.total_xp,
-					ROW_NUMBER() OVER (ORDER BY s.total_xp DESC) as rank
+					ROW_NUMBER() OVER (ORDER BY s.total_xp DESC) as rank,
+					COUNT(*) OVER () as total_users
 				FROM users.stats s
 				WHERE s.total_xp > 0
 			)
-			SELECT rank::int, total_xp::int as xp
+			SELECT rank::int, total_xp::int as xp, total_users::int
 			FROM ranked_users
 			WHERE user_id = ${userId}
 		`);
 
-		return result.rows[0] || null;
+		if (!result.rows[0]) return null;
+
+		return {
+			rank: result.rows[0].rank,
+			xp: result.rows[0].xp,
+			totalUsers: result.rows[0].total_users
+		};
 	}
 
 	/**
@@ -125,6 +132,7 @@ export class LeaderboardRepository {
 
 		return result.rows[0] || null;
 	}
+
 }
 
 export const leaderboardRepository = new LeaderboardRepository();
