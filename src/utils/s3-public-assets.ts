@@ -9,7 +9,7 @@ export function toPublicUrl(path: string): string {
 	if (isLocal) {
 		return `https://dev.arabkood.com/s3/${key}`;
 	} else {
-		return `https://dev.akood.com/s3/${key}`;
+		return `https://akood.com/s3/${key}`;
 	}
 }
 
@@ -18,7 +18,7 @@ export function replacePublicUrls(text: string): string {
 		if (isLocal) {
 			return `https://dev.arabkood.com/s3/${key}`;
 		} else {
-			return `https://dev.akood.com/s3/${key}`;
+			return `https://akood.com/s3/${key}`;
 		}
 	});
 }
