@@ -15,6 +15,6 @@ export function cn(...inputs: ClassValue[]): string {
 			return '';
 		})
 		.filter(Boolean)
-		.filter((v) => typeof v !== "boolean")
+		.filter((v) => typeof v !== 'boolean')
 		.join(' ');
 }

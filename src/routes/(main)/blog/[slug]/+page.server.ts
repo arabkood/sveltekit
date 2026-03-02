@@ -2,10 +2,9 @@ import { getBlogPost, listBlogPosts } from '$lib/server/s3/index.js';
 import { error, redirect } from '@sveltejs/kit';
 
 export async function load({ params }) {
-	if (params.slug === "about-arabkood") {
+	if (params.slug === 'about-arabkood') {
 		throw redirect(301, '/what-is-akood');
 	}
-
 
 	const post = await getBlogPost(params.slug);
 

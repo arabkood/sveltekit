@@ -15,7 +15,10 @@ export class LeaderboardRepository {
 	 * @param limit Maximum number of users to return (default: 100)
 	 * @param offset Skip this many users (for pagination)
 	 */
-	public async getAllTimeLeaderboard(limit: number = 100, offset: number = 0): Promise<LeaderboardEntry[]> {
+	public async getAllTimeLeaderboard(
+		limit: number = 100,
+		offset: number = 0
+	): Promise<LeaderboardEntry[]> {
 		const results = await db
 			.select({
 				userId: usersInAuth.id,
@@ -42,7 +45,10 @@ export class LeaderboardRepository {
 	 * @param limit Maximum number of users to return (default: 100)
 	 * @param offset Skip this many users (for pagination)
 	 */
-	public async getWeeklyLeaderboard(limit: number = 100, offset: number = 0): Promise<LeaderboardEntry[]> {
+	public async getWeeklyLeaderboard(
+		limit: number = 100,
+		offset: number = 0
+	): Promise<LeaderboardEntry[]> {
 		const sevenDaysAgo = new Date();
 		sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
@@ -74,7 +80,9 @@ export class LeaderboardRepository {
 	 * @param userId User ID to look up
 	 * @returns The user's rank, XP, and total users, or null if not found
 	 */
-	public async getUserAllTimeRank(userId: string): Promise<{ rank: number; xp: number; totalUsers: number } | null> {
+	public async getUserAllTimeRank(
+		userId: string
+	): Promise<{ rank: number; xp: number; totalUsers: number } | null> {
 		const result = await db.execute<{ rank: number; xp: number; total_users: number }>(sql`
 			WITH ranked_users AS (
 				SELECT
@@ -132,7 +140,6 @@ export class LeaderboardRepository {
 
 		return result.rows[0] || null;
 	}
-
 }
 
 export const leaderboardRepository = new LeaderboardRepository();

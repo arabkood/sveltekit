@@ -4,7 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
 
-	import '../app.css';
+	import '../styles/app.css';
 	import SvgSprite from '$ui/shared/SvgSprite.svelte';
 	import { APP_ENV } from '$config';
 

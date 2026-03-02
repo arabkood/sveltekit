@@ -1,18 +1,17 @@
-import type { LessonInteractiveAnswers } from "$types/lesson";
+import type { LessonInteractiveAnswers } from '$types/lesson';
 
 type StorageItem<T> = {
 	v: T;
 	e: number;
 };
 
-const PREFIX = "drft-itm-"
+const PREFIX = 'drft-itm-';
 
 export type DraftItem = {
 	a: LessonInteractiveAnswers;
 	csi: number;
 	tt: number;
 };
-
 
 export function getDraftItem(itemId: string): DraftItem | null {
 	if (typeof window === 'undefined') return null;
@@ -54,7 +53,6 @@ export function setDraftItem<T>(itemId: string, value: T, customTTL?: number) {
 					console.error('Local storage quota exceeded');
 				}
 			}
-
 		}
 	}
 }

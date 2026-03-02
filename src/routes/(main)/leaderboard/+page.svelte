@@ -76,6 +76,10 @@
 		</div>
 
 		<!-- Leaderboard Component -->
-		<GlobalLeaderboard entries={data.entries} currentUserId={data.currentUserId} loading={isLoading} />
+		<GlobalLeaderboard
+			entries={data.entries}
+			currentUserId={data.currentUserId}
+			loading={isLoading}
+		/>
 	</div>
 </div>

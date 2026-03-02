@@ -103,10 +103,10 @@
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
 	<div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col items-center justify-center">
-		<div class="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
+		<a href="/" class="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white">
 			<img class="me-2 h-8 w-8" src="/logo.svg" alt="logo" />
 			{i18n.t('site.logo')}
-		</div>
+		</a>
 
 		{#if status === 'success'}
 			<div

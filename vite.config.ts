@@ -6,7 +6,7 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss(), enhancedImages()],
 	server: {
-		allowedHosts: ['dev.arabkood.com', 'host.docker.internal', 'dev.akood.com', 'akood.com'],
+		allowedHosts: ['akood.local', 'host.docker.internal', 'dev.akood.com', 'akood.com'],
 		watch: {
 			usePolling: true
 		}

@@ -279,7 +279,6 @@
 	margin-bottom: 0;
 }
 
-
 /* Markdown Alert */
 
 .markdown-alert {
@@ -323,7 +322,7 @@
 		background-color: rgba(120, 53, 15, 0.3);
 		border-left-color: #f59e0b;
 	}
-	
+
 	.markdown-alert-tip .markdown-alert-title {
 		color: #fbbf24;
 	}
@@ -332,7 +331,7 @@
 		background-color: rgba(7, 89, 133, 0.3);
 		border-left-color: #0ea5e9;
 	}
-	
+
 	.markdown-alert-next .markdown-alert-title {
 		color: #38bdf8;
 	}

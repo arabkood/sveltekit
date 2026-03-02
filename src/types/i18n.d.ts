@@ -38,11 +38,10 @@ export type PathValue<T, P extends string> = P extends keyof T
 			: never
 		: never;
 
-export interface I18nStore
-	extends Readable<{
-		currentLocale: Language;
-		dictionary: Dictionary;
-	}> {
+export interface I18nStore extends Readable<{
+	currentLocale: Language;
+	dictionary: Dictionary;
+}> {
 	t: (key: TranslationKey, params?: Record<string, string>) => string;
 	setLocale: (locale: Language) => void;
 	error: (key: ErrorKey | string) => string;

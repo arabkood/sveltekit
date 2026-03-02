@@ -6,6 +6,9 @@
 
 @import './markdown.css';
 @import './codeblock.css';
+@import './corners.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
 	font-family: 'NotoKufiArabic';
@@ -21,7 +24,6 @@
 	font-weight: 100 1000;
 	font-stretch: 25% 151%;
 }
-
 
 @theme {
 	--color-primary-50: #f1fbf5;

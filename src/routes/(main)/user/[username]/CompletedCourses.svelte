@@ -20,10 +20,12 @@
 <div class="space-y-6">
 	<!-- Section Header -->
 	<div class="flex items-center justify-between">
-		<h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 sm:text-2xl">
+		<h2 class="text-xl font-bold text-gray-900 sm:text-2xl dark:text-gray-100">
 			{i18n.t('dashboard.completed_tracks')}
 		</h2>
-		<span class="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+		<span
+			class="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+		>
 			{tracks.length}
 		</span>
 	</div>

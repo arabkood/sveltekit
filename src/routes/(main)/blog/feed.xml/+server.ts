@@ -1,5 +1,5 @@
-import { SITE } from "$config";
-import { listBlogPosts } from "$lib/server/s3";
+import { SITE } from '$config';
+import { listBlogPosts } from '$lib/server/s3';
 
 export async function GET() {
 	const posts = await listBlogPosts();

@@ -154,7 +154,6 @@ export async function getS3ObjectStream(
 	}
 }
 
-
 // ----------- BLOG
 
 // Helper functions using the topics bucket
@@ -164,8 +163,6 @@ export const getS3TopicObjectAsString = (key: string) =>
 	getS3ObjectAsString(s3.PvBucketName, path.normalize(path.join('topics', key)));
 export const getS3TopicObjectAsBuffer = (key: string) =>
 	getS3ObjectAsBuffer(s3.PvBucketName, path.normalize(path.join('topics', key)));
-
-
 
 // Helper functions using the blog bucket
 export const getS3PostObjectAsString = (key: string) =>

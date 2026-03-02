@@ -5,24 +5,29 @@
 	import Icon from '$ui/common/Icon.svelte';
 	import Logo from '$ui/common/Logo.svelte';
 	import NavbarUserMenu from './NavbarUserMenu.svelte';
-	import { slide, scale } from 'svelte/transition';
-	import { quintOut, backOut } from 'svelte/easing';
+	import { slide } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
 	import NavbarLevel from './NavbarLevel.svelte';
 	import type { UserPrivate, UserStats } from '$lib/server/db/repos/user';
 
 	let {
 		user,
 		userStats,
-		transition = true
-	}: { user?: UserPrivate; userStats?: UserStats; transition?: boolean } = $props();
+		transition = true,
+		logoVariant = 'withTextMobile' as 'withText' | 'iconOnly' | 'withTextMobile'
+	}: {
+		user?: UserPrivate;
+		userStats?: UserStats;
+		transition?: boolean;
+		logoVariant?: 'withText' | 'iconOnly' | 'withTextMobile';
+	} = $props();
 
 	let isOpen = $state(false);
 	let isScrolled = $state(false);
+	let navbarVisible = $state(true);
+	let lastScrollY = 0;
 
 	// Handle navbar scroll behavior
-	let lastScrollY = 0;
-	let navbarVisible = $state(true);
-
 	const handleScroll = () => {
 		const currentScrollY = window.scrollY;
 		isScrolled = currentScrollY > 20;
@@ -44,6 +49,7 @@
 		}
 		return l;
 	});
+
 	const activePath = $derived(page.url.pathname);
 
 	const handleOutsideClick = (event: Event) => {
@@ -63,50 +69,40 @@
 <svelte:window onclick={handleOutsideClick} onkeydown={handleKeyDown} onscroll={handleScroll} />
 
 <nav
-	class="fixed top-0 right-0 left-0 z-50 border-b border-gray-200/50 bg-white/90 shadow-xs backdrop-blur-xl transition-all duration-300 dark:border-gray-800/50 dark:bg-gray-900/90 {isScrolled
-		? 'bg-white/95 shadow-xl dark:bg-gray-900/95'
-		: ''} {navbarVisible ? 'translate-y-0' : '-translate-y-full'}"
-	transition:slide={{ duration: transition ? 500 : 0 }}
+	class="fixed inset-x-0 top-0 z-50 border-b border-black/10 transition-all duration-500 dark:border-white/10 {isScrolled
+		? 'bg-white/80 shadow-sm backdrop-blur-xl dark:bg-zinc-950/80'
+		: 'bg-white dark:bg-zinc-950'} {navbarVisible ? 'translate-y-0' : '-translate-y-full'}"
 	aria-label="Main navigation"
 >
-	<div class="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4 sm:px-6 lg:px-8">
+	<div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
 		<!-- Left section: Logo and Navigation -->
-		<div class="flex items-center gap-6">
+		<div class="flex items-center gap-8">
 			<!-- Mobile menu button -->
 			<button
-				class="group relative rounded-lg p-2 text-gray-600 transition-all duration-200 hover:bg-gray-100 sm:hidden dark:text-gray-300 dark:hover:bg-gray-800"
+				class="p-2 text-zinc-500 transition-colors hover:text-zinc-900 sm:hidden dark:text-zinc-400 dark:hover:text-zinc-50"
 				onclick={() => (isOpen = !isOpen)}
 				aria-label={isOpen ? 'Close menu' : 'Open menu'}
 				aria-expanded={isOpen}
 				aria-controls="mobile-menu"
 			>
-				<div class="relative">
-					<Icon
-						name={isOpen ? 'x' : 'menu'}
-						size={24}
-						class="transition-transform duration-200 {isOpen ? 'rotate-90' : ''}"
-					/>
-					<div
-						class="absolute inset-0 rounded-lg bg-current opacity-0 transition-opacity group-hover:opacity-10"
-					></div>
-				</div>
+				<Icon
+					name={isOpen ? 'x' : 'menu'}
+					size={24}
+					class="transition-transform duration-300 {isOpen ? 'scale-110 rotate-90' : ''}"
+				/>
 			</button>
 
 			<!-- Logo -->
 			<a
 				href="/"
 				aria-label="Go to homepage"
-				class="group flex-shrink-0 rounded-lg p-1 transition-transform duration-200"
+				class="flex-shrink-0 transition-opacity duration-300 hover:opacity-70"
 			>
-				<Logo
-					variant="withTextMobile"
-					size="md"
-					class="transition-opacity group-hover:opacity-80"
-				/>
+				<Logo variant={logoVariant} size="md" />
 			</a>
 
 			<!-- Desktop navigation -->
-			<div class="ml-2 hidden items-center gap-3 sm:flex">
+			<div class="hidden items-center gap-2 sm:flex">
 				{#each links as link}
 					{@const isActive = activePath === link.href}
 					<Button
@@ -115,26 +111,18 @@
 						variant={isActive ? 'link-pill-active' : 'link-pill'}
 						size="sm"
 						rounded
-						class="relative"
 						startIcon={link.icon as any}
 					>
 						{link.name}
-						{#if isActive}
-							<div
-								class="absolute bottom-0 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-current"
-								transition:scale={{ duration: 300, easing: backOut }}
-							></div>
-						{/if}
 					</Button>
 				{/each}
 			</div>
 		</div>
 
 		<!-- Right section: User info or Auth buttons -->
-		<div class="hidden items-center gap-2 sm:flex">
+		<div class="hidden items-center gap-4 sm:flex">
 			{#if user && userStats}
 				<NavbarLevel {userStats} />
-
 				<NavbarUserMenu {user} />
 			{:else}
 				<!-- Auth Buttons -->
@@ -148,51 +136,49 @@
 		</div>
 	</div>
 
-	<!-- Mobile menu -->
+	<!-- Mobile menu (Glassmorphism overlay) -->
 	{#if isOpen}
 		<div
 			transition:slide={{ duration: 300, easing: quintOut }}
-			class="border-t border-gray-200 bg-white/95 backdrop-blur-sm sm:hidden dark:border-gray-800 dark:bg-gray-900/95"
+			class="absolute inset-x-0 top-full bg-white/95 px-6 pt-2 pb-6 shadow-lg backdrop-blur-2xl sm:hidden dark:bg-zinc-950/95"
 			id="mobile-menu"
 		>
-			<div class="px-4 py-4">
-				<nav class="space-y-2" aria-label="Mobile navigation">
-					{#each links as link}
-						{@const isActive = activePath === link.href}
-						<Button
-							href={link.href}
-							aria-current={isActive ? 'page' : undefined}
-							variant={isActive ? 'link-pill-active' : 'link-pill'}
-							size="sm"
-							class="w-full justify-start py-5"
-							onclick={() => (isOpen = false)}
-							startIcon={link.icon as any}
-						>
-							<span class="whitespace-nowrap">{link.name}</span>
-						</Button>
-					{/each}
-				</nav>
+			<nav class="flex flex-col gap-2" aria-label="Mobile navigation">
+				{#each links as link}
+					{@const isActive = activePath === link.href}
+					<Button
+						href={link.href}
+						aria-current={isActive ? 'page' : undefined}
+						variant={isActive ? 'link-pill-active' : 'link-pill'}
+						size="md"
+						class="w-full justify-start text-base"
+						onclick={() => (isOpen = false)}
+						startIcon={link.icon as any}
+					>
+						{link.name}
+					</Button>
+				{/each}
+			</nav>
 
+			<div class="mt-6">
 				{#if user && userStats}
-					<div class="mt-3 border-t border-gray-200 pt-3 dark:border-gray-700">
-						<NavbarUserMenu {user} variant="mobile" />
-					</div>
+					<NavbarUserMenu {user} variant="mobile" />
 				{:else}
-					<div class="mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-gray-700">
+					<div class="flex flex-col gap-3">
 						<Button
 							href="/signup"
-							variant="default"
-							size="sm"
-							class="flex w-full items-center justify-center"
+							variant="attention"
+							size="md"
+							class="w-full justify-center text-base"
 							onclick={() => (isOpen = false)}
 						>
 							{i18n.t('navigation.signup')}
 						</Button>
 						<Button
 							href="/signin"
-							variant="ghost"
-							size="sm"
-							class="flex w-full items-center justify-center"
+							variant="link-pill"
+							size="md"
+							class="w-full justify-center text-base"
 							onclick={() => (isOpen = false)}
 						>
 							{i18n.t('navigation.signin')}

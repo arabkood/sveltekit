@@ -1,0 +1,53 @@
+@utility corners-t {
+	&::before {
+		content: '';
+		position: absolute;
+		top: calc(var(--corner-offset, 0px) * -1);
+		left: calc(var(--corner-offset-y, 0px) * -1);
+		width: var(--corner-size, 16px);
+		height: var(--corner-size, 16px);
+		border-top: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		border-left: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		z-index: 1;
+		pointer-events: none;
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		top: calc(var(--corner-offset, 0px) * -1);
+		right: calc(var(--corner-offset-y, 0px) * -1);
+		width: var(--corner-size, 16px);
+		height: var(--corner-size, 16px);
+		border-top: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		border-right: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		z-index: 1;
+		pointer-events: none;
+	}
+}
+
+@utility corners-b {
+	&::before {
+		content: '';
+		position: absolute;
+		bottom: calc(var(--corner-offset, 0px) * -1);
+		left: calc(var(--corner-offset-y, 0px) * -1);
+		width: var(--corner-size, 16px);
+		height: var(--corner-size, 16px);
+		border-bottom: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		border-left: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		z-index: 1;
+		pointer-events: none;
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: calc(var(--corner-offset, 0px) * -1);
+		right: calc(var(--corner-offset-y, 0px) * -1);
+		width: var(--corner-size, 16px);
+		height: var(--corner-size, 16px);
+		border-bottom: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		border-right: var(--corner-weight, 2px) solid var(--corner-color, currentColor);
+		z-index: 1;
+		pointer-events: none;
+	}
+}
