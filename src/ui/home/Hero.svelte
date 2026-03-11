@@ -37,7 +37,7 @@ print(greeting)`,
 	};
 </script>
 
-<section class="relative bg-white text-zinc-950 dark:bg-zinc-950 dark:text-white">
+<section class="relative bg-white text-gray-950 dark:bg-gray-950 dark:text-white">
 	<div
 		class="relative mx-auto flex max-w-7xl flex-col border-x border-b border-black/10 lg:min-h-240 lg:flex-row dark:border-white/10"
 	>
@@ -47,7 +47,7 @@ print(greeting)`,
 		></div>
 
 		<div
-			class="flex w-full flex-col justify-center border-b border-black/10 bg-amber-50 p-6 text-center backdrop-blur-sm sm:p-20 lg:w-1/2 lg:border-b-0 lg:p-16 lg:text-start dark:border-white/10 dark:bg-amber-950/20"
+			class="flex w-full flex-col justify-center border-b border-black/10 p-6 text-center backdrop-blur-sm sm:p-20 lg:w-1/2 lg:border-b-0 lg:p-16 lg:text-start dark:border-white/10"
 		>
 			<div
 				class="mx-auto my-auto flex max-w-lg flex-col items-center lg:mx-0 lg:max-w-none lg:items-start"
@@ -56,7 +56,7 @@ print(greeting)`,
 					تعلم البرمجة بالممارسة
 				</h1>
 				<p
-					class="mt-6 max-w-md text-base leading-relaxed text-zinc-600 sm:text-lg lg:mt-8 lg:text-xl dark:text-zinc-500"
+					class="mt-6 max-w-md text-base leading-relaxed text-gray-600 sm:text-lg lg:mt-8 lg:text-xl dark:text-gray-500"
 				>
 					الطريقة الأكثر متعة وسهولة لتعلم البرمجة وممارستها.
 				</p>
@@ -67,18 +67,22 @@ print(greeting)`,
 		</div>
 
 		<div
-			class="relative flex w-full flex-col items-center justify-center border-black/10 bg-linear-to-b from-amber-50 to-zinc-50/10 p-4 sm:p-6 lg:w-1/2 lg:border-r lg:p-12 dark:border-white/10 dark:from-amber-950/10 dark:to-zinc-950"
+			class="relative flex w-full flex-col items-center justify-center border-black/10 bg-gray-900 p-4 sm:p-6 lg:w-1/2 lg:border-r lg:p-12 dark:border-white/10"
 		>
-			<span class="corners-t text-zinc-400"></span>
-			<span class="corners-b z-10 text-zinc-400 [--corner-offset:1px]"></span>
+			<span class="corners-t text-gray-400"></span>
+			<span class="corners-b z-10 text-gray-400 [--corner-offset:1px]"></span>
 
 			<div
 				aria-hidden="true"
-				class="pointer-events-none absolute inset-0 right-0 left-0 z-0 bg-[linear-gradient(to_right,#0000000d_1px,transparent_1px),linear-gradient(to_bottom,#0000000d_1px,transparent_1px)] bg-size-[32px_32px] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)]"
+				class="pointer-events-none absolute inset-0 right-0 left-0 z-0
+  bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)]
+  bg-size-[32px_32px] opacity-40
+  [--grid-color:var(--color-gray-100)]
+  dark:[--grid-color:var(--color-gray-950)]"
 			></div>
 
 			<div
-				class="group relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-black/10 bg-zinc-50 shadow-2xl dark:border-white/10 dark:bg-zinc-950/40"
+				class="group relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-black/10 bg-gray-50 shadow-2xl dark:border-white/10 dark:bg-gray-950/40"
 			>
 				<div
 					class="flex flex-row-reverse items-center gap-3 border-b border-black/10 px-4 py-2 sm:gap-4 sm:px-8 sm:py-3 dark:border-white/10"

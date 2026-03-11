@@ -38,17 +38,18 @@
 	--color-primary-900: #183f1a;
 	--color-primary-950: #0d260f;
 
-	--color-gray-50: #f8fafc;
-	--color-gray-100: #f1f5f9;
-	--color-gray-200: #e2e8f0;
-	--color-gray-300: #cbd5e1;
-	--color-gray-400: #94a3b8;
-	--color-gray-500: #64748b;
-	--color-gray-600: #475569;
-	--color-gray-700: #334155;
-	--color-gray-800: #1e293b;
-	--color-gray-900: #0f172a;
-	--color-gray-950: #020617;
+--color-gray-50: #fafaf9;
+--color-gray-100: #f5f5f4;
+--color-gray-200: #e7e6e4;
+--color-gray-300: #d5d4d2;
+--color-gray-400: #a6a5a0;
+--color-gray-500: #73726b;
+--color-gray-600: #56564f;
+--color-gray-700: #43433d;
+--color-gray-800: #282625;
+--color-gray-900: #1b1a18;
+--color-gray-950: #0c0b09;
+
 
 	--font-family-arabic:
 		'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Sans Arabic', 'Segoe UI', Tahoma,

@@ -70,8 +70,8 @@
 
 <nav
 	class="fixed inset-x-0 top-0 z-50 border-b border-black/10 transition-all duration-500 dark:border-white/10 {isScrolled
-		? 'bg-white/80 shadow-sm backdrop-blur-xl dark:bg-zinc-950/80'
-		: 'bg-white dark:bg-zinc-950'} {navbarVisible ? 'translate-y-0' : '-translate-y-full'}"
+		? 'bg-white/80 shadow-sm backdrop-blur-xl dark:bg-gray-950/80'
+		: 'bg-white dark:bg-gray-950'} {navbarVisible ? 'translate-y-0' : '-translate-y-full'}"
 	aria-label="Main navigation"
 >
 	<div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
@@ -79,7 +79,7 @@
 		<div class="flex items-center gap-8">
 			<!-- Mobile menu button -->
 			<button
-				class="p-2 text-zinc-500 transition-colors hover:text-zinc-900 sm:hidden dark:text-zinc-400 dark:hover:text-zinc-50"
+				class="p-2 text-gray-500 transition-colors hover:text-gray-900 sm:hidden dark:text-gray-400 dark:hover:text-gray-50"
 				onclick={() => (isOpen = !isOpen)}
 				aria-label={isOpen ? 'Close menu' : 'Open menu'}
 				aria-expanded={isOpen}
@@ -140,7 +140,7 @@
 	{#if isOpen}
 		<div
 			transition:slide={{ duration: 300, easing: quintOut }}
-			class="absolute inset-x-0 top-full bg-white/95 px-6 pt-2 pb-6 shadow-lg backdrop-blur-2xl sm:hidden dark:bg-zinc-950/95"
+			class="absolute inset-x-0 top-full bg-white/95 px-6 pt-2 pb-6 shadow-lg backdrop-blur-2xl sm:hidden dark:bg-gray-950/95"
 			id="mobile-menu"
 		>
 			<nav class="flex flex-col gap-2" aria-label="Mobile navigation">
