@@ -5,7 +5,7 @@
 	import Button from '$ui/common/Button.svelte';
 	import IconPng from '$ui/common/IconPng.svelte';
 	import type { UserTrack } from '$lib/server/db/repos/class';
-	import { slide, fade } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
 	const {
 		userTracks,
@@ -39,7 +39,7 @@
 	};
 
 	let currentDate = $state(getCurrentDate());
-	let greeting = $state('');
+	let greeting = $state(i18n.t('dashboard.greeting.hi'));
 
 	onMount(() => {
 		currentDate = getCurrentDate();
@@ -52,12 +52,7 @@
 		<div class="space-y-3">
 			<p class="opacity-60">{currentDate}</p>
 			{#if greeting !== ''}
-				<div
-					class="flex items-center gap-3"
-					in:slide={{
-						axis: 'x'
-					}}
-				>
+				<div class="flex items-center gap-3">
 					{#if is_user_premium}
 						<IconPng name="premium" size={40} />
 					{/if}

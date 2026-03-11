@@ -47,12 +47,12 @@ print(greeting)`,
 		></div>
 
 		<div
-			class="flex w-full flex-col justify-center border-b border-black/10 p-6 text-center backdrop-blur-sm sm:p-20 lg:w-1/2 lg:border-b-0 lg:p-16 lg:text-start dark:border-white/10"
+			class="flex w-full flex-col justify-center border-b border-black/10 p-6 text-center backdrop-blur-sm sm:p-10 lg:w-1/2 lg:border-b-0 lg:p-10 lg:text-start dark:border-white/10"
 		>
 			<div
 				class="mx-auto my-auto flex max-w-lg flex-col items-center lg:mx-0 lg:max-w-none lg:items-start"
 			>
-				<h1 class="text-[clamp(2.5rem,8vw,6rem)] leading-tight font-bold">
+				<h1 class="text-[clamp(2.5rem,7vw,5.6rem)] leading-tight font-bold">
 					تعلم البرمجة بالممارسة
 				</h1>
 				<p
