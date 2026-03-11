@@ -86,14 +86,14 @@ export const RANKS: Rank[] = [
 		name: 'باحث', // The Researcher
 		icon: 'level_badges_5',
 		theme: {
-			bg: 'bg-gradient-to-br from-slate-50 to-red-50 dark:from-slate-900/20 dark:to-red-900/20',
-			border: 'border-slate-300/50 dark:border-red-700/50',
-			hoverBorder: 'hover:border-slate-400 dark:hover:border-red-500',
-			text: 'text-slate-800 dark:text-slate-300',
-			progress: 'bg-gradient-to-r from-slate-500 to-red-500',
-			glow: 'shadow-slate-300/60 dark:shadow-red-900/40',
-			hoverGlow: 'hover:shadow-slate-400/70 dark:hover:shadow-red-800/50',
-			accent: 'from-slate-600 to-red-500'
+			bg: 'bg-gradient-to-br from-gray-50 to-red-50 dark:from-gray-900/20 dark:to-red-900/20',
+			border: 'border-gray-300/50 dark:border-red-700/50',
+			hoverBorder: 'hover:border-gray-400 dark:hover:border-red-500',
+			text: 'text-gray-800 dark:text-gray-300',
+			progress: 'bg-gradient-to-r from-gray-500 to-red-500',
+			glow: 'shadow-gray-300/60 dark:shadow-red-900/40',
+			hoverGlow: 'hover:shadow-gray-400/70 dark:hover:shadow-red-800/50',
+			accent: 'from-gray-600 to-red-500'
 		}
 	},
 	// ... and so on for the rest of the ranks. I've completed them all for you below.
@@ -102,14 +102,14 @@ export const RANKS: Rank[] = [
 		name: 'مطور', // The Developer
 		icon: 'level_badges_4',
 		theme: {
-			bg: 'bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-900/20 dark:to-slate-900/20',
-			border: 'border-blue-300/50 dark:border-slate-700/50',
-			hoverBorder: 'hover:border-blue-400 dark:hover:border-slate-500',
+			bg: 'bg-gradient-to-br from-blue-50 to-gray-50 dark:from-blue-900/20 dark:to-gray-900/20',
+			border: 'border-blue-300/50 dark:border-gray-700/50',
+			hoverBorder: 'hover:border-blue-400 dark:hover:border-gray-500',
 			text: 'text-blue-800 dark:text-blue-300',
-			progress: 'bg-gradient-to-r from-blue-500 to-slate-500',
-			glow: 'shadow-blue-300/60 dark:shadow-slate-900/40',
-			hoverGlow: 'hover:shadow-blue-400/70 dark:hover:shadow-slate-800/50',
-			accent: 'from-blue-600 to-slate-500'
+			progress: 'bg-gradient-to-r from-blue-500 to-gray-500',
+			glow: 'shadow-blue-300/60 dark:shadow-gray-900/40',
+			hoverGlow: 'hover:shadow-blue-400/70 dark:hover:shadow-gray-800/50',
+			accent: 'from-blue-600 to-gray-500'
 		}
 	},
 	{
@@ -117,14 +117,14 @@ export const RANKS: Rank[] = [
 		name: 'مبرمج', // The Programmer
 		icon: 'level_badges_3',
 		theme: {
-			bg: 'bg-gradient-to-br from-slate-50 to-teal-50 dark:from-slate-900/20 dark:to-teal-900/20',
-			border: 'border-slate-300/50 dark:border-teal-700/50',
-			hoverBorder: 'hover:border-slate-400 dark:hover:border-teal-500',
-			text: 'text-slate-800 dark:text-slate-300',
-			progress: 'bg-gradient-to-r from-slate-500 to-teal-500',
-			glow: 'shadow-slate-300/60 dark:shadow-teal-900/40',
-			hoverGlow: 'hover:shadow-slate-400/70 dark:hover:shadow-teal-800/50',
-			accent: 'from-slate-600 to-teal-500'
+			bg: 'bg-gradient-to-br from-gray-50 to-teal-50 dark:from-gray-900/20 dark:to-teal-900/20',
+			border: 'border-gray-300/50 dark:border-teal-700/50',
+			hoverBorder: 'hover:border-gray-400 dark:hover:border-teal-500',
+			text: 'text-gray-800 dark:text-gray-300',
+			progress: 'bg-gradient-to-r from-gray-500 to-teal-500',
+			glow: 'shadow-gray-300/60 dark:shadow-teal-900/40',
+			hoverGlow: 'hover:shadow-gray-400/70 dark:hover:shadow-teal-800/50',
+			accent: 'from-gray-600 to-teal-500'
 		}
 	},
 	{

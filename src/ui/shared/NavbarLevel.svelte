@@ -24,8 +24,8 @@
 <div
 	class={cn(
 		'relative flex h-10 min-w-48 items-center gap-1 rounded-xl px-2 ring-1 backdrop-blur-sm transition-all duration-300',
-		'bg-slate-200/50 dark:bg-slate-800/50',
-		'ring-slate-300/80 dark:ring-slate-700/60',
+		'bg-gray-200/50 dark:bg-gray-800/50',
+		'ring-gray-300/80 dark:ring-gray-700/60',
 		currentRank.theme.glow
 	)}
 >
@@ -40,7 +40,7 @@
 		<div class={cn('font-hacker text-sm leading-none font-bold', currentRank.theme.text)}>
 			{userStats.totalXp.toLocaleString()}
 		</div>
-		<div class="font-hacker text-xs leading-none text-slate-500 dark:text-slate-400">XP</div>
+		<div class="font-hacker text-xs leading-none text-gray-500 dark:text-gray-400">XP</div>
 	</div>
 
 	<div class="relative h-8 w-2 overflow-hidden rounded-full bg-black/10 dark:bg-white/30">

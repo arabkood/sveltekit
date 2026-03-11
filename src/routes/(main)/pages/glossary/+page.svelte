@@ -139,21 +139,21 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<div class="min-h-screen bg-slate-50 font-sans text-slate-800 dark:bg-gray-900 dark:text-slate-200">
+<div class="min-h-screen bg-gray-50 font-sans text-gray-800 dark:bg-gray-900 dark:text-gray-200">
 	<div class="container mx-auto max-w-5xl px-4 py-16 sm:py-24">
 		<header class="mb-12 text-center">
 			<h1
-				class="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl dark:text-slate-100"
+				class="text-5xl font-extrabold tracking-tight text-gray-900 sm:text-6xl dark:text-gray-100"
 			>
 				مصطلحات برمجية أساسية مترجمة
 			</h1>
-			<p class="mt-4 font-serif text-2xl text-slate-600 dark:text-slate-400">
+			<p class="mt-4 font-serif text-2xl text-gray-600 dark:text-gray-400">
 				مرجع شامل للمطورين باللغة العربية
 			</p>
-			<p class="mt-4 text-sm text-slate-500 dark:text-slate-400">
+			<p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
 				يحتوي على {data.totalTerms} مصطلح • اضغط
 				<kbd
-					class="rounded border border-slate-300 bg-slate-200 px-1.5 py-0.5 text-xs font-medium text-slate-600 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300"
+					class="rounded border border-gray-300 bg-gray-200 px-1.5 py-0.5 text-xs font-medium text-gray-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
 				>
 					Ctrl+K
 				</kbd>
@@ -163,19 +163,19 @@
 			<div class="mx-auto mt-8 max-w-lg">
 				<div class="relative w-full">
 					<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-						<Icon name="search" class="h-5 w-5 text-slate-400 dark:text-slate-500" />
+						<Icon name="search" class="h-5 w-5 text-gray-400 dark:text-gray-500" />
 					</div>
 					<input
 						bind:this={searchInput}
 						type="search"
 						bind:value={searchTerm}
 						placeholder="ابحث عن مصطلح..."
-						class="focus:border-primary-500 focus:ring-primary-500/50 w-full rounded-full border border-slate-300 bg-white py-3 pr-11 pl-10 text-lg text-slate-800 placeholder-slate-400 shadow-sm transition-colors focus:ring-2 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500"
+						class="focus:border-primary-500 focus:ring-primary-500/50 w-full rounded-full border border-gray-300 bg-white py-3 pr-11 pl-10 text-lg text-gray-800 placeholder-gray-400 shadow-sm transition-colors focus:ring-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500"
 					/>
 					{#if searchTerm}
 						<button
 							onclick={clearSearch}
-							class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 transition-colors hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-400"
+							class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400"
 							aria-label="مسح البحث"
 						>
 							<Icon name="x" class="h-5 w-5" />
@@ -185,7 +185,7 @@
 				{#if searchTerm}
 					<div class="mt-3" transition:fade={{ duration: 200 }}>
 						<span
-							class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300"
+							class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
 						>
 							{getResultsText}
 						</span>
@@ -196,12 +196,12 @@
 
 		<div class="sticky top-0 z-20 mb-10 bg-transparent py-3">
 			<div
-				class="flex flex-wrap justify-center gap-1.5 rounded-full border border-slate-200/75 bg-white/70 p-2 shadow-md backdrop-blur-md dark:border-slate-700/75 dark:bg-slate-800/70"
+				class="flex flex-wrap justify-center gap-1.5 rounded-full border border-gray-200/75 bg-white/70 p-2 shadow-md backdrop-blur-md dark:border-gray-700/75 dark:bg-gray-800/70"
 			>
 				{#each alphabet as letter}
 					<button
 						onclick={() => scrollToSection(letter)}
-						class="focus:ring-primary-500 grid h-9 w-9 place-items-center rounded-full font-bold text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:ring-2 focus:ring-offset-2 focus:outline-none dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+						class="focus:ring-primary-500 grid h-9 w-9 place-items-center rounded-full font-bold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-offset-2 focus:outline-none dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
 						class:!bg-primary-600={activeSection === letter}
 						class:!text-white={activeSection === letter}
 						aria-label="اذهب إلى قسم {letter}"
@@ -217,21 +217,21 @@
 			{#if Object.keys(filteredGlossary).length === 0}
 				<div class="py-16 text-center" transition:fade={{ duration: 300 }}>
 					<div
-						class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700"
+						class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700"
 					>
-						<Icon name="search-x" class="h-8 w-8 text-slate-500 dark:text-slate-400" />
+						<Icon name="search-x" class="h-8 w-8 text-gray-500 dark:text-gray-400" />
 					</div>
-					<p class="mt-4 text-xl font-semibold text-slate-700 dark:text-slate-300">
+					<p class="mt-4 text-xl font-semibold text-gray-700 dark:text-gray-300">
 						لم يتم العثور على مصطلحات مطابقة
 					</p>
-					<p class="mt-1 text-slate-500 dark:text-slate-400">جرّب البحث بكلمات أخرى.</p>
+					<p class="mt-1 text-gray-500 dark:text-gray-400">جرّب البحث بكلمات أخرى.</p>
 				</div>
 			{:else}
 				{#each Object.entries(filteredGlossary) as [letter, items] (letter)}
 					<section>
 						<h2
 							id={'letter-' + letter}
-							class="text-primary-700 dark:text-primary-400 mb-6 scroll-mt-24 border-b border-slate-200 pb-2 text-2xl font-bold dark:border-slate-700"
+							class="text-primary-700 dark:text-primary-400 mb-6 scroll-mt-24 border-b border-gray-200 pb-2 text-2xl font-bold dark:border-gray-700"
 						>
 							{letter}
 						</h2>

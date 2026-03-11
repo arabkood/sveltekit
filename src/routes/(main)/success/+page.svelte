@@ -34,18 +34,16 @@
 			</div>
 
 			<!-- Main Heading -->
-			<h1
-				class="mb-4 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl dark:text-white"
-			>
+			<h1 class="mb-4 text-4xl font-black tracking-tight text-gray-900 sm:text-5xl dark:text-white">
 				تهانينا! أصبحت من أعضاء برو
 			</h1>
 
 			<!-- Sub-heading -->
-			<p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-200">
+			<p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-200">
 				تم تفعيل اشتراكك في أكوود برو بنجاح. أنت الآن تملك وصولاً كاملاً لكل الأدوات والميزات التي
 				تحتاجها لتصبح محترفاً.
 			</p>
-			<p class="mx-auto mt-5 text-sm text-slate-500 dark:text-slate-500">
+			<p class="mx-auto mt-5 text-sm text-gray-500 dark:text-gray-500">
 				يمكنك وقف الاشتراك في صفحة الاعدادات
 			</p>
 

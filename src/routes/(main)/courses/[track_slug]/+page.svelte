@@ -100,7 +100,7 @@
 <!-- Desktop -->
 <div class="mx-auto hidden min-h-screen max-w-7xl grid-cols-[1fr_380px] lg:grid">
 	<main class="mt-4 p-4">
-		<h2 class="mb-6 text-xl font-bold text-slate-800 dark:text-white">
+		<h2 class="mb-6 text-xl font-bold text-gray-800 dark:text-white">
 			{i18n.t('common.track_content')}
 		</h2>
 		<Track
@@ -111,7 +111,7 @@
 		/>
 	</main>
 	<aside class="mt-4 p-4">
-		<h2 class="mb-6 text-xl font-bold text-slate-800 dark:text-white">
+		<h2 class="mb-6 text-xl font-bold text-gray-800 dark:text-white">
 			{i18n.t('common.your_progress')}
 		</h2>
 		<TrackProgress modules={data.modules} />

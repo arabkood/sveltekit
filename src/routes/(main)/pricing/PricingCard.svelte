@@ -33,8 +33,8 @@
 <div
 	class={'group relative flex flex-col overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02] ' +
 		(plan.isPopular
-			? 'bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 text-white shadow-2xl hover:shadow-emerald-500/20 dark:from-emerald-900 dark:via-emerald-800 dark:to-emerald-900'
-			: 'border border-slate-200/60 bg-white/80 shadow-lg backdrop-blur-sm hover:shadow-slate-500/10 dark:border-slate-700/60 dark:bg-gray-900/80')}
+			? 'bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white shadow-2xl hover:shadow-emerald-500/20 dark:from-emerald-900 dark:via-emerald-800 dark:to-emerald-900'
+			: 'border border-gray-200/60 bg-white/80 shadow-lg backdrop-blur-sm hover:shadow-gray-500/10 dark:border-gray-700/60 dark:bg-gray-900/80')}
 >
 	<!-- Decorative Overlays -->
 	{#if plan.isPopular}
@@ -43,7 +43,7 @@
 		></div>
 	{:else}
 		<div
-			class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-slate-50/50 dark:to-slate-800/50"
+			class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-gray-50/50 dark:to-gray-800/50"
 		></div>
 	{/if}
 
@@ -57,12 +57,10 @@
 					class={'rounded-lg p-2 ' +
 						(plan.isPopular ? 'bg-emerald-500/20' : 'bg-gray-100 dark:bg-gray-800')}
 				>
-					<Icon name={plan.iconName} size={24} class="text-slate-600 dark:text-slate-400" />
+					<Icon name={plan.iconName} size={24} class="text-gray-600 dark:text-gray-400" />
 				</div>
 			</div>
-			<p
-				class={'mb-8 ' + (plan.isPopular ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400')}
-			>
+			<p class={'mb-8 ' + (plan.isPopular ? 'text-gray-300' : 'text-gray-600 dark:text-gray-400')}>
 				{plan.description}
 			</p>
 		</header>
@@ -72,14 +70,14 @@
 			{#key displayedPrice}
 				<div in:slide={{ duration: 300, axis: 'y' }}>
 					{#if isFreePlan}
-						<span class="text-5xl font-black text-slate-900 dark:text-white">مجاناً</span>
-						<span class="text-lg font-medium text-slate-500 dark:text-slate-400"
+						<span class="text-5xl font-black text-gray-900 dark:text-white">مجاناً</span>
+						<span class="text-lg font-medium text-gray-500 dark:text-gray-400"
 							>{plan.priceSuffix}</span
 						>
 					{:else}
 						<div class="flex items-baseline gap-2">
 							<span class="text-5xl font-black">${displayedPrice}</span>
-							<span class="text-lg font-medium text-slate-400">{plan.priceSuffix}</span>
+							<span class="text-lg font-medium text-gray-400">{plan.priceSuffix}</span>
 						</div>
 						{#if billingCycleYearly}
 							<div class="mt-2 flex items-center gap-2">
@@ -116,8 +114,7 @@
 						>
 					</div>
 					<span
-						class={'leading-relaxed ' +
-							(plan.isPopular ? '' : 'text-slate-700 dark:text-slate-300')}
+						class={'leading-relaxed ' + (plan.isPopular ? '' : 'text-gray-700 dark:text-gray-300')}
 					>
 						{@html feature}
 					</span>
@@ -133,8 +130,8 @@
 						(isFreePlan ? '' : 'bg-emerald-600/20')}
 					class:bg-gray-100={isFreePlan}
 					class:dark:bg-gray-800={isFreePlan}
-					class:text-slate-700={isFreePlan}
-					class:dark:text-slate-300={isFreePlan}
+					class:text-gray-700={isFreePlan}
+					class:dark:text-gray-300={isFreePlan}
 					class:text-white={!isFreePlan}
 				>
 					{isFreePlan ? 'خطتك الحالية' : 'إدارة الاشتراك'}
@@ -148,7 +145,7 @@
 						: '/signup'}
 					class={'group/btn block w-full rounded-xl py-4 text-center font-bold transition-all duration-300 ' +
 						(isFreePlan
-							? 'border-2 border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-gray-50 dark:border-slate-700 dark:bg-gray-800 dark:text-white dark:hover:border-slate-600 dark:hover:bg-gray-700'
+							? 'border-2 border-gray-200 bg-white text-gray-800 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700'
 							: 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg hover:from-emerald-400 hover:to-emerald-500 hover:shadow-xl')}
 				>
 					{#if isFreePlan}

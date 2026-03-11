@@ -293,7 +293,7 @@
 
 					<div class="rounded-xl bg-gray-100/70 p-3 sm:p-4 dark:bg-gray-800/70">
 						<div
-							class="scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-400 dark:hover:scrollbar-thumb-slate-500 scrollbar-track-transparent scrollbar-thumb-rounded-full flex space-x-3 space-x-reverse overflow-x-auto px-4 py-6 sm:space-x-4"
+							class="scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500 scrollbar-track-transparent scrollbar-thumb-rounded-full flex space-x-3 space-x-reverse overflow-x-auto px-4 py-6 sm:space-x-4"
 						>
 							{#each course.tracks as track}
 								<svelte:element

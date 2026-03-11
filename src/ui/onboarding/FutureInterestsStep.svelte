@@ -37,12 +37,8 @@
 </script>
 
 <div class="space-y-8">
-	<h2 class="mb-3 text-2xl font-bold text-slate-900 dark:text-white">
-		ما الذي تريد رؤيته بعد ذلك؟
-	</h2>
-	<p class="text-base text-slate-600 dark:text-slate-400">
-		ساعدنا في تحديد أولويات الدورات القادمة
-	</p>
+	<h2 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">ما الذي تريد رؤيته بعد ذلك؟</h2>
+	<p class="text-base text-gray-600 dark:text-gray-400">ساعدنا في تحديد أولويات الدورات القادمة</p>
 
 	<!-- Future Interests Grid -->
 	<div class="mt-8 grid gap-3 sm:grid-cols-2">
@@ -53,7 +49,7 @@
 					option.id
 				)
 					? 'border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-950/30'
-					: 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:hover:border-slate-500'}"
+					: 'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:hover:border-gray-500'}"
 			>
 				<div class="flex items-center justify-start gap-2.5">
 					<div
@@ -61,11 +57,11 @@
 							option.id
 						)
 							? 'bg-emerald-100 dark:bg-emerald-900/50'
-							: 'bg-slate-100 dark:bg-slate-700'}"
+							: 'bg-gray-100 dark:bg-gray-700'}"
 					>
 						{option.emoji}
 					</div>
-					<h4 class="text-sm font-semibold text-slate-900 dark:text-white">
+					<h4 class="text-sm font-semibold text-gray-900 dark:text-white">
 						{option.label}
 					</h4>
 				</div>
@@ -73,11 +69,11 @@
 		{/each}
 	</div>
 
-	<label class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+	<label class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
 		<input
 			type="checkbox"
 			bind:checked={marketingConsent}
-			class="h-4 w-4 cursor-pointer rounded border-slate-300 text-emerald-600 transition-colors focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600"
+			class="h-4 w-4 cursor-pointer rounded border-gray-300 text-emerald-600 transition-colors focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600"
 		/>
 		<span>أرغب في تلقي تحديثات عن الدورات الجديدة</span>
 	</label>
@@ -87,7 +83,7 @@
 	</Button>
 	<button
 		onclick={onComplete}
-		class="w-full cursor-pointer text-center text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+		class="w-full cursor-pointer text-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
 	>
 		تخطي
 	</button>

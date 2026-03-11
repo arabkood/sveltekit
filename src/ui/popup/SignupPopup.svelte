@@ -34,7 +34,7 @@
 
 	<!-- The popup card -->
 	<div
-		class="relative z-10 w-full max-w-md rounded-3xl border border-slate-200/50 bg-white/80 p-8 shadow-2xl shadow-green-500/10 backdrop-blur-2xl dark:border-white/10 dark:bg-gray-800/80 dark:shadow-black/50"
+		class="relative z-10 w-full max-w-md rounded-3xl border border-gray-200/50 bg-white/80 p-8 shadow-2xl shadow-green-500/10 backdrop-blur-2xl dark:border-white/10 dark:bg-gray-800/80 dark:shadow-black/50"
 	>
 		<!-- Close Button -->
 		<button

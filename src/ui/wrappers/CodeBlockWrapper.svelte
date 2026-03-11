@@ -24,7 +24,7 @@
 		button.innerHTML = copyIconSVG;
 		button.setAttribute('aria-label', 'Copy code');
 		button.className =
-			'cursor-copy p-1.5 rounded-md bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50';
+			'cursor-copy p-1.5 rounded-md bg-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50';
 
 		button.addEventListener('click', async () => {
 			const existingTimeout = activeCopyTimeouts.get(button);

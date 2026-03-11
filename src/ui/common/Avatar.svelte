@@ -52,7 +52,7 @@
 		cn(
 			'flex h-full w-full items-center justify-center rounded-full overflow-hidden',
 			'bg-gradient-to-br from-primary to-primary-600 text-primary-foreground',
-			'dark:from-slate-700 dark:to-slate-800 dark:text-slate-100',
+			'dark:from-gray-700 dark:to-gray-800 dark:text-gray-100',
 			'transition-all duration-200 ease-in-out'
 		)
 	);
@@ -95,7 +95,7 @@
 <div class={outerClasses}>
 	<div class={innerClasses}>
 		{#if loading}
-			<div class="bg-primary-300 h-full w-full animate-pulse rounded-full dark:bg-slate-700"></div>
+			<div class="bg-primary-300 h-full w-full animate-pulse rounded-full dark:bg-gray-700"></div>
 		{:else if src && !imageError}
 			<img
 				{src}
@@ -108,7 +108,7 @@
 			/>
 			{#if !imageLoaded}
 				<div
-					class="bg-primary-300 absolute inset-0 animate-pulse rounded-full dark:bg-slate-700"
+					class="bg-primary-300 absolute inset-0 animate-pulse rounded-full dark:bg-gray-700"
 				></div>
 			{/if}
 		{:else if fallback && !showFallbackIcon}

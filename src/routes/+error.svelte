@@ -26,7 +26,7 @@
 <!-- The dir="rtl" attribute is crucial for correct Arabic layout -->
 <div
 	dir="rtl"
-	class="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-slate-50 p-4 sm:p-6 lg:p-8 dark:bg-gray-950"
+	class="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gray-50 p-4 sm:p-6 lg:p-8 dark:bg-gray-950"
 >
 	<!-- Subtle background gradient with a touch of green -->
 	<div
@@ -46,7 +46,7 @@
 	<main class="relative z-10 w-full max-w-2xl text-center" role="alert" aria-live="assertive">
 		<!-- The main card with glassmorphism effect and green accents -->
 		<div
-			class="relative overflow-hidden rounded-3xl border border-slate-200/50 bg-white/70 p-8 pt-0 shadow-2xl shadow-green-200/30 backdrop-blur-xl transition-all duration-300 dark:border-white/10 dark:bg-gray-800/70 dark:shadow-black/50"
+			class="relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/70 p-8 pt-0 shadow-2xl shadow-green-200/30 backdrop-blur-xl transition-all duration-300 dark:border-white/10 dark:bg-gray-800/70 dark:shadow-black/50"
 		>
 			<!-- The massive, stylized error code with a green gradient -->
 			<h1
@@ -58,13 +58,13 @@
 
 			<!-- Human-readable Arabic title -->
 			<h2
-				class="-mt-4 text-2xl font-bold tracking-tight text-slate-800 sm:-mt-8 sm:text-3xl dark:text-slate-100"
+				class="-mt-4 text-2xl font-bold tracking-tight text-gray-800 sm:-mt-8 sm:text-3xl dark:text-gray-100"
 			>
 				{title}
 			</h2>
 
 			<!-- Helpful Arabic message -->
-			<p class="mx-auto mt-4 max-w-md text-slate-600 dark:text-slate-400">
+			<p class="mx-auto mt-4 max-w-md text-gray-600 dark:text-gray-400">
 				{message}
 			</p>
 

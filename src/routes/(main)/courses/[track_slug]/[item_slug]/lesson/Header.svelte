@@ -101,7 +101,7 @@
 </script>
 
 <header
-	class="flex items-center gap-4 border-b border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
+	class="flex items-center gap-4 border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
 >
 	<nav class="me-auto hidden min-w-0 items-center gap-1 text-sm md:flex">
 		<a
@@ -123,15 +123,12 @@
 		<span
 			class={cn(
 				'me-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors',
-				'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600'
+				'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
 			)}
 		>
 			<Icon name="arrow-right" size={20} />
 		</span>
-		<span
-			class="truncate text-sm font-medium text-slate-800 dark:text-slate-100"
-			title={item.title}
-		>
+		<span class="truncate text-sm font-medium text-gray-800 dark:text-gray-100" title={item.title}>
 			العودة للمسار
 		</span>
 	</a>
@@ -166,7 +163,7 @@
 			disabled={currentStep === 0}
 			class={cn(
 				'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-40',
-				'bg-slate-100 text-slate-600 hover:scale-105 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600'
+				'bg-gray-100 text-gray-600 hover:scale-105 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
 			)}
 			aria-label="الخطوة السابقة"
 		>
@@ -183,7 +180,7 @@
 				})}
 			>
 				{#if stepsRemaining > 0}
-					<span class="text-sm font-bold text-slate-700 dark:text-slate-300">
+					<span class="text-sm font-bold text-gray-700 dark:text-gray-300">
 						متبقي {stepsRemaining}
 						{stepsRemaining === 1 ? 'خطوة' : stepsRemaining === 2 ? 'خطوتان' : 'خطوات'}
 					</span>
@@ -201,7 +198,7 @@
 			</div>
 
 			<!-- Progress Bar -->
-			<div class="relative h-2.5 rounded-full bg-slate-200 shadow-inner dark:bg-slate-700">
+			<div class="relative h-2.5 rounded-full bg-gray-200 shadow-inner dark:bg-gray-700">
 				<!-- Fill -->
 				<div
 					class={cn(
@@ -219,7 +216,7 @@
 				>
 					<div
 						class={cn(
-							'flex h-5 w-5 items-center justify-center rounded-full border-[3px] bg-white shadow-lg ring-2 ring-white transition-all dark:bg-slate-800 dark:ring-slate-800',
+							'flex h-5 w-5 items-center justify-center rounded-full border-[3px] bg-white shadow-lg ring-2 ring-white transition-all dark:bg-gray-800 dark:ring-gray-800',
 							!isNearCompletion && 'border-emerald-500',
 							isNearCompletion && 'scale-110 border-orange-500'
 						)}
@@ -242,8 +239,8 @@
 					'opacity-0': stepsRemaining > 0
 				})}
 			>
-				<span class="font-bold text-slate-500 dark:text-slate-400">{totalSteps}</span>
-				<span class="text-slate-400">/</span>
+				<span class="font-bold text-gray-500 dark:text-gray-400">{totalSteps}</span>
+				<span class="text-gray-400">/</span>
 				<span class="font-bold text-emerald-600 dark:text-emerald-400">{currentStep + 1}</span>
 			</div>
 		</div>
@@ -258,7 +255,7 @@
 				currentStep < maxStepIndex &&
 					'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 hover:scale-105 hover:bg-emerald-600',
 				currentStep >= maxStepIndex &&
-					'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
+					'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
 			)}
 			aria-label="الخطوة التالية"
 		>
@@ -274,7 +271,7 @@
 			disabled={currentStep === 0}
 			class={cn(
 				'flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-30',
-				'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400'
+				'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400'
 			)}
 			aria-label="الخطوة السابقة"
 		>
@@ -286,7 +283,7 @@
 				{currentStep + 1}/{totalSteps}
 			</span>
 			{#if stepsRemaining > 0}
-				<span class="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+				<span class="text-[10px] font-medium text-gray-500 dark:text-gray-400">
 					متبقي {stepsRemaining}
 				</span>
 			{:else}
@@ -302,7 +299,7 @@
 				'flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-30',
 				currentStep < maxStepIndex && 'bg-emerald-500 text-white hover:bg-emerald-600',
 				currentStep >= maxStepIndex &&
-					'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
+					'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
 			)}
 			aria-label="الخطوة التالية"
 		>

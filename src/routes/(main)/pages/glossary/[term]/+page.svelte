@@ -56,11 +56,11 @@
 					{englishTerm}
 				</h1>
 			</div>
-			<div class="mt-4 border-t border-slate-200 pt-6 dark:border-slate-700">
-				<h2 class="font-serif text-3xl font-bold text-slate-900 dark:text-slate-100">
+			<div class="mt-4 border-t border-gray-200 pt-6 dark:border-gray-700">
+				<h2 class="font-serif text-3xl font-bold text-gray-900 dark:text-gray-100">
 					{details.t}
 				</h2>
-				<p class="mt-4 text-lg leading-relaxed text-slate-700 dark:text-slate-300">{details.d}</p>
+				<p class="mt-4 text-lg leading-relaxed text-gray-700 dark:text-gray-300">{details.d}</p>
 			</div>
 		</article>
 	</div>

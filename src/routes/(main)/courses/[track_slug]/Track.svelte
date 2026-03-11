@@ -29,13 +29,13 @@
 	{@const offset = circumference - (moduleProgress / 100) * circumference}
 	<details class="group mb-4 w-full max-w-full" open={module.id === nextItem?.moduleId}>
 		<summary
-			class="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl bg-slate-100 p-3 transition-colors duration-200 group-open:mb-8 hover:bg-slate-200 sm:gap-4 sm:p-4 dark:bg-slate-800/50 dark:hover:bg-slate-700"
+			class="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl bg-gray-100 p-3 transition-colors duration-200 group-open:mb-8 hover:bg-gray-200 sm:gap-4 sm:p-4 dark:bg-gray-800/50 dark:hover:bg-gray-700"
 		>
 			<div class="flex min-w-0 items-center gap-3 sm:gap-4">
 				<div class="relative h-10 w-10 flex-shrink-0 sm:h-12 sm:w-12">
 					<svg class="h-full w-full -rotate-90" viewBox="0 0 44 44">
 						<circle
-							class="stroke-slate-200 dark:stroke-slate-700"
+							class="stroke-gray-200 dark:stroke-gray-700"
 							cx="22"
 							cy="22"
 							r={radius}
@@ -55,18 +55,18 @@
 						/>
 					</svg>
 					<span
-						class="font-hacker absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-700 sm:text-base dark:text-slate-200"
+						class="font-hacker absolute inset-0 flex items-center justify-center text-sm font-bold text-gray-700 sm:text-base dark:text-gray-200"
 					>
 						{module.position}
 					</span>
 				</div>
-				<h2 class="text-lg font-bold text-slate-800 sm:text-xl dark:text-white">
+				<h2 class="text-lg font-bold text-gray-800 sm:text-xl dark:text-white">
 					{module.title}
 				</h2>
 			</div>
 			<Icon
 				name="chevron-down"
-				class="h-6 w-6 flex-shrink-0 text-slate-500 transition-transform duration-300 group-open:rotate-180"
+				class="h-6 w-6 flex-shrink-0 text-gray-500 transition-transform duration-300 group-open:rotate-180"
 			/>
 		</summary>
 
@@ -82,12 +82,12 @@
 					>
 						<div class="flex min-w-0 items-center gap-3 sm:gap-4">
 							<div
-								class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700"
+								class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700"
 							>
-								<Icon name="lock" class="h-5 w-5 text-slate-600 dark:text-slate-300" />
+								<Icon name="lock" class="h-5 w-5 text-gray-600 dark:text-gray-300" />
 							</div>
 							<div class="min-w-0">
-								<h3 class="flex items-center gap-2 font-bold text-slate-800 dark:text-white">
+								<h3 class="flex items-center gap-2 font-bold text-gray-800 dark:text-white">
 									{item.title}
 									{#if item.type === 'code'}
 										<span
@@ -121,17 +121,17 @@
 								class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full {item.type ===
 								'code'
 									? 'bg-amber-500/10 dark:bg-amber-500/20'
-									: 'bg-slate-200 dark:bg-slate-700'}"
+									: 'bg-gray-200 dark:bg-gray-700'}"
 							>
 								<Icon
 									name={item.type === 'lesson' ? 'book-open' : 'code'}
 									class="h-5 w-5 {item.type === 'code'
 										? 'text-amber-600 dark:text-amber-400'
-										: 'text-slate-600 dark:text-slate-300'}"
+										: 'text-gray-600 dark:text-gray-300'}"
 								/>
 							</div>
 							<div class="min-w-0">
-								<h3 class="flex items-center gap-2 font-bold text-slate-800 dark:text-white">
+								<h3 class="flex items-center gap-2 font-bold text-gray-800 dark:text-white">
 									{item.title}
 
 									{#if item.type === 'code'}
@@ -149,7 +149,7 @@
 								{#if draft && !item.submission}
 									<div class="mt-1.5 flex items-center gap-2">
 										<div
-											class="h-1.5 w-24 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
+											class="h-1.5 w-24 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
 										>
 											<div
 												class="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"

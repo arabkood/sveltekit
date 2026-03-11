@@ -85,12 +85,12 @@ print(greeting)`,
 				class="group relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-black/10 bg-gray-50 shadow-2xl dark:border-white/10 dark:bg-gray-950/40"
 			>
 				<div
-					class="flex flex-row-reverse items-center gap-3 border-b border-black/10 px-4 py-2 sm:gap-4 sm:px-8 sm:py-3 dark:border-white/10"
+					class="flex flex-row-reverse items-center gap-4 border-b border-black/10 px-5 py-2 dark:border-white/10"
 				>
 					<div class="flex gap-1.5 sm:gap-2" aria-hidden="true">
-						<div class="h-2.5 w-2.5 rounded-full bg-red-400 sm:h-3 sm:w-3"></div>
-						<div class="h-2.5 w-2.5 rounded-full bg-yellow-400 sm:h-3 sm:w-3"></div>
 						<div class="h-2.5 w-2.5 rounded-full bg-green-400 sm:h-3 sm:w-3"></div>
+						<div class="h-2.5 w-2.5 rounded-full bg-yellow-400 sm:h-3 sm:w-3"></div>
+						<div class="h-2.5 w-2.5 rounded-full bg-red-400 sm:h-3 sm:w-3"></div>
 					</div>
 
 					<span

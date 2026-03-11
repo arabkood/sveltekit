@@ -325,7 +325,7 @@
 <!-- ============================================================================ -->
 
 <div
-	class="relative flex min-h-screen w-full flex-col items-center bg-slate-50 pt-[7vh] text-slate-800 dark:bg-slate-950 dark:text-slate-200"
+	class="relative flex min-h-screen w-full flex-col items-center bg-gray-50 pt-[7vh] text-gray-800 dark:bg-gray-950 dark:text-gray-200"
 	dir="rtl"
 >
 	<!-- Background gradients -->
@@ -341,7 +341,7 @@
 	</div>
 
 	<!-- Progress bar -->
-	<div class="fixed top-0 right-0 left-0 z-50 h-1 bg-slate-200 dark:bg-slate-800">
+	<div class="fixed top-0 right-0 left-0 z-50 h-1 bg-gray-200 dark:bg-gray-800">
 		<div
 			class="h-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all duration-500 ease-out"
 			style="width: {progress}%"
@@ -352,7 +352,7 @@
 	{#if stepHistory.length > 1}
 		<button
 			onclick={goBack}
-			class="fixed start-6 top-6 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow-md transition-all hover:bg-slate-50 hover:shadow-lg dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+			class="fixed start-6 top-6 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition-all hover:bg-gray-50 hover:shadow-lg dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
 			aria-label="رجوع"
 		>
 			<Icon name="arrow-right" size={20} />

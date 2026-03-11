@@ -28,9 +28,9 @@
 			tooltipNode.setAttribute('role', 'tooltip');
 			tooltipNode.className =
 				'px-3 py-2 rounded-lg shadow-xl text-sm \
-            bg-white text-slate-700 \
+            bg-white text-gray-700 \
             dark:bg-neutral-800 dark:text-neutral-300 \
-            border border-slate-200 dark:border-neutral-700 \
+            border border-gray-200 dark:border-neutral-700 \
             pointer-events-none z-[10000] max-w-xs';
 			document.body.appendChild(tooltipNode);
 		}
@@ -38,10 +38,10 @@
 		let contentHTML = '';
 
 		if (title) {
-			contentHTML += `<strong dir="auto" class="font-semibold mb-1 block text-slate-900 dark:text-neutral-100">${title}</strong>`;
+			contentHTML += `<strong dir="auto" class="font-semibold mb-1 block text-gray-900 dark:text-neutral-100">${title}</strong>`;
 		}
 		if (description) {
-			contentHTML += `<span dir="auto" class="block text-slate-600 dark:text-neutral-400">${description}</span>`;
+			contentHTML += `<span dir="auto" class="block text-gray-600 dark:text-neutral-400">${description}</span>`;
 		}
 		tooltipNode.innerHTML = contentHTML;
 		tooltipNode.style.display = 'block';

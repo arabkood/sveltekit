@@ -192,7 +192,7 @@
                {isTouchDevice ? 'mb-3 min-h-[56px] p-4' : ''}
                {isIncorrect
 					? 'border-red-400 bg-red-50 hover:border-red-500 hover:bg-red-100 dark:border-red-500 dark:bg-red-900/30 dark:hover:border-red-400 dark:hover:bg-red-900/40'
-					: 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600'}
+					: 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600'}
                {draggedIndex === i ? 'border-blue-500 bg-blue-100 dark:bg-blue-900' : ''}"
 				draggable={!disabled}
 				tabindex={disabled ? -1 : 0}
@@ -275,11 +275,11 @@
 	<div class="cb-container overflow-hidden py-3">
 		{#each Array(order.length) as _}
 			<div
-				class="relative mb-2 min-h-[48px] animate-pulse flex-col items-start space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3 last:mb-0 md:min-h-[56px] md:p-4 dark:border-gray-600 dark:bg-gray-700"
+				class="relative mb-2 min-h-[48px] animate-pulse flex-col items-start space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-3 last:mb-0 md:min-h-[56px] md:p-4 dark:border-gray-600 dark:bg-gray-700"
 				dir="ltr"
 			>
-				<div class="ms-8 h-4 w-5/6 rounded bg-slate-200 dark:bg-gray-600"></div>
-				<div class="ms-8 h-4 w-3/4 rounded bg-slate-200 dark:bg-gray-600"></div>
+				<div class="ms-8 h-4 w-5/6 rounded bg-gray-200 dark:bg-gray-600"></div>
+				<div class="ms-8 h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-600"></div>
 			</div>
 		{/each}
 	</div>

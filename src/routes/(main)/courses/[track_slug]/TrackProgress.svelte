@@ -31,19 +31,19 @@
 <div class="space-y-4">
 	{#if totalLessons > 0}
 		<div
-			class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-slate-100 p-2 py-4 dark:bg-slate-800/50"
+			class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-gray-100 p-2 py-4 dark:bg-gray-800/50"
 		>
 			<IconPng name="book-close" size={48} />
 			<div>
 				<div class="mb-3 flex items-center justify-between text-base">
-					<span class="font-semibold text-slate-700 dark:text-slate-300">
+					<span class="font-semibold text-gray-700 dark:text-gray-300">
 						{i18n.t('common.lessons_completed')}
 					</span>
-					<span class="font-hacker text-sm font-medium text-slate-500 dark:text-slate-400">
+					<span class="font-hacker text-sm font-medium text-gray-500 dark:text-gray-400">
 						{completedLessons}/{totalLessons}
 					</span>
 				</div>
-				<div class="mb-2 h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+				<div class="mb-2 h-3 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
 					<div
 						class="h-3 rounded-full bg-blue-400 transition-all duration-500"
 						style="width: {lessonsProgress}%"
@@ -54,19 +54,19 @@
 	{/if}
 	{#if totalProjects > 0}
 		<div
-			class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-slate-100 p-2 py-4 dark:bg-slate-800/50"
+			class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-gray-100 p-2 py-4 dark:bg-gray-800/50"
 		>
 			<IconPng name="terminal" size={48} />
 			<div>
 				<div class="mb-2 flex items-center justify-between text-base">
-					<span class="font-semibold text-slate-700 dark:text-slate-300">
+					<span class="font-semibold text-gray-700 dark:text-gray-300">
 						{i18n.t('common.challenges_completed')}
 					</span>
-					<span class="font-hacker text-sm font-medium text-slate-500 dark:text-slate-400">
+					<span class="font-hacker text-sm font-medium text-gray-500 dark:text-gray-400">
 						{completedProjects}/{totalProjects}
 					</span>
 				</div>
-				<div class="mb-2 h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+				<div class="mb-2 h-3 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
 					<div
 						class="h-3 rounded-full bg-lime-400 transition-all duration-500"
 						style="width: {challengesProgress}%"
@@ -77,19 +77,19 @@
 	{/if}
 	{#if totalXP > 0}
 		<div
-			class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-slate-100 p-2 py-4 dark:bg-slate-800/50"
+			class="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-gray-100 p-2 py-4 dark:bg-gray-800/50"
 		>
 			<IconPng name="bolt" size={48} />
 			<div>
 				<div class="mb-2 flex items-center justify-between text-base">
-					<span class="font-semibold text-slate-700 dark:text-slate-300">
+					<span class="font-semibold text-gray-700 dark:text-gray-300">
 						{i18n.t('common.xp_earned')}
 					</span>
-					<span class="font-hacker text-sm font-medium text-slate-500 dark:text-slate-400">
+					<span class="font-hacker text-sm font-medium text-gray-500 dark:text-gray-400">
 						{earnedXP}/{totalXP}
 					</span>
 				</div>
-				<div class="mb-2 h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+				<div class="mb-2 h-3 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
 					<div
 						class="h-3 rounded-full bg-yellow-400 transition-all duration-500"
 						style="width: {xpProgress}%"

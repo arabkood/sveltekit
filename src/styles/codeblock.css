@@ -1,19 +1,19 @@
 .cb-container .code-body {
 	position: relative;
-	border: 1px solid var(--color-slate-200);
+	border: 1px solid var(--color-gray-200);
 	border-radius: 6px;
 }
 
 .cb-container .code-body code {
-	background-color: var(--color-slate-100);
+	background-color: var(--color-gray-100);
 	border-radius: 6px;
 }
 
 @media (prefers-color-scheme: dark) {
 	.cb-container .code-body {
-		border-color: var(--color-gray-600);
+		border-color: var(--color-gray-800);
 	}
 	.cb-container .code-body code {
-		background-color: var(--color-slate-800);
+		background-color: var(--color-gray-950);
 	}
 }

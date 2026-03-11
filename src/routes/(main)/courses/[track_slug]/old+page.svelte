@@ -39,7 +39,7 @@
 		};
 		return (
 			(difficulties[difficulty?.toLowerCase() || ''] ||
-				'bg-slate-50 text-slate-700 border border-slate-200 dark:bg-slate-900/30 dark:text-slate-300 dark:border-slate-700/50') +
+				'bg-gray-50 text-gray-700 border border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-700/50') +
 			' px-3 py-1 rounded-full text-xs font-semibold capitalize shadow-sm'
 		);
 	}
@@ -66,7 +66,7 @@
 			case 'wait':
 				return 'text-amber-500 dark:text-amber-400 animate-pulse';
 			default:
-				return 'text-slate-400 dark:text-slate-600';
+				return 'text-gray-400 dark:text-gray-600';
 		}
 	}
 
@@ -77,7 +77,7 @@
 		if (isLocked) {
 			return (
 				baseClass +
-				' border-slate-100 bg-white dark:border-slate-700 dark:bg-slate-800 cursor-not-allowed'
+				' border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800 cursor-not-allowed'
 			);
 		}
 
@@ -113,7 +113,7 @@
 			default:
 				return (
 					clickableBaseClass +
-					' border-slate-100 bg-white dark:border-slate-700 dark:bg-slate-800 hover:border-slate-200 dark:hover:border-slate-600 hover:bg-gradient-to-br hover:from-slate-50 hover:to-gray-50 dark:hover:from-slate-900/10 dark:hover:to-gray-900/5 opacity-60 hover:opacity-80'
+					' border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-600 hover:bg-gradient-to-br hover:from-gray-50 hover:to-gray-50 dark:hover:from-gray-900/10 dark:hover:to-gray-900/5 opacity-60 hover:opacity-80'
 				);
 		}
 	}
@@ -157,12 +157,12 @@
 </script>
 
 <main
-	class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 px-4 py-8 sm:px-6 lg:px-8 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"
+	class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 px-4 py-8 sm:px-6 lg:px-8 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
 >
 	<div class="mx-auto max-w-7xl">
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 			<div
-				class="top-6 mb-auto flex flex-col gap-6 rounded-3xl border border-white/80 bg-white/95 p-8 shadow-xl backdrop-blur-sm duration-300 ease-in-out lg:sticky lg:col-span-1 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-slate-900/30"
+				class="top-6 mb-auto flex flex-col gap-6 rounded-3xl border border-white/80 bg-white/95 p-8 shadow-xl backdrop-blur-sm duration-300 ease-in-out lg:sticky lg:col-span-1 dark:border-gray-700/50 dark:bg-gray-800/95 dark:shadow-gray-900/30"
 			>
 				{#if progressPercentage > 0}
 					<div
@@ -177,14 +177,12 @@
 				{#if progressPercentage > 0}
 					<div class="mb-2">
 						<div class="mb-2 flex items-center justify-between text-sm font-semibold">
-							<span class="text-slate-700 dark:text-slate-300"
-								>{i18n.t('common.your_progress')}</span
-							>
+							<span class="text-gray-700 dark:text-gray-300">{i18n.t('common.your_progress')}</span>
 							<span class="text-emerald-600 dark:text-emerald-400">{progressPercentage}%</span>
 						</div>
 
 						<div
-							class="relative h-4 w-full overflow-hidden rounded-full border border-slate-200 bg-slate-100 dark:border-slate-600 dark:bg-slate-700"
+							class="relative h-4 w-full overflow-hidden rounded-full border border-gray-200 bg-gray-100 dark:border-gray-600 dark:bg-gray-700"
 						>
 							<div
 								class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-lime-500 shadow-inner transition-all duration-700 ease-out"
@@ -210,17 +208,17 @@
 						<img
 							src={toPublicUrl(track.logo)}
 							alt="{track.title || 'Track'} logo"
-							class="h-32 w-32 rounded-3xl object-contain transition-all duration-300 hover:scale-105 dark:ring-slate-700/50"
+							class="h-32 w-32 rounded-3xl object-contain transition-all duration-300 hover:scale-105 dark:ring-gray-700/50"
 						/>
 					</div>
 				{/if}
 
 				<div class="flex flex-col text-center">
-					<h1 class="mb-2 text-2xl font-bold text-slate-800 dark:text-white">
+					<h1 class="mb-2 text-2xl font-bold text-gray-800 dark:text-white">
 						{track.title}
 					</h1>
 
-					<p class="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+					<p class="mb-6 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
 						{track.blurb}
 					</p>
 				</div>
@@ -249,11 +247,11 @@
 					{#each modules as module}
 						<div class="w-full">
 							<div
-								class="mb-10 w-full rounded-3xl border border-lime-200 bg-gradient-to-r from-lime-600 via-lime-500 to-lime-600 p-8 text-center shadow-lg dark:border-slate-600 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800"
+								class="mb-10 w-full rounded-3xl border border-lime-200 bg-gradient-to-r from-lime-600 via-lime-500 to-lime-600 p-8 text-center shadow-lg dark:border-gray-600 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800"
 							>
 								<div class="mb-4 flex items-center justify-center gap-4">
 									<div
-										class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-slate-100 to-lime-100 text-lg font-bold text-emerald-700 shadow-lg ring-4 ring-white/30 dark:from-lime-600 dark:to-emerald-600 dark:text-white"
+										class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-gray-100 to-lime-100 text-lg font-bold text-emerald-700 shadow-lg ring-4 ring-white/30 dark:from-lime-600 dark:to-emerald-600 dark:text-white"
 									>
 										{module.position}
 									</div>
@@ -278,7 +276,7 @@
 											></div>
 										</div>
 										<span
-											class="rounded-full border border-white/20 bg-white/15 px-3 py-1 text-sm font-bold text-white dark:text-slate-100"
+											class="rounded-full border border-white/20 bg-white/15 px-3 py-1 text-sm font-bold text-white dark:text-gray-100"
 											>{moduleCompleted}/{moduleTotal}</span
 										>
 									</div>
@@ -293,18 +291,18 @@
 											<!-- Blurred background content -->
 											<div class="flex w-full items-center gap-6 blur-sm">
 												<div
-													class="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700/50"
+													class="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700/50"
 												>
-													<Icon name="lock" class="h-7 w-7 text-slate-400 dark:text-slate-600" />
+													<Icon name="lock" class="h-7 w-7 text-gray-400 dark:text-gray-600" />
 												</div>
 
 												<div class="min-w-0 grow">
-													<h3 class="mb-2 text-xl font-bold text-slate-800 dark:text-white">
+													<h3 class="mb-2 text-xl font-bold text-gray-800 dark:text-white">
 														{item.title}
 													</h3>
 													{#if item.blurb}
 														<p
-															class="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400"
+															class="line-clamp-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400"
 														>
 															{item.blurb}
 														</p>
@@ -316,7 +314,7 @@
 														{item.difficulty || 'N/A'}
 													</span>
 													<span
-														class="min-w-[48px] rounded-full border border-slate-300 bg-gradient-to-r from-slate-100 to-gray-100 px-3 py-1.5 text-center text-xs font-semibold text-nowrap text-slate-600 shadow-sm dark:border-slate-600 dark:from-slate-800/50 dark:to-slate-700/50 dark:text-slate-400"
+														class="min-w-[48px] rounded-full border border-gray-300 bg-gradient-to-r from-gray-100 to-gray-100 px-3 py-1.5 text-center text-xs font-semibold text-nowrap text-gray-600 shadow-sm dark:border-gray-600 dark:from-gray-800/50 dark:to-gray-700/50 dark:text-gray-400"
 													>
 														{item.base_xp} XP
 													</span>
@@ -326,7 +324,7 @@
 											<!-- Upgrade prompt overlay -->
 											<a
 												href={'/pricing'}
-												class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-slate-900/60 p-6 text-center backdrop-blur-[1px] transition-all duration-300 hover:bg-slate-900/75"
+												class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-gray-900/60 p-6 text-center backdrop-blur-[1px] transition-all duration-300 hover:bg-gray-900/75"
 											>
 												<Icon name="star" class="h-10 w-10 text-amber-400" />
 												<span
@@ -357,7 +355,7 @@
 										>
 											<div class="flex w-full items-center gap-6">
 												<div
-													class={`relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 transition-colors duration-200 dark:bg-slate-700/50 
+													class={`relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 transition-colors duration-200 dark:bg-gray-700/50 
 ${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-blue-800' : ''}`}
 												>
 													<Icon
@@ -368,7 +366,7 @@ ${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-b
 													/>
 													{#if item.submission?.status === 'pass'}
 														<div
-															class="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-800"
+															class="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white dark:ring-gray-800"
 														>
 															<Icon name="check" class="h-3 w-3 text-white" />
 														</div>
@@ -377,7 +375,7 @@ ${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-b
 
 												<div class="min-w-0 grow">
 													<h3
-														class="mb-2 flex items-center gap-2 text-xl font-bold text-slate-800 transition-colors duration-200 group-hover:text-green-600 dark:text-white dark:group-hover:text-green-400 {isNextItem
+														class="mb-2 flex items-center gap-2 text-xl font-bold text-gray-800 transition-colors duration-200 group-hover:text-green-600 dark:text-white dark:group-hover:text-green-400 {isNextItem
 															? 'text-blue-700 dark:text-blue-300'
 															: ''}"
 													>
@@ -389,7 +387,7 @@ ${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-b
 
 													{#if item.blurb}
 														<p
-															class="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400"
+															class="line-clamp-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400"
 														>
 															{item.blurb}
 														</p>
@@ -419,7 +417,7 @@ ${isNextItem ? 'bg-blue-100 ring-4 ring-blue-200 dark:bg-blue-900/50 dark:ring-b
 														class={`min-w-[48px] rounded-full border px-3 py-1.5 text-center text-xs font-semibold text-nowrap shadow-sm transition-transform duration-700 ease-in-out
 ${
 	!item.submission?.xp_reward
-		? 'border-slate-300 bg-gradient-to-r from-slate-100 to-gray-100 text-slate-600 dark:border-slate-600 dark:from-slate-800/50 dark:to-slate-700/50 dark:text-slate-400'
+		? 'border-gray-300 bg-gradient-to-r from-gray-100 to-gray-100 text-gray-600 dark:border-gray-600 dark:from-gray-800/50 dark:to-gray-700/50 dark:text-gray-400'
 		: 'border-blue-200 bg-gradient-to-r from-blue-50 to-violet-50 text-blue-700 dark:border-blue-700/50 dark:from-blue-900/30 dark:to-violet-900/30 dark:text-blue-300'
 }`}
 													>
@@ -437,7 +435,7 @@ ${
 									{#if index < module.items.length - 1}
 										<div class="flex justify-center py-4">
 											<div
-												class="h-10 w-1 rounded-full bg-gradient-to-b from-slate-200 via-slate-100 to-slate-200 dark:from-slate-600 dark:via-slate-700 dark:to-slate-600"
+												class="h-10 w-1 rounded-full bg-gradient-to-b from-gray-200 via-gray-100 to-gray-200 dark:from-gray-600 dark:via-gray-700 dark:to-gray-600"
 											></div>
 										</div>
 									{/if}
