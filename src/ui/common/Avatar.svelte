@@ -32,7 +32,7 @@
 	const dicebearUrl = $derived.by(() => {
 		if (!fallback) return '';
 		const seed = encodeURIComponent(fallback.trim());
-		return `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${seed}`;
+		return `https://api.dicebear.com/9.x/bottts-neutral/svg?scale=90&seed=${seed}`;
 	});
 
 	let imageError = $state(false);
@@ -51,8 +51,8 @@
 		cn(
 			'flex h-full w-full items-center justify-center rounded-full overflow-hidden',
 			'ring-1 ring-black/8 dark:ring-white/10',
-			'bg-neutral-100 text-neutral-500',
-			'dark:bg-neutral-800 dark:text-neutral-400',
+			'bg-gray-100 text-gray-500',
+			'dark:bg-gray-800 dark:text-gray-400',
 			'transition-opacity duration-200'
 		)
 	);
@@ -71,7 +71,7 @@
 
 	const statusColorClasses = {
 		online: 'bg-emerald-500 dark:bg-emerald-400',
-		offline: 'bg-neutral-400 dark:bg-neutral-500',
+		offline: 'bg-gray-400 dark:bg-gray-500',
 		away: 'bg-amber-400 dark:bg-amber-400',
 		busy: 'bg-rose-500 dark:bg-rose-400'
 	} as const;
@@ -92,9 +92,7 @@
 <div class={outerClasses}>
 	<div class={innerClasses}>
 		{#if loading}
-			<div
-				class="h-full w-full animate-pulse rounded-full bg-neutral-200 dark:bg-neutral-700"
-			></div>
+			<div class="h-full w-full animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
 		{:else if src && !imageError}
 			<img
 				{src}
@@ -106,9 +104,7 @@
 					: 'opacity-0'}"
 			/>
 			{#if !imageLoaded}
-				<div
-					class="absolute inset-0 animate-pulse rounded-full bg-neutral-200 dark:bg-neutral-700"
-				></div>
+				<div class="absolute inset-0 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
 			{/if}
 		{:else if fallback && !showFallbackIcon}
 			<img src={dicebearUrl} {alt} class="h-full w-full rounded-full object-cover" />
@@ -121,7 +117,7 @@
 		<span
 			class="
 				absolute -right-0.5 -bottom-0.5 rounded-full
-				ring-2 ring-white dark:ring-neutral-900
+				ring-2 ring-white dark:ring-gray-900
 				{statusSizeClasses[size]} {statusColorClasses[status]}
 			"
 			aria-label="Status: {status}"

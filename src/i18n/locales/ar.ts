@@ -294,6 +294,7 @@ export default {
 		xp: 'نقاط الخبرة',
 		streak: 'شعلة النشاط',
 		rank: {
+			rank: 'رتبة',
 			title: 'ترتيبك العالمي',
 			top: 'ضمن أفضل',
 			viewLeaderboard: 'عرض لوحة المتصدرين',

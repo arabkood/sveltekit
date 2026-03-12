@@ -74,7 +74,7 @@
 		: 'bg-white dark:bg-gray-950'} {navbarVisible ? 'translate-y-0' : '-translate-y-full'}"
 	aria-label="Main navigation"
 >
-	<div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+	<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
 		<!-- Left section: Logo and Navigation -->
 		<div class="flex items-center gap-8">
 			<!-- Mobile menu button -->

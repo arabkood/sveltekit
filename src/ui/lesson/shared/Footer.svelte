@@ -77,7 +77,7 @@
 						<div transition:fly={{ y: -5, duration: 200 }}>
 							<Button
 								onclick={() => (showExplanation = true)}
-								variant="neutral"
+								variant="gray"
 								rounded={true}
 								size="sm"
 							>
@@ -114,7 +114,7 @@
 
 					{#if showGetAnswer && onGetAnswer}
 						<div transition:fly={{ y: -5, duration: 200 }}>
-							<Button onclick={onGetAnswer} variant="neutral" rounded={true} size="sm">
+							<Button onclick={onGetAnswer} variant="gray" rounded={true} size="sm">
 								{i18n.t('lessons.getAnswer')}
 							</Button>
 						</div>
@@ -122,7 +122,7 @@
 
 					{#if hint && !autoShowHint && !showHint && onToggleHint}
 						<div transition:fly={{ y: -5, duration: 200 }}>
-							<Button variant="neutral" rounded={true} size="sm" onclick={onToggleHint}>
+							<Button variant="gray" rounded={true} size="sm" onclick={onToggleHint}>
 								{i18n.t('lessons.showHint')}
 							</Button>
 						</div>
@@ -154,7 +154,7 @@
 		</div>
 
 		<!-- STABLE ACTION AREA -->
-		<div class="flex min-h-[92px] items-center justify-center py-5">
+		<div class="flex min-h-23 items-center justify-center py-5">
 			{#if status === 'correct'}
 				<Button
 					type="button"
@@ -162,7 +162,7 @@
 					size="xl"
 					rounded={true}
 					variant="friendly"
-					class="min-w-[240px]"
+					class="min-w-60"
 					endIcon="arrow-left"
 				>
 					{i18n.t('lessons.continue')}
@@ -173,8 +173,8 @@
 					onclick={onNext}
 					size="xl"
 					rounded={true}
-					variant="neutral"
-					class="min-w-[240px]"
+					variant="gray"
+					class="min-w-60"
 				>
 					{i18n.t('lessons.continue')}
 				</Button>
@@ -187,8 +187,8 @@
 						onclick={onCheck}
 						size="xl"
 						rounded={true}
-						variant="neutral"
-						class="min-w-[240px]"
+						variant="gray"
+						class="min-w-60"
 					>
 						{isChecking ? i18n.t('lessons.checking') : i18n.t('lessons.checkAnswer')}
 					</Button>

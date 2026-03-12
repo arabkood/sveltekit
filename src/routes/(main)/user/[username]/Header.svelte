@@ -125,7 +125,7 @@
 						<div class="relative">
 							<Button
 								onclick={() => (showShareMenu = !showShareMenu)}
-								variant="neutral"
+								variant="gray"
 								startIcon="share"
 							>
 								{i18n.t('common.share')}
@@ -134,7 +134,7 @@
 							<!-- Share Menu Dropdown -->
 							{#if showShareMenu}
 								<div
-									class="absolute start-0 top-full z-20 mt-2 min-w-[200px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
+									class="absolute start-0 top-full z-20 mt-2 min-w-50 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
 								>
 									<button
 										onclick={copyProfileUrl}
@@ -185,7 +185,7 @@
 						</div>
 						<div class="min-w-0 flex-1">
 							<div class="text-xs font-medium text-gray-500 sm:text-sm dark:text-gray-400">
-								{i18n.t('dashboard.rank')}
+								{i18n.t('dashboard.rank.rank')}
 							</div>
 							<div class={`truncate text-base font-bold sm:text-lg ${currentRank.theme.text}`}>
 								{currentRank.name}

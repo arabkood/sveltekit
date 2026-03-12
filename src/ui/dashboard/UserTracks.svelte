@@ -53,7 +53,7 @@
 				>
 					{#if isLocked}
 						<div
-							class="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-gray-900/40 backdrop-blur-sm"
+							class="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-2xl bg-linear-to-br from-gray-900/80 via-gray-900/60 to-gray-900/40 backdrop-blur-sm"
 							aria-hidden="true"
 						>
 							<div class="rounded-full bg-white/10 p-3 backdrop-blur-sm">
@@ -96,7 +96,7 @@
 
 							<!-- Gradient overlay for better text readability -->
 							<div
-								class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"
+								class="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent"
 							></div>
 						</div>
 
@@ -133,7 +133,7 @@
 		</div>
 	{:else}
 		<div
-			class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gradient-to-br from-gray-50 to-white p-16 text-center transition-colors duration-200 hover:border-gray-300 dark:border-gray-700 dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900"
+			class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-linear-to-br from-gray-50 to-white p-16 text-center transition-colors duration-200 dark:border-gray-700 dark:bg-linear-to-br dark:from-gray-800 dark:to-gray-900"
 		>
 			<div class="rounded-full bg-gray-100 p-4 dark:bg-gray-700">
 				<Icon name="book-open" class="h-8 w-8 text-gray-400 dark:text-gray-500" />

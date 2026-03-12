@@ -19,7 +19,7 @@
 		| 'continue'
 		| 'attention'
 		| 'fire'
-		| 'neutral';
+		| 'gray';
 
 	type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 
@@ -111,34 +111,34 @@
 
 		// Hairline border, glass-like surface
 		outline: `
-			border border-neutral-200 bg-white/80 backdrop-blur-sm text-neutral-700
+			border border-gray-200 bg-white/80 backdrop-blur-sm text-gray-700
 			shadow-[0_1px_2px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]
 			tracking-[-0.01em]
-			hover:bg-white hover:border-neutral-300 hover:text-neutral-900
+			hover:bg-white hover:border-gray-300 hover:text-gray-900
 			hover:shadow-[0_1px_3px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,1)]
 			focus:ring-2 focus:ring-primary-400 focus:ring-offset-1
-			active:bg-neutral-50 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]
+			active:bg-gray-50 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]
 			active:scale-[0.99]
-			disabled:border-neutral-100 disabled:text-neutral-300 disabled:shadow-none
-			dark:border-neutral-700/80 dark:bg-gray-900/80 dark:text-neutral-300
-			dark:hover:bg-gray-800 dark:hover:border-neutral-600 dark:hover:text-neutral-100
+			disabled:border-gray-100 disabled:text-gray-300 disabled:shadow-none
+			dark:border-gray-700/80 dark:bg-gray-900/80 dark:text-gray-300
+			dark:hover:bg-gray-800 dark:hover:border-gray-600 dark:hover:text-gray-100
 			dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.04)]
 			transition-all duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
 		`,
 
 		// Muted, elevated — for secondary actions
 		boring: `
-			bg-neutral-100 text-neutral-800
+			bg-gray-100 text-gray-800
 			shadow-[0_1px_2px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]
 			tracking-[-0.01em]
-			hover:bg-neutral-200 hover:text-neutral-900
+			hover:bg-gray-200 hover:text-gray-900
 			hover:shadow-[0_1px_3px_rgba(0,0,0,0.08)]
-			focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2
-			active:bg-neutral-300 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]
+			focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2
+			active:bg-gray-300 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]
 			active:scale-[0.99]
-			disabled:bg-neutral-50 disabled:text-neutral-300 disabled:shadow-none disabled:cursor-not-allowed
-			dark:bg-neutral-800 dark:text-neutral-200
-			dark:hover:bg-neutral-700 dark:hover:text-neutral-100
+			disabled:bg-gray-50 disabled:text-gray-300 disabled:shadow-none disabled:cursor-not-allowed
+			dark:bg-gray-800 dark:text-gray-200
+			dark:hover:bg-gray-700 dark:hover:text-gray-100
 			dark:shadow-[0_1px_2px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.04)]
 			transition-all duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
 		`,
@@ -175,14 +175,14 @@
 
 		// Featherweight — pure affordance
 		ghost: `
-			text-neutral-600 bg-transparent
+			text-gray-600 bg-transparent
 			tracking-[-0.01em]
-			hover:bg-neutral-100 hover:text-neutral-900
+			hover:bg-gray-100 hover:text-gray-900
 			focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 focus:outline-none
-			active:bg-neutral-200 active:scale-[0.99]
-			disabled:text-neutral-300 disabled:hover:bg-transparent disabled:cursor-not-allowed
-			dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100
-			dark:active:bg-neutral-700 dark:disabled:text-neutral-600
+			active:bg-gray-200 active:scale-[0.99]
+			disabled:text-gray-300 disabled:hover:bg-transparent disabled:cursor-not-allowed
+			dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100
+			dark:active:bg-gray-700 dark:disabled:text-gray-600
 			transition-all duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
 		`,
 
@@ -198,12 +198,12 @@
 		`,
 
 		'link-pill': `
-			text-sm text-neutral-600 rounded-full
+			text-sm text-gray-600 rounded-full
 			tracking-[-0.01em]
 			hover:text-primary-700 hover:bg-primary-50
 			focus:ring-2 focus:ring-primary-400 focus:ring-offset-1
 			active:bg-primary-100
-			dark:text-neutral-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/30
+			dark:text-gray-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/30
 			transition-all duration-150 ease-out
 		`,
 
@@ -260,7 +260,7 @@
 		`,
 
 		// Anthracite — quiet authority
-		neutral: `
+		gray: `
 			bg-gradient-to-b from-gray-600 to-gray-800
 			shadow-[0_1px_2px_rgba(0,0,0,0.16),0_3px_8px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.10)]
 			text-white tracking-[-0.01em]
