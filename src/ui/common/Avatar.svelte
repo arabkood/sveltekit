@@ -41,61 +41,60 @@
 	const handleImageError = () => {
 		imageError = true;
 	};
-
 	const handleImageLoad = () => {
 		imageLoaded = true;
 	};
 
-	const outerClasses = $derived(cn('relative inline-block', sizeClasses[size], className));
+	const outerClasses = $derived(cn('relative inline-block shrink-0', sizeClasses[size], className));
 
 	const innerClasses = $derived(
 		cn(
 			'flex h-full w-full items-center justify-center rounded-full overflow-hidden',
-			'bg-gradient-to-br from-primary to-primary-600 text-primary-foreground',
-			'dark:from-gray-700 dark:to-gray-800 dark:text-gray-100',
-			'transition-all duration-200 ease-in-out'
+			'ring-1 ring-black/8 dark:ring-white/10',
+			'bg-neutral-100 text-neutral-500',
+			'dark:bg-neutral-800 dark:text-neutral-400',
+			'transition-opacity duration-200'
 		)
 	);
 
-	const statusIndicatorSize = $derived(
-		(() => {
-			switch (size) {
-				case 'xs':
-					return 'h-2 w-2';
-				case 'sm':
-					return 'h-2.5 w-2.5';
-				case 'md':
-					return 'h-3 w-3';
-				case 'lg':
-					return 'h-4 w-4';
-				default:
-					return 'h-5 w-5';
-			}
-		})()
-	);
+	const statusSizeClasses = {
+		xs: 'h-2 w-2',
+		sm: 'h-2.5 w-2.5',
+		md: 'h-3 w-3',
+		lg: 'h-4 w-4',
+		xl: 'h-4 w-4',
+		'2xl': 'h-5 w-5',
+		'3xl': 'h-5 w-5',
+		'4xl': 'h-5 w-5',
+		'5xl': 'h-5 w-5'
+	} as const;
 
-	const statusIndicatorColor = $derived(
-		((): string => {
-			switch (status) {
-				case 'online':
-					return 'bg-green-500 dark:bg-green-400';
-				case 'offline':
-					return 'bg-gray-400 dark:bg-gray-500';
-				case 'away':
-					return 'bg-yellow-500 dark:bg-yellow-400';
-				case 'busy':
-					return 'bg-red-500 dark:bg-red-400';
-				default:
-					return 'bg-gray-400 dark:bg-gray-500';
-			}
-		})()
-	);
+	const statusColorClasses = {
+		online: 'bg-emerald-500 dark:bg-emerald-400',
+		offline: 'bg-neutral-400 dark:bg-neutral-500',
+		away: 'bg-amber-400 dark:bg-amber-400',
+		busy: 'bg-rose-500 dark:bg-rose-400'
+	} as const;
+
+	const iconSizes: Record<SizeVariant, number> = {
+		xs: 12,
+		sm: 14,
+		md: 20,
+		lg: 28,
+		xl: 36,
+		'2xl': 40,
+		'3xl': 48,
+		'4xl': 52,
+		'5xl': 56
+	};
 </script>
 
 <div class={outerClasses}>
 	<div class={innerClasses}>
 		{#if loading}
-			<div class="bg-primary-300 h-full w-full animate-pulse rounded-full dark:bg-gray-700"></div>
+			<div
+				class="h-full w-full animate-pulse rounded-full bg-neutral-200 dark:bg-neutral-700"
+			></div>
 		{:else if src && !imageError}
 			<img
 				{src}
@@ -108,38 +107,24 @@
 			/>
 			{#if !imageLoaded}
 				<div
-					class="bg-primary-300 absolute inset-0 animate-pulse rounded-full dark:bg-gray-700"
+					class="absolute inset-0 animate-pulse rounded-full bg-neutral-200 dark:bg-neutral-700"
 				></div>
 			{/if}
 		{:else if fallback && !showFallbackIcon}
-			<img
-				src={dicebearUrl}
-				{alt}
-				class="h-full w-full rounded-full object-cover transition-opacity duration-200"
-			/>
+			<img src={dicebearUrl} {alt} class="h-full w-full rounded-full object-cover" />
 		{:else}
-			<Icon
-				name="user"
-				size={size === 'xs'
-					? 12
-					: size === 'sm'
-						? 16
-						: size === 'md'
-							? 20
-							: size === 'lg'
-								? 28
-								: size === 'xl'
-									? 36
-									: 44}
-				class="opacity-70"
-			/>
+			<Icon name="user" size={iconSizes[size]} class="opacity-50" />
 		{/if}
 	</div>
 
 	{#if showStatusIndicator && status}
-		<div
-			class="absolute -right-0.5 -bottom-0.5 rounded-full {statusIndicatorSize} {statusIndicatorColor}"
+		<span
+			class="
+				absolute -right-0.5 -bottom-0.5 rounded-full
+				ring-2 ring-white dark:ring-neutral-900
+				{statusSizeClasses[size]} {statusColorClasses[status]}
+			"
 			aria-label="Status: {status}"
-		></div>
+		></span>
 	{/if}
 </div>

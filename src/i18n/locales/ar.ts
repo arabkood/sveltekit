@@ -206,7 +206,8 @@ export default {
 		signout: 'تسجيل الخروج',
 		glossary: 'المصطلحات البرمجية',
 		signin: 'تسجيل الدخول',
-		signup: 'إنشاء حساب جديد'
+		signup: 'إنشاء حساب جديد',
+		viewProfile: 'عرض حسابي',
 	},
 	tracks: {
 		explore: {

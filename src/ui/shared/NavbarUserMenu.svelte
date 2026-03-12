@@ -1,26 +1,26 @@
 <script lang="ts">
 	import Icon from '$ui/common/Icon.svelte';
-	import { slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import { i18n } from '$i18n/i18n';
 	import Avatar from '$ui/common/Avatar.svelte';
 	import Button from '$ui/common/Button.svelte';
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import IconPng from '$ui/common/IconPng.svelte';
-	import type { User } from '$lib/server/db/repos/user';
+	import type { UserPrivate } from '$lib/server/db/repos/user';
 
 	let {
 		variant = 'desktop',
 		user
 	}: {
 		variant?: 'desktop' | 'mobile';
-		user: User;
+		user: UserPrivate;
 	} = $props();
 
 	let showMenu = $state(false);
 	let menuRef = $state<HTMLDivElement | null>(null);
 	let dropdownMenuRef = $state<HTMLDivElement | null>(null);
-	let dynamicMenuClasses = $state('top-full mt-2 right-0 origin-top-right');
+	let dynamicMenuClasses = $state('top-full mt-1.5 right-0 origin-top-right');
 
 	function handleClickOutside(event: MouseEvent) {
 		if (menuRef && !menuRef.contains(event.target as Node)) {
@@ -28,10 +28,7 @@
 		}
 	}
 
-	const signOut = async () => {
-		goto('/signout');
-	};
-
+	const signOut = async () => goto('/signout');
 	const upgrade = async () => {
 		goto('/pricing');
 		showMenu = false;
@@ -48,24 +45,23 @@
 				const viewportH = window.innerHeight;
 				const viewportW = window.innerWidth;
 
-				let vPos = 'top-full mt-2';
+				let vPos = 'top-full mt-1.5';
 				let vOrigin = 'origin-top';
 				let hPos = 'right-0';
 				let hOriginSuffix = '-right';
 
-				const spaceBelowParent = viewportH - parentElRect.bottom;
-				const spaceAboveParent = parentElRect.top;
-
-				if (menuElRect.height > spaceBelowParent && menuElRect.height <= spaceAboveParent) {
-					vPos = 'bottom-full mb-2';
+				if (
+					menuElRect.height > viewportH - parentElRect.bottom &&
+					menuElRect.height <= parentElRect.top
+				) {
+					vPos = 'bottom-full mb-1.5';
 					vOrigin = 'origin-bottom';
 				}
 
-				const menuLeftIfRightAligned = parentElRect.right - menuElRect.width;
-				const menuRightIfLeftAligned = parentElRect.left + menuElRect.width;
-
-				const fitsRightAligned = menuLeftIfRightAligned >= 0 && parentElRect.right <= viewportW;
-				const fitsLeftAligned = parentElRect.left >= 0 && menuRightIfLeftAligned <= viewportW;
+				const fitsRightAligned =
+					parentElRect.right - menuElRect.width >= 0 && parentElRect.right <= viewportW;
+				const fitsLeftAligned =
+					parentElRect.left >= 0 && parentElRect.left + menuElRect.width <= viewportW;
 
 				if (!fitsRightAligned && fitsLeftAligned) {
 					hPos = 'left-0';
@@ -78,28 +74,40 @@
 			adjustPosition();
 			document.addEventListener('click', handleClickOutside);
 			window.addEventListener('resize', adjustPosition);
-
 			return () => {
 				document.removeEventListener('click', handleClickOutside);
 				window.removeEventListener('resize', adjustPosition);
 			};
 		} else if (showMenu && variant === 'mobile') {
 			document.addEventListener('click', handleClickOutside);
-			return () => {
-				document.removeEventListener('click', handleClickOutside);
-			};
+			return () => document.removeEventListener('click', handleClickOutside);
 		} else {
-			dynamicMenuClasses = 'top-full mt-2 right-0 origin-top-right';
+			dynamicMenuClasses = 'top-full mt-1.5 right-0 origin-top-right';
 		}
 	});
 </script>
 
 {#if variant === 'mobile'}
 	<ul class="list-none">
+		<!-- Profile -->
+		<li>
+			<Button
+				href="/user/{user.username}"
+				variant="link-pill"
+				size="sm"
+				class="w-full justify-start py-5"
+				rounded={false}
+				startIcon="user"
+				iconSize={20}
+			>
+				{user.username}
+			</Button>
+		</li>
+
 		{#if !user.premiumActive}
 			<li>
 				<Button
-					variant={'link-pill'}
+					variant="link-pill"
 					size="sm"
 					class="w-full justify-start py-5"
 					rounded={false}
@@ -111,23 +119,24 @@
 				</Button>
 			</li>
 		{/if}
+
 		<li>
 			<Button
-				href={'/settings'}
-				variant={'link-pill'}
+				href="/settings"
+				variant="link-pill"
 				size="sm"
 				class="w-full justify-start py-5"
 				rounded={false}
-				onclick={() => (showMenu = false)}
-				startIcon={'cog'}
+				startIcon="cog"
 				iconSize={20}
 			>
 				{i18n.t('navigation.settings')}
 			</Button>
 		</li>
+
 		<li>
 			<Button
-				variant={'link-pill'}
+				variant="link-pill"
 				size="sm"
 				class="w-full justify-start py-5"
 				rounded={false}
@@ -141,8 +150,8 @@
 	</ul>
 {:else}
 	<div class="relative" bind:this={menuRef}>
-		<Button
-			variant="link-pill"
+		<!-- Trigger: avatar only -->
+		<button
 			onclick={(e: MouseEvent) => {
 				e.stopPropagation();
 				showMenu = !showMenu;
@@ -150,68 +159,98 @@
 			aria-expanded={showMenu}
 			aria-haspopup="true"
 			aria-controls="user-menu"
-			size="md"
+			class="relative flex cursor-pointer items-center transition-opacity hover:opacity-80"
 		>
-			{#if user.premiumActive}
-				<IconPng name="premium" size={24} alt="Premium" class="inline" />
-			{/if}
-			{user.username}
 			<Avatar
 				src={user?.avatar || undefined}
 				alt={user.username}
 				fallback={user.username}
-				size="sm"
-				className="ms-3"
+				size="md"
 			/>
-		</Button>
+			{#if user.premiumActive}
+				<span class="absolute -bottom-3 -left-3">
+					<IconPng name="premium" size={32} alt="Premium" />
+				</span>
+			{/if}
+		</button>
 
+		<!-- Dropdown -->
 		{#if showMenu}
 			<div
 				bind:this={dropdownMenuRef}
 				id="user-menu"
-				class="absolute z-50 w-56 rounded-lg bg-white py-1.5 shadow-xl ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-white/10 {dynamicMenuClasses}"
-				transition:slide={{ duration: 200 }}
+				class="
+					absolute z-50 w-48 overflow-hidden
+					rounded-xl border
+					border-gray-200/70 bg-white
+					shadow-[0_2px_8px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.06)]
+					dark:border-gray-700/50 dark:bg-gray-900
+					dark:shadow-[0_2px_8px_rgba(0,0,0,0.3),0_8px_24px_rgba(0,0,0,0.25)]
+					{dynamicMenuClasses}
+				"
+				transition:fade={{ duration: 100 }}
 			>
-				<ul class="divide-y divide-gray-100 dark:divide-gray-700">
+				<ul class="p-1">
+					<!-- Profile -->
+					<li>
+						<a
+							href="/user/{user.username}"
+							onclick={() => (showMenu = false)}
+							class="group flex items-center gap-2.5 rounded-lg px-3 py-2 transition-colors duration-100 hover:bg-gray-100 dark:hover:bg-gray-800"
+						>
+							<Avatar
+								src={user?.avatar || undefined}
+								alt={user.username}
+								fallback={user.username}
+								size="xs"
+							/>
+							<div class="flex min-w-0 flex-col">
+								<span
+									class="truncate text-sm font-semibold text-gray-800 group-hover:text-gray-900 dark:text-gray-100 dark:group-hover:text-white"
+								>
+									{user.username}
+								</span>
+								<span class="text-xs text-gray-400 dark:text-gray-500">
+									{i18n.t('navigation.viewProfile')}
+								</span>
+							</div>
+						</a>
+					</li>
+
+					<li class="my-1 h-px bg-gray-100 dark:bg-gray-800" role="separator"></li>
+
 					{#if !user.premiumActive}
 						<li>
 							<button
-								class="group flex w-full cursor-pointer items-center gap-3 px-3.5 py-2.5 text-sm text-yellow-600 transition-colors duration-150 ease-in-out hover:bg-yellow-50 hover:text-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20 dark:hover:text-yellow-300"
 								onclick={() => upgrade()}
+								class="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-amber-600 transition-colors duration-100 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/40"
 							>
-								<Icon
-									name="star"
-									size={20}
-									class="text-yellow-500 transition-colors duration-150 ease-in-out group-hover:text-yellow-600 dark:text-yellow-400 dark:group-hover:text-yellow-300"
-								/>
+								<Icon name="star" size={15} class="shrink-0" />
 								{i18n.t('common.upgrade')}
 							</button>
 						</li>
+						<li class="my-1 h-px bg-gray-100 dark:bg-gray-800" role="separator"></li>
 					{/if}
+
 					<li>
 						<a
 							href="/settings"
-							class="group flex cursor-pointer items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
 							onclick={() => (showMenu = false)}
+							class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 transition-colors duration-100 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
 						>
-							<Icon
-								name="cog"
-								size={20}
-								class="text-gray-400 transition-colors duration-150 ease-in-out group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400"
-							/>
+							<Icon name="cog" size={15} class="shrink-0 text-gray-400 dark:text-gray-500" />
 							{i18n.t('navigation.settings')}
 						</a>
 					</li>
+
+					<li class="my-1 h-px bg-gray-100 dark:bg-gray-800" role="separator"></li>
+
 					<li>
 						<button
-							class="group flex w-full cursor-pointer items-center gap-3 px-3.5 py-2.5 text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
 							onclick={() => signOut()}
+							class="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-gray-500 transition-colors duration-100 hover:bg-gray-100 hover:text-rose-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-rose-400"
 						>
-							<Icon
-								name="exit"
-								size={20}
-								class="text-gray-400 transition-colors duration-150 ease-in-out group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400"
-							/>
+							<Icon name="exit" size={15} class="shrink-0 text-gray-400 dark:text-gray-500" />
 							{i18n.t('navigation.signout')}
 						</button>
 					</li>
