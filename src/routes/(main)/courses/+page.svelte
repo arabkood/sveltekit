@@ -125,7 +125,7 @@
 						py-3 ps-4 pe-12
 						text-right
 						text-gray-900 placeholder-gray-400
-						shadow-[0_1px_2px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-150 focus:ring-2
+						transition-all duration-150 focus:ring-2
 						focus:outline-none dark:border-gray-700 dark:bg-gray-800/80 dark:text-white
 						dark:placeholder-gray-500
 					"
