@@ -59,7 +59,7 @@
 								<a
 									href="/blog"
 									class="text-sm leading-6 text-gray-600 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
-									>مدونة أكوود</a
+									>مدونة أكود</a
 								>
 							</li>
 							<li>
@@ -101,7 +101,7 @@
 		<!-- Bottom Bar -->
 		<div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24 dark:border-white/10">
 			<p class="text-xs leading-5 text-gray-500 dark:text-gray-400">
-				&copy; {new Date().getFullYear()} أكوود. جميع الحقوق محفوظة.
+				&copy; {new Date().getFullYear()} أكود. جميع الحقوق محفوظة.
 			</p>
 		</div>
 	</div>

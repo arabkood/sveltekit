@@ -178,7 +178,7 @@
 		if (courseTitle) {
 			shareText = shareText.replace('{title}', '"' + courseTitle + '"');
 		} else {
-			shareText = shareText.replace('{title}', 'أكوود');
+			shareText = shareText.replace('{title}', 'أكود');
 		}
 
 		// 2. Get the current URL and add a referral parameter

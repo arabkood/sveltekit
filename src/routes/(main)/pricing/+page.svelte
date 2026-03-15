@@ -83,8 +83,8 @@
 </script>
 
 <svelte:head>
-	<title>أكوود برو | أكوود</title>
-	<meta name="description" content="وصول كامل لجميع مسارات أكوود. تعلّم البرمجة بجدية بدون قيود." />
+	<title>أكود برو | أكود</title>
+	<meta name="description" content="وصول كامل لجميع مسارات أكود. تعلّم البرمجة بجدية بدون قيود." />
 </svelte:head>
 
 <div class="min-h-screen bg-[#FAFAF8] transition-colors duration-300 dark:bg-gray-950">
@@ -106,7 +106,7 @@
 			<!-- <p -->
 			<!-- 	class="fade-up mx-auto mt-5 max-w-[460px] text-base leading-relaxed text-gray-500 delay-2 dark:text-gray-500" -->
 			<!-- > -->
-			<!-- 	وصول كامل لكل مسارات أكوود، التحديات المتقدمة، والمشاريع التي تبني بها مستقبلك المهني. -->
+			<!-- 	وصول كامل لكل مسارات أكود، التحديات المتقدمة، والمشاريع التي تبني بها مستقبلك المهني. -->
 			<!-- </p> -->
 
 			<!-- Billing toggle -->
@@ -219,7 +219,7 @@
 									href={checkoutUrl}
 									class="cta-btn block w-full rounded-2xl bg-violet-600 py-4 text-center text-sm font-bold tracking-[-0.01em] text-white shadow-lg shadow-violet-700/30 hover:bg-violet-500"
 								>
-									{user.isAuthenticated ? 'ابدأ أكوود برو الآن' : 'سجّل وابدأ فوراً'}
+									{user.isAuthenticated ? 'ابدأ أكود برو الآن' : 'سجّل وابدأ فوراً'}
 								</a>
 							{/if}
 
