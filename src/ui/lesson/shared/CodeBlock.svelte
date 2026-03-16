@@ -165,7 +165,7 @@
 	<div class={renderData.containerClass}>
 		<pre class="code-body" dir={renderData.direction}><code class="hljs {renderData.langClass}"
 				><!-- eslint-disable-next-line svelte/no-at-html-tags --><!--
-			-->{#each renderData.highlightedSnippets as snippet, i}{@html snippet}{#if i < renderData.inputCount}<span
+			-->{#each renderData.highlightedSnippets as snippet, i (i)}{@html snippet}{#if i < renderData.inputCount}<span
 							class="cb-input-wrapper"
 							><input
 								type="text"

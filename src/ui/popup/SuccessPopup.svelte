@@ -221,10 +221,8 @@
 	aria-modal="true"
 	aria-labelledby="success-title"
 >
-	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<div
 		class="absolute inset-0 bg-white/10 backdrop-blur-sm dark:bg-black/50"
-		onclick={false && onClose}
 		role="button"
 		tabindex="-1"
 		aria-label="Close dialog"
@@ -253,7 +251,7 @@
 					stroke-width="5"
 					viewBox="0 0 24 24"
 				>
-					<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" class="path" />
+					<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" class="sppath" />
 				</svg>
 			</div>
 
@@ -328,7 +326,7 @@
 </div>
 
 <style>
-	.path {
+	.sppath {
 		stroke-dasharray: 100;
 		stroke-dashoffset: 100;
 		animation: draw 0.8s cubic-bezier(0.65, 0, 0.35, 1) 0.5s forwards;

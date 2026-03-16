@@ -34,6 +34,12 @@ export default defineConfig(
 		}
 	},
 	{
+		files: ['**/*.ts'],
+		languageOptions: {
+			parser: ts.parser
+		}
+	},
+	{
 		files: ['**/*.svelte'],
 
 		languageOptions: {

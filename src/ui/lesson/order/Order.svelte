@@ -11,6 +11,7 @@
 		onSuccess,
 		successPlayer,
 		failPlayer,
+		// eslint-disable-next-line
 		answer = $bindable([])
 	}: {
 		step: OrderQuestion;

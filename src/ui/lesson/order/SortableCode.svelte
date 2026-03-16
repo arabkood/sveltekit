@@ -178,10 +178,10 @@
 		{#each displayedBlocks as block, i (block.id)}
 			{@const isIncorrect = incorrectPositions[i] || false}
 			<div
-				class="code-body relative mb-2 flex min-h-[48px] items-start rounded-lg border p-3 transition-all duration-200
+				class="code-body relative mb-2 flex min-h-12 items-start rounded-lg border p-3 transition-all duration-200
                ease-in-out select-none last:mb-0
                {disabled ? '' : 'cursor-grab hover:-translate-y-0.5 hover:shadow-md'}
-               {draggedIndex === i ? 'z-[1000] scale-[0.98] rotate-1 opacity-50 shadow-xl' : ''}
+               {draggedIndex === i ? 'z-1000 scale-[0.98] rotate-1 opacity-50 shadow-xl' : ''}
                {dragOverIndex === i && draggedIndex !== i ? 'drag-over' : ''}
                {dragOverIndex === i && draggedIndex !== null && draggedIndex > i
 					? 'drag-above'
@@ -189,7 +189,7 @@
                {dragOverIndex === i && draggedIndex !== null && draggedIndex < i
 					? 'drag-below'
 					: ''}
-               {isTouchDevice ? 'mb-3 min-h-[56px] p-4' : ''}
+               {isTouchDevice ? 'mb-3 min-h-14 p-4' : ''}
                {isIncorrect
 					? 'border-red-400 bg-red-50 hover:border-red-500 hover:bg-red-100 dark:border-red-500 dark:bg-red-900/30 dark:hover:border-red-400 dark:hover:bg-red-900/40'
 					: 'border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600'}
@@ -262,7 +262,7 @@
 					</svg>
 				</div>
 				<pre
-					class="overflow-wrap-anywhere m-0 min-h-[1.5em] flex-grow p-0 break-words whitespace-pre-wrap"><code
+					class="overflow-wrap-anywhere m-0 min-h-[1.5em] grow p-0 wrap-break-word whitespace-pre-wrap"><code
 						class="hljs language-{lang} font-mono text-sm leading-relaxed antialiased md:text-base
 						{isIncorrect ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-gray-100'}"
 						><!-- eslint-disable-next-line svelte/no-at-html-tags --><!--
@@ -273,9 +273,9 @@
 	</div>
 {:else}
 	<div class="cb-container overflow-hidden py-3">
-		{#each Array(order.length) as _}
+		{#each Array(order.length) as _, i (i)}
 			<div
-				class="relative mb-2 min-h-[48px] animate-pulse flex-col items-start space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-3 last:mb-0 md:min-h-[56px] md:p-4 dark:border-gray-600 dark:bg-gray-700"
+				class="relative mb-2 min-h-12 animate-pulse flex-col items-start space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-3 last:mb-0 md:min-h-14 md:p-4 dark:border-gray-600 dark:bg-gray-700"
 				dir="ltr"
 			>
 				<div class="ms-8 h-4 w-5/6 rounded bg-gray-200 dark:bg-gray-600"></div>

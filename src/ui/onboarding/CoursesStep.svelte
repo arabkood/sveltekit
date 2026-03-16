@@ -29,13 +29,13 @@
 
 	<!-- Available Courses -->
 	<div class="mt-8 grid gap-3">
-		{#each availableCourses as course}
+		{#each availableCourses as course (course.slug)}
 			<button
 				onclick={() => onCourseSelect(course.slug)}
-				class="group cursor-pointer rounded-xl border-2 border-gray-200 bg-gradient-to-br from-emerald-50/80 to-white p-4 text-right transition-all duration-200 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 dark:border-gray-700 dark:from-emerald-950/20 dark:to-gray-900/50 dark:hover:border-emerald-400"
+				class="group cursor-pointer rounded-xl border-2 border-gray-200 bg-linear-to-br from-emerald-50/80 to-white p-4 text-right transition-all duration-200 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 dark:border-gray-700 dark:from-emerald-950/20 dark:to-gray-900/50 dark:hover:border-emerald-400"
 			>
 				<div class="mb-3 flex items-start gap-3">
-					<div class="flex-shrink-0 text-3xl">{course.emoji}</div>
+					<div class="shrink-0 text-3xl">{course.emoji}</div>
 					<div class="min-w-0 flex-1">
 						<h3 class="mb-1 text-lg font-bold text-gray-900 dark:text-white">
 							{course.titleAr}

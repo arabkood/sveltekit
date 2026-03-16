@@ -5,16 +5,14 @@
 		return icons.some((icon) => icon.id === iconId);
 	};
 
-	interface IconData {
+	export const icons: Array<{
 		id: string;
 		content: string;
 		viewBox?: string;
 		fill?: string;
 		stroke?: string;
 		strokeWidth?: string;
-	}
-
-	export const icons = [
+	}> = [
 		{
 			id: 'dashboard',
 			content:
@@ -354,7 +352,7 @@
 </script>
 
 <svg aria-hidden="true" style="display: none;">
-	{#each icons as icon}
+	{#each icons as icon (icon.id)}
 		<symbol
 			id={'icon-' + icon.id}
 			viewBox={icon.viewBox || '0 0 24 24'}

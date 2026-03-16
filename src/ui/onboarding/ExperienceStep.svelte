@@ -46,7 +46,7 @@
 	<!-- <p class="text-base text-gray-600 dark:text-gray-400">سنقترح عليك المحتوى المناسب</p> -->
 
 	<div class="mt-8 grid gap-3 sm:gap-4">
-		{#each experiences as exp}
+		{#each experiences as exp (exp.id)}
 			<button
 				onclick={() => onExperienceSelect(exp.id as Experience)}
 				class="group transform-gpu cursor-pointer rounded-2xl border border-gray-200 bg-white p-5 text-right transition-all duration-200 hover:scale-[1.02] hover:border-emerald-500 hover:bg-emerald-50/50 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-500 dark:hover:bg-emerald-950/20"

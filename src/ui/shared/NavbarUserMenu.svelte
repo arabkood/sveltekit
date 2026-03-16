@@ -8,6 +8,7 @@
 	import { goto } from '$app/navigation';
 	import IconPng from '$ui/common/IconPng.svelte';
 	import type { UserPrivate } from '$lib/server/db/repos/user';
+	import { resolve } from '$app/paths';
 
 	let {
 		variant = 'desktop',
@@ -28,9 +29,9 @@
 		}
 	}
 
-	const signOut = async () => goto('/signout');
+	const signOut = async () => goto(resolve('/signout'));
 	const upgrade = async () => {
-		goto('/pricing');
+		goto(resolve('/(main)/pricing'));
 		showMenu = false;
 	};
 
@@ -92,7 +93,9 @@
 		<!-- Profile -->
 		<li>
 			<Button
-				href="/user/{user.username}"
+				href={resolve('/(main)/user/[username]', {
+					username: user.username
+				})}
 				variant="link-pill"
 				size="sm"
 				class="w-full justify-start py-5"
@@ -122,7 +125,7 @@
 
 		<li>
 			<Button
-				href="/settings"
+				href={resolve('/(main)/settings')}
 				variant="link-pill"
 				size="sm"
 				class="w-full justify-start py-5"
@@ -194,7 +197,7 @@
 					<!-- Profile -->
 					<li>
 						<a
-							href="/user/{user.username}"
+							href={resolve('/(main)/user/[username]', { username: user.username })}
 							onclick={() => (showMenu = false)}
 							class="group flex items-center gap-2.5 rounded-lg px-3 py-2 transition-colors duration-100 hover:bg-gray-100 dark:hover:bg-gray-800"
 						>
@@ -234,7 +237,7 @@
 
 					<li>
 						<a
-							href="/settings"
+							href={resolve('/settings')}
 							onclick={() => (showMenu = false)}
 							class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 transition-colors duration-100 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
 						>

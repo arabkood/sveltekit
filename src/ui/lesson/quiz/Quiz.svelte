@@ -12,6 +12,7 @@
 		onSuccess,
 		successPlayer,
 		failPlayer,
+		// eslint-disable-next-line
 		answer = $bindable()
 	}: {
 		step: QuizQuestion;
@@ -113,7 +114,7 @@
 				<legend class="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
 					>{i18n.t('common.choose_correct_answer')}</legend
 				>
-				{#each step.options as option, i}
+				{#each step.options as option, i (option)}
 					{@const isCorrectSolution = step.solution === i}
 					{@const isWrong = wrongAnswers.has(i)}
 					<button

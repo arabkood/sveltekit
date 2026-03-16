@@ -99,7 +99,7 @@
 {:else}
 	{@const widths = ['w-10/12', 'w-11/12', 'w-8/12', 'w-9/12', 'w-10/12']}
 	<div dir="ltr" class="space-y-3 rounded-lg bg-gray-50 p-4 dark:bg-gray-900/50">
-		{#each Array(code.split('\n').length > 0 ? code.split('\n').length : 5) as _, i}
+		{#each Array(code.split('\n').length > 0 ? code.split('\n').length : 5) as _, i (i)}
 			<div class="flex animate-pulse items-center space-x-4">
 				<div class="h-5 w-8 flex-shrink-0 rounded bg-gray-200 dark:bg-gray-700"></div>
 				<div

@@ -1,4 +1,5 @@
 <script>
+	import { resolve } from '$app/paths';
 	import Icon from '$ui/common/Icon.svelte';
 	import Logo from '$ui/common/Logo.svelte';
 </script>
@@ -57,21 +58,21 @@
 						<ul class="mt-6 space-y-4">
 							<li>
 								<a
-									href="/blog"
+									href={resolve('/blog')}
 									class="text-sm leading-6 text-gray-600 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
 									>مدونة أكود</a
 								>
 							</li>
 							<li>
 								<a
-									href="/courses"
+									href={resolve('/courses')}
 									class="text-sm leading-6 text-gray-600 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
 									>المسارات</a
 								>
 							</li>
 							<li>
 								<a
-									href="/signup"
+									href={resolve('/signup')}
 									class="text-sm leading-6 text-gray-600 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
 									>ابدأ مجاناً</a
 								>

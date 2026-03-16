@@ -12,6 +12,7 @@
 		onSuccess,
 		successPlayer,
 		failPlayer,
+		// eslint-disable-next-line
 		answer = $bindable(undefined)
 	}: {
 		step: BugQuestion;

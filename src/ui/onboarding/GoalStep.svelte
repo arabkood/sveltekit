@@ -65,7 +65,7 @@
 	</div>
 
 	<div class="grid gap-3 sm:gap-4">
-		{#each goals as goal}
+		{#each goals as goal (goal.id)}
 			<button
 				onclick={() => onGoalSelect(goal.id as Goal)}
 				class="group transform-gpu cursor-pointer rounded-2xl border border-gray-200 bg-white p-5 text-right transition-all duration-200 hover:scale-[1.02] hover:border-emerald-500 hover:bg-emerald-50/50 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-500 dark:hover:bg-emerald-950/20"

@@ -42,7 +42,7 @@
 
 	<!-- Future Interests Grid -->
 	<div class="mt-8 grid gap-3 sm:grid-cols-2">
-		{#each unavailableOptions as option}
+		{#each unavailableOptions as option (option.id)}
 			<button
 				onclick={() => toggleInterest(option.id)}
 				class="group cursor-pointer rounded-xl border p-3.5 text-right transition-all {futureInterests.includes(

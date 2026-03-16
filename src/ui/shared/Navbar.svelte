@@ -9,16 +9,15 @@
 	import { quintOut } from 'svelte/easing';
 	import NavbarLevel from './NavbarLevel.svelte';
 	import type { UserPrivate, UserStats } from '$lib/server/db/repos/user';
+	import { resolve } from '$app/paths';
 
 	let {
 		user,
 		userStats,
-		transition = true,
 		logoVariant = 'withTextMobile' as 'withText' | 'iconOnly' | 'withTextMobile'
 	}: {
 		user?: UserPrivate;
 		userStats?: UserStats;
-		transition?: boolean;
 		logoVariant?: 'withText' | 'iconOnly' | 'withTextMobile';
 	} = $props();
 
@@ -41,11 +40,15 @@
 
 	const links = $derived.by(() => {
 		let l = [
-			{ name: i18n.t('navigation.exploreTracks'), href: '/courses', icon: 'book-open' },
-			{ name: i18n.t('navigation.glossary'), href: '/pages/glossary', icon: 'search' }
+			{ name: i18n.t('navigation.exploreTracks'), href: resolve('/courses'), icon: 'book-open' },
+			{ name: i18n.t('navigation.glossary'), href: resolve('/pages/glossary'), icon: 'search' }
 		];
 		if (user) {
-			l.unshift({ name: i18n.t('navigation.dashboard'), href: '/dashboard', icon: 'dashboard' });
+			l.unshift({
+				name: i18n.t('navigation.dashboard'),
+				href: resolve('/dashboard'),
+				icon: 'dashboard'
+			});
 		}
 		return l;
 	});
@@ -94,16 +97,16 @@
 
 			<!-- Logo -->
 			<a
-				href="/"
+				href={resolve('/')}
 				aria-label="Go to homepage"
-				class="flex-shrink-0 transition-opacity duration-300 hover:opacity-70"
+				class="shrink-0 transition-opacity duration-300 hover:opacity-70"
 			>
 				<Logo variant={logoVariant} size="md" />
 			</a>
 
 			<!-- Desktop navigation -->
 			<div class="hidden items-center gap-2 sm:flex">
-				{#each links as link}
+				{#each links as link (link.name)}
 					{@const isActive = activePath === link.href}
 					<Button
 						href={link.href}
@@ -126,10 +129,10 @@
 				<NavbarUserMenu {user} />
 			{:else}
 				<!-- Auth Buttons -->
-				<Button href="/signin" variant="link-pill" size="sm" rounded>
+				<Button href={resolve('/signin')} variant="link-pill" size="sm" rounded>
 					{i18n.t('navigation.signin')}
 				</Button>
-				<Button href="/signup" variant="attention" size="sm" rounded>
+				<Button href={resolve('/signup')} variant="attention" size="sm" rounded>
 					{i18n.t('navigation.signup')}
 				</Button>
 			{/if}
@@ -144,7 +147,7 @@
 			id="mobile-menu"
 		>
 			<nav class="flex flex-col gap-2" aria-label="Mobile navigation">
-				{#each links as link}
+				{#each links as link (link.name)}
 					{@const isActive = activePath === link.href}
 					<Button
 						href={link.href}
@@ -166,7 +169,7 @@
 				{:else}
 					<div class="flex flex-col gap-3">
 						<Button
-							href="/signup"
+							href={resolve('/signup')}
 							variant="attention"
 							size="md"
 							class="w-full justify-center text-base"
@@ -175,7 +178,7 @@
 							{i18n.t('navigation.signup')}
 						</Button>
 						<Button
-							href="/signin"
+							href={resolve('/signin')}
 							variant="link-pill"
 							size="md"
 							class="w-full justify-center text-base"

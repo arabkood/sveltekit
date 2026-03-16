@@ -6,6 +6,7 @@
 	import { useXp } from '$utils/xp';
 	import Avatar from '$ui/common/Avatar.svelte';
 	import IconPng from '$ui/common/IconPng.svelte';
+	import { resolve } from '$app/paths';
 
 	interface LeaderboardEntry {
 		rank: number;
@@ -41,9 +42,9 @@
 	<!-- Loading State -->
 	{#if loading}
 		<div class="space-y-2">
-			{#each Array(10) as _, i}
+			{#each Array(10) as _, i (i)}
 				<div
-					class="h-[72px] animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800"
+					class="h-18 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800"
 					in:fade={{ duration: 200, delay: i * 20 }}
 				></div>
 			{/each}
@@ -64,7 +65,6 @@
 			{#each entries as entry, index (entry.userId)}
 				{@const isUser = isCurrentUser(entry)}
 				{@const rank = getRankIcon(entry.totalXp)}
-				{@const userHref = `/user/${entry.username}`}
 
 				<div
 					class={cn(
@@ -90,12 +90,18 @@
 					</div>
 
 					<!-- Avatar -->
-					<a class="flex shrink-0 justify-center hover:opacity-90" href={userHref}>
+					<a
+						class="flex shrink-0 justify-center hover:opacity-90"
+						href={resolve('/(main)/user/[username]', { username: entry.username })}
+					>
 						<Avatar src={entry.avatarUrl} fallback={entry.displayName} size="md" />
 					</a>
 
 					<!-- Name/Username/Rank Badge Box -->
-					<a href={userHref} class="me-auto flex min-w-0 items-center gap-3">
+					<a
+						href={resolve('/(main)/user/[username]', { username: entry.username })}
+						class="me-auto flex min-w-0 items-center gap-3"
+					>
 						<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 							<!-- Name with inline rank icon -->
 							<div class="flex items-start gap-2">
