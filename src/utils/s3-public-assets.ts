@@ -1,4 +1,4 @@
-import { isLocal } from '$config';
+import { publicEnv } from '$config';
 
 export function toPublicUrl(path: string): string {
 	if (!path.startsWith('public://')) {
@@ -6,19 +6,11 @@ export function toPublicUrl(path: string): string {
 	}
 	const key = path.replace('public://', '');
 
-	if (isLocal) {
-		return `https://dev.arabkood.com/s3/${key}`;
-	} else {
-		return `https://akood.com/s3/${key}`;
-	}
+	return `${publicEnv.PUBLIC_S3_PATH}/${key}`;
 }
 
 export function replacePublicUrls(text: string): string {
 	return text.replace(/public:\/\/([\w./-]+)/g, (_, key) => {
-		if (isLocal) {
-			return `https://dev.arabkood.com/s3/${key}`;
-		} else {
-			return `https://akood.com/s3/${key}`;
-		}
+		return `${publicEnv.PUBLIC_S3_PATH}/${key}`;
 	});
 }

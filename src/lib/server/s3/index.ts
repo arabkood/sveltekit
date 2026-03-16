@@ -1,8 +1,8 @@
 import { S3Client, GetObjectCommand, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
 import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
-import { s3 } from '../config';
 import path from 'node:path';
+import { s3 } from '$secrets';
 
 console.log('Initializing S3Client.');
 

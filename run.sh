@@ -2,11 +2,11 @@
 
 export DATABASE_URL="postgresql://postgres:admin@192.168.1.69:5432/arabkood_0?sslmode=disable"
 
-export ARABKOOD_DATABASE_DBNAME="arabkood_3"
-export ARABKOOD_DATABASE_USER="postgres"
-export ARABKOOD_DATABASE_HOST="192.168.1.69"
-export ARABKOOD_DATABASE_PASSWORD="admin"
-export ARABKOOD_DATABASE_PORT="5432"
+export AKOOD_DATABASE_DBNAME="arabkood_3"
+export AKOOD_DATABASE_USER="postgres"
+export AKOOD_DATABASE_HOST="192.168.1.69"
+export AKOOD_DATABASE_PASSWORD="admin"
+export AKOOD_DATABASE_PORT="5432"
 
 export AWS_S3_TOPICS_BUCKET_NAME="hellotopics"
 export PUBLIC_APP_ENV="local"

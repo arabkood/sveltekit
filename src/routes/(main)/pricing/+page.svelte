@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { POLAR_PRODUCTS } from '$config';
 	import Icon from '$ui/common/Icon.svelte';
 	import IconPng from '$ui/common/IconPng.svelte';
 	import Footer from '$ui/shared/Footer.svelte';
@@ -7,10 +6,10 @@
 
 	const { data }: { data: LayoutServerData } = $props();
 
-	const user = {
+	const user = $derived({
 		isAuthenticated: !!data.user,
 		isPro: data.user?.premiumActive ?? false
-	};
+	});
 
 	let billingCycleYearly = $state(false);
 	let openFaqIndex: number | null = $state(null);
@@ -77,8 +76,8 @@
 
 	const checkoutUrl = $derived(
 		billingCycleYearly
-			? `/services/checkout?products=${POLAR_PRODUCTS.premium_yearly}&customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
-			: `/services/checkout?products=${POLAR_PRODUCTS.premium_monthly}&customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
+			? `/services/checkout?products=customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
+			: `/services/checkout?products=customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
 	);
 </script>
 

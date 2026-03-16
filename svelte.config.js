@@ -21,7 +21,8 @@ const config = {
 			$i18n: 'src/i18n',
 			$types: 'src/types',
 			$assets: 'src/assets',
-			$config: 'src/config.ts'
+			$config: 'src/lib/env.ts',
+			$secrets: 'src/lib/server/env.ts'
 		},
 
 		version: {

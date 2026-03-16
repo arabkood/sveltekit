@@ -1,6 +1,6 @@
-import { ARABKOOD_API_BASE_URL } from '$config';
+import { publicEnv } from '$config';
 
-export const API_BASE_URL = ARABKOOD_API_BASE_URL;
+export const API_BASE_URL = publicEnv.PUBLIC_API_PATH;
 
 export const API_ENDPOINTS = {
 	auth: {

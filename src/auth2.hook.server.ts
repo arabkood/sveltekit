@@ -1,4 +1,4 @@
-import { auth as authConfig } from '$config';
+import { publicEnv } from '$config';
 import { userRepository } from '$lib/server/db/repos/user';
 import { redirect, type Handle } from '@sveltejs/kit';
 
@@ -16,7 +16,7 @@ const canAnonVisit = (routeId: string) => {
 
 export const authHandle2: Handle = async ({ event, resolve }) => {
 	const currentRouteId = event.route.id;
-	const sessionToken = event.cookies.get(authConfig.sessionCookieName);
+	const sessionToken = event.cookies.get(publicEnv.PUBLIC_SESSION_COOKIE_NAME);
 
 	if (sessionToken) {
 		event.locals.user = await userRepository.getUserBySessionToken(sessionToken);

@@ -1,10 +1,8 @@
-import { getS3ObjectAsBuffer } from '$lib/server/s3';
-import { error, type RequestHandler } from '@sveltejs/kit';
 import path from 'node:path';
+import { error, type RequestHandler } from '@sveltejs/kit';
 import mime from 'mime-types';
-import { s3 } from '$lib/server/config';
-
-//
+import { getS3ObjectAsBuffer } from '$lib/server/s3';
+import { s3 } from '$secrets';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const userPath = params['path'];
