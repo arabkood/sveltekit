@@ -45,7 +45,7 @@
 	</div>
 
 	<div
-		class={'group relative h-[230px] overflow-hidden rounded-2xl border-1 border-gray-200 p-6 shadow-lg transition-all duration-500 dark:border-gray-700'}
+		class="group relative h-[230px] overflow-hidden rounded-2xl border-1 border-gray-200 p-6 shadow-lg transition-all duration-500 dark:border-gray-700"
 	>
 		<div class="absolute inset-0 opacity-5">
 			<svg class="h-full w-full" viewBox="0 0 100 100">

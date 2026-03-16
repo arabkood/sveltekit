@@ -8,7 +8,7 @@
 		variant = 'current',
 		thickness,
 		label = 'Loading...',
-		// eslint-disable-next-line svelte/valid-compile
+		 
 		...props
 	}: {
 		class?: string;

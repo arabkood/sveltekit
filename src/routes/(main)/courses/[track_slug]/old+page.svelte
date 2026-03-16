@@ -238,7 +238,7 @@
 								انتهيت من هذا المسار بنجاح — جهدك واضح، وتستحق كل التقدير. خُطوة مهمة في طريقك، تابع
 								بثقة.
 							</p>
-							<Button variant="attention" endIcon="arrow-left" size={'lg'} href={`/courses`}>
+							<Button variant="attention" endIcon="arrow-left" size="lg" href="/courses">
 								{i18n.t('common.find_other_tracks')}
 							</Button>
 						</div>
@@ -323,7 +323,7 @@
 
 											<!-- Upgrade prompt overlay -->
 											<a
-												href={'/pricing'}
+												href="/pricing"
 												class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-gray-900/60 p-6 text-center backdrop-blur-[1px] transition-all duration-300 hover:bg-gray-900/75"
 											>
 												<Icon name="star" class="h-10 w-10 text-amber-400" />

@@ -122,7 +122,7 @@
 	<div class="flex items-center justify-between">
 		<div class="flex items-center gap-4">
 			<!-- Fire Icon -->
-			<div class={'relative p-1'}>
+			<div class="relative p-1">
 				<IconPng
 					class={cn('relative z-10', { 'grayscale filter': streakStatus === 'broken' })}
 					name="fire"

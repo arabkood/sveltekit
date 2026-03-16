@@ -74,7 +74,7 @@
 				>
 					<Icon
 						name={showPassword ? 'eye-off' : 'eye'}
-						class={'h-5 w-5 text-gray-400 hover:text-gray-500'}
+						class="h-5 w-5 text-gray-400 hover:text-gray-500"
 					/>
 				</button>
 			</div>

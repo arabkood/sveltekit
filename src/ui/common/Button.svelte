@@ -37,7 +37,7 @@
 		endIcon,
 		iconSize,
 		href,
-		// eslint-disable-next-line svelte/valid-compile
+		 
 		...props
 	}: {
 		children: Snippet;

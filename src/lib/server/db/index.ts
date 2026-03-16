@@ -1,9 +1,8 @@
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { env } from '$env/dynamic/private';
 import pg from 'pg';
-import { APP_ENV } from '$config';
 import * as schema from './generated/drizzle/schema';
 import * as relations from './generated/drizzle/relations';
+import { privateEnv } from '$secrets';
 
 const combinedSchema = { ...schema, ...relations };
 
@@ -20,7 +19,7 @@ export function initDB(): DB {
 
 	console.log('Initializing new database connection...');
 
-	const dbURL = env.DATABASE_URL;
+	const dbURL = privateEnv.DATABASE_URL;
 
 	if (!dbURL) {
 		console.error('FATAL: Missing required database environment variables DATABASE_URL');

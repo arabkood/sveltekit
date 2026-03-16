@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { env } from '$env/dynamic/private';
 
 const schema = z.object({
+	DATABASE_URL: z.url(),
+
 	STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
 	STRIPE_WEBHOOK_SECRET: z.string(),
 

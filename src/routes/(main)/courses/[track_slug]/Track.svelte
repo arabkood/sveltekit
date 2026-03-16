@@ -77,7 +77,7 @@
 				{#if item.premiumOnly && !isPremium && !item.submission}
 					<!-- Locked Item -->
 					<a
-						href={'/pricing'}
+						href="/pricing"
 						class="mb-2 flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl p-3 opacity-60 transition-opacity hover:opacity-100 sm:gap-4 sm:p-4"
 					>
 						<div class="flex min-w-0 items-center gap-3 sm:gap-4">
