@@ -207,7 +207,7 @@ export default {
 		glossary: 'المصطلحات البرمجية',
 		signin: 'تسجيل الدخول',
 		signup: 'إنشاء حساب جديد',
-		viewProfile: 'عرض حسابي',
+		viewProfile: 'عرض حسابي'
 	},
 	tracks: {
 		explore: {

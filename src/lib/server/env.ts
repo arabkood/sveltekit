@@ -10,7 +10,7 @@ const schema = z.object({
 	S3_ACCESS_KEY_ID: z.string().min(1),
 	S3_SECRET_ACCESS_KEY: z.string().min(1),
 	S3_PV_BUCKET_NAME: z.string().min(1),
-	S3_BLOG_BUCKET_NAME: z.string().min(1),
+	S3_BLOG_BUCKET_NAME: z.string().min(1)
 });
 
 const parsed = schema.safeParse(env);
@@ -29,5 +29,5 @@ export const s3 = {
 	AccessKeyId: e.S3_ACCESS_KEY_ID,
 	SecretAccessKey: e.S3_SECRET_ACCESS_KEY,
 	PvBucketName: e.S3_PV_BUCKET_NAME,
-	BlogBucketName: e.S3_BLOG_BUCKET_NAME,
+	BlogBucketName: e.S3_BLOG_BUCKET_NAME
 };

@@ -7,7 +7,7 @@ import { privateEnv } from '$secrets';
 const stripe = new Stripe(privateEnv.STRIPE_SECRET_KEY);
 
 export const POST: RequestHandler = async ({ url }) => {
-	const key = url.searchParams.get("key");
+	const key = url.searchParams.get('key');
 
 	if (!key) {
 		error(400, 'key is required');
@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ url }) => {
 
 	const prices = await stripe.prices.list({
 		lookup_keys: [key],
-		expand: ['data.product'],
+		expand: ['data.product']
 	});
 
 	const session = await stripe.checkout.sessions.create({
@@ -23,11 +23,11 @@ export const POST: RequestHandler = async ({ url }) => {
 		line_items: [
 			{
 				price: prices.data[0].id,
-				quantity: 1,
-			},
+				quantity: 1
+			}
 		],
 		mode: 'subscription',
-		success_url: `${SITE}/success?success=true&session_id={CHECKOUT_SESSION_ID}`,
+		success_url: `${SITE}/success?success=true&session_id={CHECKOUT_SESSION_ID}`
 	});
 
 	if (!session.url) {

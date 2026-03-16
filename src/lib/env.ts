@@ -4,7 +4,6 @@ import { env } from '$env/dynamic/public';
 const schema = z.object({
 	PUBLIC_APP_ENV: z.enum(['local', 'dev', 'staging', 'production']).default('dev'),
 
-
 	PUBLIC_S3_PATH: z.string().default('https://akood.com/s3'),
 	PUBLIC_SESSION_COOKIE_NAME: z.string().optional().default('akood_session_token'),
 	PUBLIC_API_PATH: z.url().default('https://akood.com/api/v1'),
@@ -12,7 +11,7 @@ const schema = z.object({
 	PUBLIC_SITE_NAME_EN: z.string().optional().default('Akood'),
 	PUBLIC_SITE_NAME_AR: z.string().optional().default('أكود'),
 	PUBLIC_SITE_NAME_FULL: z.string().optional().default('أكود - Akood'),
-	PUBLIC_SITE: z.string().optional().default('https://akood.com'),
+	PUBLIC_SITE: z.string().optional().default('https://akood.com')
 });
 
 const parsed = schema.safeParse(env);

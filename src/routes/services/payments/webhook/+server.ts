@@ -2,7 +2,6 @@ import type { RequestHandler } from './$types';
 import Stripe from 'stripe';
 import { privateEnv } from '$secrets';
 
-
 const stripe = new Stripe(privateEnv.STRIPE_SECRET_KEY);
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -17,7 +16,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		console.error('⚠️  Webhook signature verification failed.', err.message);
 		return new Response(null, { status: 400 });
 	}
-
 
 	let subscription: Stripe.Subscription;
 

@@ -12,97 +12,107 @@
 
 /* Zain Black */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-Black.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-Black.woff") format("woff");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-Black.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-Black.woff') format('woff');
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
 }
 
 /* Zain ExtraBold */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-ExtraBold.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-ExtraBold.woff") format("woff");
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-ExtraBold.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-ExtraBold.woff') format('woff');
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
 }
 
 /* Zain Bold */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-Bold.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-Bold.woff") format("woff");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-Bold.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-Bold.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
 }
 
 /* Zain Regular */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-Regular.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-Regular.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-Regular.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
 }
 
 /* Zain Light */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-Light.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-Light.woff") format("woff");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-Light.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-Light.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
 }
 
 /* Zain ExtraLight */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-ExtraLight.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-ExtraLight.woff") format("woff");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-ExtraLight.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-ExtraLight.woff') format('woff');
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
 }
 
 /* Zain Italic */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-Italic.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-Italic.woff") format("woff");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-Italic.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-Italic.woff') format('woff');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
 }
 
 /* Zain Light Italic */
 @font-face {
-  font-family: "Zain";
-  src: url("/fonts/Zain/Zain-LightItalic.woff2") format("woff2"),
-       url("/fonts/Zain/Zain-LightItalic.woff") format("woff");
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Fira Code';
-  src: url('/fonts/FiraCode/woff2/FiraCode-Regular.woff2') format('woff2'),
-    url("/fonts/FiraCode/woff/FiraCode-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
+	font-family: 'Zain';
+	src:
+		url('/fonts/Zain/Zain-LightItalic.woff2') format('woff2'),
+		url('/fonts/Zain/Zain-LightItalic.woff') format('woff');
+	font-weight: 300;
+	font-style: italic;
 	font-display: swap;
 }
 @font-face {
-  font-family: 'TheNeueBlack';
-  src: url('/fonts/TheNeueBlack/WOFF2/TheNeue-Black.woff2') format('woff2'),
-    url("/fonts/TheNeueBlack/WOFF/TheNeue-Black.woff") format("woff");
-  font-weight: 500;
-  font-style: normal;
+	font-family: 'Fira Code';
+	src:
+		url('/fonts/FiraCode/woff2/FiraCode-Regular.woff2') format('woff2'),
+		url('/fonts/FiraCode/woff/FiraCode-Regular.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'TheNeueBlack';
+	src:
+		url('/fonts/TheNeueBlack/WOFF2/TheNeue-Black.woff2') format('woff2'),
+		url('/fonts/TheNeueBlack/WOFF/TheNeue-Black.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
 	font-display: swap;
 }
 
@@ -119,25 +129,17 @@
 	--color-primary-900: #183f1a;
 	--color-primary-950: #0d260f;
 
-
-
---color-gray-50: #f9fbfb;
---color-gray-100: #f3f5f6;
---color-gray-200: #e5e9eb;
---color-gray-300: #d0d8dc;
---color-gray-400: #9ba9b0;
---color-gray-500: #5e6b73;
---color-gray-600: #4a5c64;
---color-gray-700: #354a53;
---color-gray-800: #1e3038;
---color-gray-900: #101f28;
---color-gray-950: #020c13;
-
-
-
-
-
-
+	--color-gray-50: #f9fbfb;
+	--color-gray-100: #f3f5f6;
+	--color-gray-200: #e5e9eb;
+	--color-gray-300: #d0d8dc;
+	--color-gray-400: #9ba9b0;
+	--color-gray-500: #5e6b73;
+	--color-gray-600: #4a5c64;
+	--color-gray-700: #354a53;
+	--color-gray-800: #1e3038;
+	--color-gray-900: #101f28;
+	--color-gray-950: #020c13;
 
 	--font-family-arabic:
 		Zain, 'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Sans Arabic', 'Segoe UI', Tahoma,

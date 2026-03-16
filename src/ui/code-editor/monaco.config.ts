@@ -4,7 +4,7 @@ export const monacoConfig: Monaco.editor.IStandaloneEditorConstructionOptions = 
 	automaticLayout: true,
 	minimap: { enabled: false },
 	fontSize: 16,
-	fontFamily: "var(--font-mono)",
+	fontFamily: 'var(--font-mono)',
 	lineNumbers: 'on',
 	folding: true,
 	lineHeight: 24,
