@@ -214,12 +214,15 @@
 									أنت مشترك بالفعل ✓
 								</div>
 							{:else}
-								<a
-									href={checkoutUrl}
-									class="cta-btn block w-full rounded-2xl bg-violet-600 py-4 text-center text-sm font-bold tracking-[-0.01em] text-white shadow-lg shadow-violet-700/30 hover:bg-violet-500"
-								>
-									{user.isAuthenticated ? 'ابدأ أكود برو الآن' : 'سجّل وابدأ فوراً'}
-								</a>
+								<form action="/services/payments/create-checkout-session" method="POST">
+									<input type="hidden" name="key" value="pro_monthly" />
+									<button
+										type="submit"
+										class="cta-btn block w-full rounded-2xl bg-violet-600 py-4 text-center text-sm font-bold tracking-[-0.01em] text-white shadow-lg shadow-violet-700/30 hover:bg-violet-500"
+									>
+										{user.isAuthenticated ? 'ابدأ أكود برو الآن' : 'سجّل وابدأ فوراً'}
+									</button>
+								</form>
 							{/if}
 
 							<p class="mt-4 text-center text-xs text-gray-400">لا رسوم خفية · إلغاء في أي وقت</p>

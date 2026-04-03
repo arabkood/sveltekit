@@ -6,15 +6,15 @@ import { privateEnv } from '$secrets';
 
 const stripe = new Stripe(privateEnv.STRIPE_SECRET_KEY);
 
-export const POST: RequestHandler = async ({ url }) => {
-	const key = url.searchParams.get('key');
+export const POST: RequestHandler = async ({ url, request }) => {
+	const key = (await request.formData()).get("key")
 
 	if (!key) {
 		error(400, 'key is required');
 	}
 
 	const prices = await stripe.prices.list({
-		lookup_keys: [key],
+		lookup_keys: [key.toString()],
 		expand: ['data.product']
 	});
 
