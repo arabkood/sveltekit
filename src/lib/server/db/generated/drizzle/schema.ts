@@ -155,10 +155,6 @@ export const usersInAuth = auth.table(
 		emailVerifiedAt: timestamp('email_verified_at', { withTimezone: true, mode: 'date' }),
 		createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
-		premiumActive: boolean('premium_active').default(false).notNull(),
-		polarLastSyncedAt: timestamp('polar_last_synced_at', { withTimezone: true, mode: 'date' }),
-		polarCustomerId: uuid('polar_customer_id'),
-		polarSubscriptionIds: uuid('polar_subscription_ids').array()
 	},
 	(table) => [
 		index('users_active_email_lower_idx').using('btree', sql`lower((email)::text)`),

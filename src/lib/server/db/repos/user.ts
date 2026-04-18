@@ -18,8 +18,6 @@ export type UserPrivate = Pick<
 	| 'role'
 	| 'emailVerified'
 	| 'createdAt'
-	| 'premiumActive'
-	| 'polarCustomerId'
 >;
 
 export type UserStats = typeof statsInUsers.$inferSelect;
@@ -49,8 +47,6 @@ export class UserRepository {
 						role: true,
 						emailVerified: true,
 						createdAt: true,
-						premiumActive: true,
-						polarCustomerId: true
 					}
 				}
 			}
@@ -91,8 +87,6 @@ export class UserRepository {
 				role: true,
 				emailVerified: true,
 				createdAt: true,
-				premiumActive: true,
-				polarCustomerId: true
 			}
 		});
 
