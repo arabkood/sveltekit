@@ -235,7 +235,7 @@
 						</div>
 
 						<!-- Tracks Scroll Container -->
-						<div class="relative rounded-2xl bg-gray-100/60 p-3 dark:bg-gray-800/50">
+						<div class="relative rounded-2xl bg-gray-100/60 p-3 dark:bg-gray-800/20">
 							<div
 								class="scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent scrollbar-thumb-rounded-full flex gap-3 overflow-x-auto px-2 py-4"
 							>

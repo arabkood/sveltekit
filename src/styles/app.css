@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@import 'highlight.js/styles/github.css' layer(base);
+@import 'highlight.js/styles/github.css' layer(gray);
 
 @import 'highlight.js/styles/github-dark.css' layer(dark) (prefers-color-scheme: dark);
 
@@ -129,17 +129,17 @@
 	--color-primary-900: #183f1a;
 	--color-primary-950: #0d260f;
 
-	--color-gray-50: #f9fbfb;
-	--color-gray-100: #f3f5f6;
-	--color-gray-200: #e5e9eb;
-	--color-gray-300: #d0d8dc;
-	--color-gray-400: #9ba9b0;
-	--color-gray-500: #5e6b73;
-	--color-gray-600: #4a5c64;
-	--color-gray-700: #354a53;
-	--color-gray-800: #1e3038;
-	--color-gray-900: #101f28;
-	--color-gray-950: #020c13;
+	--color-gray-50: oklch(100% 0 255);
+	--color-gray-100: oklch(96.09% 0.013 255);
+	--color-gray-200: oklch(88.15% 0.035 255);
+	--color-gray-300: oklch(79.94% 0.05 255);
+	--color-gray-400: oklch(71.52% 0.065 255);
+	--color-gray-500: oklch(62.87% 0.08 255);
+	--color-gray-600: oklch(53.5% 0.07 255);
+	--color-gray-700: oklch(43.71% 0.058 255);
+	--color-gray-800: oklch(33.35% 0.045 255);
+	--color-gray-900: oklch(21.94% 0.018 255);
+	--color-gray-950: oklch(18.37% 0.013 255);
 
 	--font-family-arabic:
 		Zain, 'NotoKufiArabic', 'IBM Plex Sans Arabic', 'Dubai', 'Noto Sans Arabic', 'Segoe UI', Tahoma,
