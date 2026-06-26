@@ -2,68 +2,13 @@
 	import { scale } from 'svelte/transition';
 	import { i18n } from '$i18n/i18n';
 	import Input from '$ui/common/Input.svelte';
-	import { createForm, z } from '$utils/createForm.svelte';
-	import { API_ENDPOINTS } from '$api/config';
-	import type { ApiError } from '$types/api';
 	import Icon from '$ui/common/Icon.svelte';
-	import { page } from '$app/state';
 	import Button from '$ui/common/Button.svelte';
+	import { enhance } from '$app/forms';
+
+	let { form } = $props();
 
 	let status = $state('idle');
-	let submitError = $state<null | string>(null);
-
-	const schema = z
-		.object({
-			password: z
-				.string()
-				.min(8, i18n.t('validation.password.minLength'))
-				.max(100, i18n.t('validation.password.maxLength'))
-				.regex(/[0-9]/, i18n.t('validation.password.number')),
-			confirmPassword: z.string().min(1, i18n.t('validation.confirmPassword.required'))
-		})
-		.refine((data) => data.password === data.confirmPassword, {
-			message: i18n.t('validation.confirmPassword.match'),
-			path: ['confirmPassword']
-		});
-
-	const form = $derived(
-		createForm(
-			{
-				password: '',
-				confirmPassword: ''
-			},
-			schema,
-			async (values) => {
-				if (!form.state.isValid) return;
-
-				status = 'loading';
-				submitError = null;
-
-				const response = await fetch(API_ENDPOINTS.auth.resetPassword, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						token: page.params.token,
-						newPassword: values.password
-					}),
-					credentials: 'include'
-				});
-
-				if (!response.ok) {
-					const error: ApiError = await response.json();
-					submitError = error.error;
-					status = 'idle';
-					return;
-				}
-
-				status = 'success';
-
-				setTimeout(() => {
-					location.href = '/signin';
-				}, 1500);
-			}
-		)
-	);
 </script>
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
@@ -73,7 +18,7 @@
 			{i18n.t('site.logo')}
 		</a>
 
-		{#if status === 'success'}
+		{#if form?.success || status === 'success'}
 			<div
 				transition:scale={{ duration: 400 }}
 				class="text-primary-700 dark:text-primary-500 w-full rounded-lg py-6 text-center"
@@ -96,7 +41,20 @@
 						{i18n.t('resetPassword.description')}
 					</p>
 
-					<form class="space-y-4 md:space-y-6" onsubmit={form.handleSubmit}>
+					<form class="space-y-4 md:space-y-6" method="POST" use:enhance={() => {
+						status = 'loading';
+						return async ({ result, update }) => {
+							if (result.type === 'success') {
+								status = 'success';
+								setTimeout(() => {
+									location.href = '/signin';
+								}, 1500);
+							} else {
+								status = 'idle';
+							}
+							await update();
+						};
+					}}>
 						<Input
 							label={i18n.t('common.password')}
 							icon="password"
@@ -105,10 +63,8 @@
 							placeholder="••••••••"
 							required={true}
 							dir="ltr"
-							value={form.state.values.password}
-							onchange={form.handleChange}
-							error={form.state.touched.password ? form.state.errors.password : undefined}
-							disabled={status === 'loading' || form.state.isSubmitting}
+							error={form?.errors?.password ? i18n.t(form.errors.password[0]) : undefined}
+							disabled={status === 'loading'}
 						/>
 
 						<Input
@@ -119,27 +75,23 @@
 							placeholder="••••••••"
 							required={true}
 							dir="ltr"
-							value={form.state.values.confirmPassword}
-							onchange={form.handleChange}
-							error={form.state.touched.confirmPassword
-								? form.state.errors.confirmPassword
-								: undefined}
-							disabled={status === 'loading' || form.state.isSubmitting}
+							error={form?.errors?.confirmPassword ? i18n.t(form.errors.confirmPassword[0]) : undefined}
+							disabled={status === 'loading'}
 						/>
 
-						{#if submitError}
+						{#if form?.error}
 							<div
 								transition:scale={{ duration: 400 }}
 								class="rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200"
 							>
-								{i18n.error(submitError)}
+								{i18n.t(form.error)}
 							</div>
 						{/if}
 
 						<Button
 							type="submit"
 							fullWidth={true}
-							disabled={status === 'loading' || form.state.isSubmitting}
+							disabled={status === 'loading'}
 						>
 							{status === 'loading'
 								? i18n.t('resetPassword.submiting')

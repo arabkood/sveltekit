@@ -19,7 +19,7 @@ export type UserPrivate = Pick<
 
 type SubscriptionColumns = { plan: 'free' | 'pro' | 'past_due'; proUntil: Date | null } | null;
 
-function isProFromSubscription(sub: SubscriptionColumns): boolean {
+export function isProFromSubscription(sub: SubscriptionColumns): boolean {
 	if (!sub || sub.plan !== 'pro') return false;
 	if (sub.proUntil && sub.proUntil.getTime() < Date.now()) return false;
 	return true;
@@ -37,43 +37,6 @@ export type UserTrack = typeof userTracks.$inferSelect & {
 };
 
 export class UserRepository {
-	public async getUserBySessionToken(token: string): Promise<UserPrivate | null> {
-		const session = await db.query.sessionTokensInAuth.findFirst({
-			where: {
-				token: token,
-				expiresAt: {
-					gt: new Date()
-				}
-			},
-			with: {
-				usersInAuth: {
-					columns: {
-						id: true,
-						email: true,
-						username: true,
-						role: true,
-						emailVerified: true,
-						createdAt: true
-					},
-					with: {
-						userSubscriptionsInAuths: {
-							columns: { plan: true, proUntil: true, stripeCustomerId: true }
-						}
-					}
-				}
-			}
-		});
-
-		const userRecord = session?.usersInAuth;
-		if (!userRecord) return null;
-
-		const { userSubscriptionsInAuths: sub, ...rest } = userRecord;
-		return {
-			...rest,
-			isPro: isProFromSubscription(sub[0] || null),
-			hasBilling: !!sub[0]?.stripeCustomerId
-		};
-	}
 
 	public async getStats(userId: string): Promise<UserStats | null> {
 		const userStats = await db.query.statsInUsers.findFirst({
@@ -120,7 +83,7 @@ export class UserRepository {
 				createdAt: true
 			},
 			with: {
-				userSubscriptionsInAuths: {
+				userSubscriptionsInAuth: {
 					columns: { plan: true, proUntil: true, stripeCustomerId: true }
 				}
 			}
@@ -128,11 +91,11 @@ export class UserRepository {
 
 		if (!userRecord) return null;
 
-		const { userSubscriptionsInAuths: sub, ...rest } = userRecord;
+		const { userSubscriptionsInAuth: sub, ...rest } = userRecord;
 		return {
 			...rest,
-			isPro: isProFromSubscription(sub[0] || null),
-			hasBilling: !!sub[0]?.stripeCustomerId
+			isPro: isProFromSubscription(sub),
+			hasBilling: !!sub?.stripeCustomerId
 		};
 	}
 

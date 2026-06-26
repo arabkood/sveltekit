@@ -11,10 +11,20 @@ const schema = z.object({
 	S3_ACCESS_KEY_ID: z.string().min(1),
 	S3_SECRET_ACCESS_KEY: z.string().min(1),
 	S3_PV_BUCKET_NAME: z.string().min(1),
-	S3_BLOG_BUCKET_NAME: z.string().min(1)
+	S3_BLOG_BUCKET_NAME: z.string().min(1),
+	AUTH_SESSION_COOKIE_NAME: z.string().default('akood_session_token'),
+	AUTH_SESSION_TOKEN_EXPIRY_HOURS: z.string().default('720'),
+	AUTH_EMAIL_VERIFICATION_EXPIRY_MINUTES: z.string().default('1440'),
+	AUTH_PASSWORD_RESET_EXPIRY_MINUTES: z.string().default('60'),
+	SMTP_HOST: z.string().optional(),
+	SMTP_PORT: z.string().optional(),
+	SMTP_USER: z.string().optional(),
+	SMTP_PASS: z.string().optional(),
+	SMTP_FROM_EMAIL: z.string().optional(),
+	SMTP_FROM_NAME: z.string().optional()
 });
 
-const skipValidation = building || process.env.SKIP_ENV_VALIDATION === 'true';
+const skipValidation = building || import.meta.env.SKIP_ENV_VALIDATION === 'true';
 
 const e = skipValidation
 	? (env as unknown as z.infer<typeof schema>)

@@ -25,7 +25,8 @@ export default {
 		submiting: 'جاري الإرسال...',
 		submit: 'إرسال',
 		rememberPassword: 'تتذكر كلمة المرور؟',
-		signinHere: 'تسجيل الدخول هنا'
+		signinHere: 'تسجيل الدخول هنا',
+		emailNotFound: 'البريد الإلكتروني غير موجود'
 	},
 	resetPassword: {
 		title: 'إعادة تعيين كلمة المرور',
@@ -60,7 +61,8 @@ export default {
 		identifier: 'البريد الإلكتروني أو اسم المستخدم',
 		identifierPlaceholder: 'أدخل بريدك الإلكتروني أو اسم المستخدم',
 		rememberMe: 'تذكرني',
-		forgotPassword: 'نسيت كلمة المرور؟'
+		forgotPassword: 'نسيت كلمة المرور؟',
+		invalidCredentials: 'اسم المستخدم/البريد الإلكتروني أو كلمة المرور غير صحيحة'
 	},
 	verifyEmail: {
 		title: 'تحقق من بريدك الإلكتروني',
@@ -70,7 +72,8 @@ export default {
 		success: 'تم التحقق من البريد الإلكتروني بنجاح!',
 		noCode: 'لم يصلك الرمز؟',
 		resend: 'إعادة إرسال الرمز',
-		incomplete: 'يرجى إدخال رمز التحقق كاملاً'
+		incomplete: 'يرجى إدخال رمز التحقق كاملاً',
+		invalidCode: 'رمز التحقق غير صالح'
 	},
 	validation: {
 		required: 'هذا الحقل مطلوب',
@@ -81,18 +84,21 @@ export default {
 		email: {
 			required: 'البريد الإلكتروني مطلوب',
 			invalid: 'الرجاء إدخال بريد إلكتروني صحيح',
-			maxLength: 'يجب ألا يتجاوز البريد الإلكتروني 100 حرف'
+			maxLength: 'يجب ألا يتجاوز البريد الإلكتروني 100 حرف',
+			exists: 'البريد الإلكتروني مستخدم بالفعل'
 		},
 		username: {
 			minLength: 'يجب أن يحتوي اسم المستخدم على 4 أحرف على الأقل',
 			maxLength: 'يجب ألا يتجاوز اسم المستخدم 40 حرف',
-			pattern: 'يمكن أن يحتوي اسم المستخدم على أحرف وأرقام وشرطات سفلية وواصلات فقط'
+			pattern: 'يمكن أن يحتوي اسم المستخدم على أحرف وأرقام وشرطات سفلية وواصلات فقط',
+			exists: 'اسم المستخدم مستخدم بالفعل'
 		},
 		password: {
 			minLength: 'يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل',
 			maxLength: 'يجب ألا تتجاوز كلمة المرور 100 حرف',
 			number: 'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل',
-			required: 'كلمة المرور مطلوبة'
+			required: 'كلمة المرور مطلوبة',
+			wrongCurrent: 'كلمة المرور الحالية غير صحيحة'
 		},
 		confirmPassword: {
 			required: 'الرجاء تأكيد كلمة المرور',
@@ -187,16 +193,9 @@ export default {
 		module: 'وحدة'
 	},
 	errors: {
-		USERNAME_CONFLICT: 'اسم المستخدم مستخدم بالفعل',
-		EMAIL_CONFLICT: 'البريد الإلكتروني مستخدم بالفعل',
-		MISSING_AUTHORIZATION_TOKEN: 'الرجاء تسجيل الدخول',
-		INVALID_AUTHORIZATION_TOKEN: 'جلسة غير صالحة، الرجاء تسجيل الدخول مرة أخرى',
-		INVALID_AUTHORIZATION_TOKEN_CLAIMS: 'جلسة غير صالحة، الرجاء تسجيل الدخول مرة أخرى',
 		INTERNAL_ERROR: 'حدث خطأ داخلي',
 		SOMETHING_WENT_WRONG: 'حدث خطأ ما',
-		INVALID_EMAIL_VERIFICATION_TOKEN: 'رمز التحقق غير صالح',
-		INVALID_INPUT: 'البيانات المدخلة غير صحيحة',
-		BAD_CREDENTIALS: 'اسم المستخدم/البريد الإلكتروني أو كلمة المرور غير صحيحة'
+		INVALID_INPUT: 'البيانات المدخلة غير صحيحة'
 	},
 	navigation: {
 		dashboard: 'لوحة التحكم ',

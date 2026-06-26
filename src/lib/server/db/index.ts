@@ -7,7 +7,7 @@ import { relations } from './relations';
 function createDB(pool: Pool) {
 	return drizzle({
 		client: pool,
-		logger: true,
+		logger: false,
 		relations: relations
 	});
 }

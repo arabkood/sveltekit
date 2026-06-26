@@ -14,7 +14,7 @@
 
 	async function handleSignOut() {
 		try {
-			const signoutResponse = await fetch(API_ENDPOINTS.auth.signout, {
+			const signoutResponse = await fetch('/api/v1/auth/signout', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

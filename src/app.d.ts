@@ -7,6 +7,7 @@ declare global {
 	namespace App {
 		interface Locals {
 			user: UserPrivate | null;
+			session: any | null;
 		}
 	}
 	interface Window {

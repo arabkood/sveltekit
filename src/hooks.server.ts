@@ -1,10 +1,10 @@
 import type { ServerInit } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { initDB } from '$lib/server/db';
-import { authHandle2 } from './auth2.hook.server';
+import { authHandle } from './auth2.hook.server';
 
 export const init: ServerInit = async () => {
 	initDB();
 };
 
-export const handle = sequence(authHandle2);
+export const handle = sequence(authHandle);

@@ -2,50 +2,13 @@
 	import { scale } from 'svelte/transition';
 	import { i18n } from '$i18n/i18n';
 	import Input from '$ui/common/Input.svelte';
-	import { createForm, z } from '$utils/createForm.svelte';
-	import { API_ENDPOINTS } from '$api/config';
-	import type { ApiError } from '$types/api';
 	import Icon from '$ui/common/Icon.svelte';
 	import Button from '$ui/common/Button.svelte';
+	import { enhance } from '$app/forms';
+
+	let { form } = $props();
 
 	let status = $state('idle');
-	let submitError = $state<null | string>(null);
-
-	const schema = z.object({
-		email: z
-			.string()
-			.min(1, i18n.t('validation.email.required'))
-			.email(i18n.t('validation.email.invalid'))
-			.max(100, i18n.t('validation.email.maxLength'))
-	});
-
-	const form = createForm(
-		{
-			email: ''
-		},
-		schema,
-		async (values) => {
-			if (!form.state.isValid) return;
-			status = 'loading';
-			submitError = null;
-
-			const response = await fetch(API_ENDPOINTS.auth.forgotPassword, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(values),
-				credentials: 'include'
-			});
-
-			if (!response.ok) {
-				const error: ApiError = await response.json();
-				submitError = error.error;
-				status = 'idle';
-				return;
-			}
-
-			status = 'success';
-		}
-	);
 </script>
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
@@ -55,7 +18,7 @@
 			{i18n.t('site.logo')}
 		</a>
 
-		{#if status === 'success'}
+		{#if form?.success || status === 'success'}
 			<div
 				transition:scale={{ duration: 400 }}
 				class="text-primary-700 dark:text-primary-500 w-full rounded-lg py-6 text-center"
@@ -78,7 +41,17 @@
 						{i18n.t('forgotPassword.description')}
 					</p>
 
-					<form class="space-y-4 md:space-y-6" onsubmit={form.handleSubmit}>
+					<form class="space-y-4 md:space-y-6" method="POST" use:enhance={() => {
+						status = 'loading';
+						return async ({ result, update }) => {
+							if (result.type === 'success') {
+								status = 'success';
+							} else {
+								status = 'idle';
+							}
+							await update();
+						};
+					}}>
 						<Input
 							label={i18n.t('common.email')}
 							icon="email"
@@ -87,25 +60,24 @@
 							placeholder="name@example.com"
 							required={true}
 							dir="ltr"
-							value={form.state.values.email}
-							onchange={form.handleChange}
-							error={form.state.touched.email ? form.state.errors.email : undefined}
-							disabled={status === 'loading' || form.state.isSubmitting}
+							value={form?.values?.email ?? ''}
+							error={form?.errors?.email ? i18n.t(form.errors.email[0]) : undefined}
+							disabled={status === 'loading'}
 						/>
 
-						{#if submitError}
+						{#if form?.error}
 							<div
 								transition:scale={{ duration: 400 }}
 								class="rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200"
 							>
-								{i18n.error(submitError)}
+								{i18n.t(form.error)}
 							</div>
 						{/if}
 
 						<Button
 							type="submit"
 							fullWidth={true}
-							disabled={status === 'loading' || form.state.isSubmitting}
+							disabled={status === 'loading'}
 						>
 							{status === 'loading'
 								? i18n.t('forgotPassword.submiting')

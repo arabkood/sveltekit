@@ -19,6 +19,8 @@ COPY --from=build /app/build ./build
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/.svelte-kit ./.svelte-kit
 
+ENV ADDRESS_HEADER="X-Forwarded-For"
+ENV XFF_DEPTH="1"
 
 EXPOSE 3000
 CMD ["node", "build"]

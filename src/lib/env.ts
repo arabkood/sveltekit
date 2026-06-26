@@ -14,7 +14,7 @@ const schema = z.object({
 	PUBLIC_SITE: z.string().optional().default('https://akood.com')
 });
 
-const shouldValidate = process.env.SKIP_ENV_VALIDATION !== 'true';
+const shouldValidate = import.meta.env.SKIP_ENV_VALIDATION !== 'true';
 
 const publicEnv = shouldValidate
 	? (() => {

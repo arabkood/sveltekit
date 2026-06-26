@@ -12,7 +12,7 @@ export const relations = defineRelations(schema, (r) => ({
 		auditLogsInAuths: r.many.auditLogsInAuth(),
 		oneTimeTokensInAuths: r.many.oneTimeTokensInAuth(),
 		sessionTokensInAuths: r.many.sessionTokensInAuth(),
-		userSubscriptionsInAuths: r.many.userSubscriptionsInAuth(),
+		userSubscriptionsInAuth: r.one(schema.userSubscriptionsInAuth),
 		dailyStatsInUsers: r.many.dailyStatsInUsers(),
 		statsInUsers: r.many.statsInUsers(),
 		itemsInClasses: r.many.itemsInClass(),

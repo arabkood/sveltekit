@@ -1,117 +1,39 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import { i18n } from '$i18n/i18n';
-	import { API_ENDPOINTS } from '$api/config';
-	import type { ApiError } from '$types/api';
 	import Icon from '$ui/common/Icon.svelte';
 	import CodeInput from '$ui/common/CodeInput.svelte';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import { goto } from '$app/navigation';
 	import Button from '$ui/common/Button.svelte';
+	import { enhance } from '$app/forms';
 
 	let status = $state('idle');
-	let submitError = $state<null | string>(null);
 	let verificationCode = $state<string[]>(Array(6).fill(''));
 
-	const { data }: { data: PageData } = $props();
+	const { data, form }: { data: PageData, form: any } = $props();
 	const { user } = data;
 
 	if (!user || user.emailVerified || !user.email) {
 		location.href = '/';
-		goto('/', {
-			invalidateAll: true
-		});
 	}
+	
 	let cooldown = $state<number>(30);
-	let startTime = $state<number>(Date.now());
 
 	onMount(() => {
 		const i = setInterval(() => {
-			cooldown--;
+			if (cooldown > 0) cooldown--;
 		}, 1000);
 
-		startTime = Date.now();
-
 		window.posthog?.capture('email_verification_started', {
-			email: user.email
+			email: user?.email
 		});
 
 		return () => clearInterval(i);
 	});
 
-	const handleSubmit = async (event: Event) => {
-		event.preventDefault();
-
-		if (verificationCode.some((v) => !v)) {
-			submitError = 'validation.verificationCode.incomplete';
-			return;
-		}
-
-		status = 'loading';
-		submitError = null;
-
-		const code = verificationCode.join('');
-
-		try {
-			const response = await fetch(API_ENDPOINTS.auth.verifyEmail, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ code: code, email: user.email }),
-				credentials: 'include'
-			});
-
-			if (!response.ok) {
-				const error: ApiError = await response.json();
-				console.log(error);
-				submitError = error.error;
-				status = 'idle';
-
-				window.posthog?.capture('email_verification_failed', {
-					email: user.email,
-					error: JSON.stringify(error)
-				});
-
-				return;
-			}
-
-			status = 'success';
-
-			window.posthog?.capture('email_verification_completed', {
-				email: user.email,
-				duration_seconds: Math.floor((Date.now() - startTime) / 1000)
-			});
-			setTimeout(() => {
-				location.href = '/';
-			}, 1500);
-		} catch {
-			submitError = 'SOMETHING_WENT_WRONG';
-			status = 'idle';
-		}
-	};
-
 	const handleCodeChange = (code: string[]) => {
 		verificationCode = code;
-	};
-
-	const resendCode = async () => {
-		if (cooldown > 0) return;
-		try {
-			window.posthog?.capture('email_verification_resend_code', {
-				email: user.email
-			});
-
-			await fetch(API_ENDPOINTS.auth.resendEmailVerification, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email: user.email })
-			});
-
-			const canResendCodeAt = Date.now() + 60 * 1000;
-			cooldown = Math.floor((canResendCodeAt - Date.now()) / 1000);
-		} catch {
-			// Handle error silently
-		}
 	};
 </script>
 
@@ -122,7 +44,7 @@
 			{i18n.t('site.logo')}
 		</div>
 
-		{#if status === 'success'}
+		{#if form?.success || status === 'success'}
 			<div
 				transition:scale={{ duration: 400 }}
 				class="text-primary-700 dark:text-primary-500 w-full rounded-lg py-6 text-center"
@@ -145,7 +67,22 @@
 						{i18n.t('verifyEmail.description')}
 					</p>
 
-					<form class="space-y-4 md:space-y-6" onsubmit={handleSubmit}>
+					<form class="space-y-4 md:space-y-6" method="POST" action="?/default" use:enhance={() => {
+						status = 'loading';
+						return async ({ result, update }) => {
+							if (result.type === 'success') {
+								status = 'success';
+								window.posthog?.capture('email_verification_completed', { email: user?.email });
+								setTimeout(() => {
+									location.href = '/dashboard';
+								}, 1500);
+							} else {
+								status = 'idle';
+							}
+							await update();
+						};
+					}}>
+						<input type="hidden" name="code" value={verificationCode.join('')} />
 						<CodeInput
 							length={6}
 							value={verificationCode}
@@ -153,12 +90,12 @@
 							disabled={status === 'loading'}
 						/>
 
-						{#if submitError}
+						{#if form?.error}
 							<div
 								transition:scale={{ duration: 400 }}
 								class="rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200"
 							>
-								{i18n.error(submitError)}
+								{i18n.t(form.error)}
 							</div>
 						{/if}
 
@@ -167,12 +104,20 @@
 								? i18n.t('verifyEmail.verifying')
 								: i18n.t('verifyEmail.verify')}
 						</Button>
+					</form>
 
-						<p class="text-center text-sm font-light text-gray-500 dark:text-gray-400">
+					<form method="POST" action="?/resend" use:enhance={() => {
+						return async ({ result, update }) => {
+							if (result.type === 'success') {
+								cooldown = 60;
+							}
+							await update();
+						};
+					}}>
+						<p class="text-center text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
 							{i18n.t('verifyEmail.noCode')}
 							<button
-								type="button"
-								onclick={resendCode}
+								type="submit"
 								disabled={cooldown > 0}
 								class={cooldown > 0
 									? 'cursor-default font-medium text-gray-700 dark:text-gray-300'
