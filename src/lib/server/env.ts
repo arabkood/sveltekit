@@ -14,19 +14,24 @@ const schema = z.object({
 	S3_BLOG_BUCKET_NAME: z.string().min(1)
 });
 
-const e = building
-	? ({} as z.infer<typeof schema>)
+const skipValidation = building || process.env.SKIP_ENV_VALIDATION === 'true';
+
+const e = skipValidation
+	? (env as unknown as z.infer<typeof schema>)
 	: (() => {
 			const parsed = schema.safeParse(env);
+
 			if (!parsed.success) {
 				console.error('❌ Invalid private environment variables:');
 				console.error(parsed.error);
 				throw new Error('Invalid environment configuration');
 			}
+
 			return parsed.data;
 		})();
 
 export const privateEnv = e;
+
 export const s3 = {
 	Endpoint: e.S3_ENDPOINT,
 	Region: e.S3_REGION,

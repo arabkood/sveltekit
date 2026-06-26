@@ -14,14 +14,23 @@ const schema = z.object({
 	PUBLIC_SITE: z.string().optional().default('https://akood.com')
 });
 
-const parsed = schema.safeParse(env);
-if (!parsed.success) {
-	console.error('❌ Invalid public environment variables:');
-	console.error(z.treeifyError(parsed.error).errors);
-	throw new Error('Invalid environment configuration');
-}
+const shouldValidate = process.env.SKIP_ENV_VALIDATION !== 'true';
 
-export const publicEnv = parsed.data;
+const publicEnv = shouldValidate
+	? (() => {
+			const parsed = schema.safeParse(env);
+
+			if (!parsed.success) {
+				console.error('❌ Invalid public environment variables:');
+				console.error(z.treeifyError(parsed.error).errors);
+				throw new Error('Invalid environment configuration');
+			}
+
+			return parsed.data;
+		})()
+	: (env as unknown as z.infer<typeof schema>);
+
+export { publicEnv };
 
 // App env
 export const APP_ENV = publicEnv.PUBLIC_APP_ENV;
