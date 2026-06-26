@@ -18,7 +18,19 @@ export type UserPrivate = Pick<
 	| 'role'
 	| 'emailVerified'
 	| 'createdAt'
->;
+> & {
+	// Derived from auth.user_subscriptions (Stripe).
+	isPro: boolean;
+	hasBilling: boolean;
+};
+
+type SubscriptionColumns = { plan: 'free' | 'pro' | 'past_due'; proUntil: Date | null } | null;
+
+function isProFromSubscription(sub: SubscriptionColumns): boolean {
+	if (!sub || sub.plan !== 'pro') return false;
+	if (sub.proUntil && sub.proUntil.getTime() < Date.now()) return false;
+	return true;
+}
 
 export type UserStats = typeof statsInUsers.$inferSelect;
 export type UserDailyStats = typeof dailyStatsInUsers.$inferSelect;
@@ -47,12 +59,25 @@ export class UserRepository {
 						role: true,
 						emailVerified: true,
 						createdAt: true,
+					},
+					with: {
+						userSubscriptionsInAuth: {
+							columns: { plan: true, proUntil: true, stripeCustomerId: true }
+						}
 					}
 				}
 			}
 		});
 
-		return session?.usersInAuth || null;
+		const user = session?.usersInAuth;
+		if (!user) return null;
+
+		const { userSubscriptionsInAuth: sub, ...rest } = user;
+		return {
+			...rest,
+			isPro: isProFromSubscription(sub),
+			hasBilling: !!sub?.stripeCustomerId
+		};
 	}
 
 	public async getStats(userId: string): Promise<UserStats | null> {
@@ -87,10 +112,22 @@ export class UserRepository {
 				role: true,
 				emailVerified: true,
 				createdAt: true,
+			},
+			with: {
+				userSubscriptionsInAuth: {
+					columns: { plan: true, proUntil: true, stripeCustomerId: true }
+				}
 			}
 		});
 
-		return user || null;
+		if (!user) return null;
+
+		const { userSubscriptionsInAuth: sub, ...rest } = user;
+		return {
+			...rest,
+			isPro: isProFromSubscription(sub),
+			hasBilling: !!sub?.stripeCustomerId
+		};
 	}
 
 	public async getUserTracks(userId: string): Promise<UserTrack[]> {

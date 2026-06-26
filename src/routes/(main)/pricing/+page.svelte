@@ -8,7 +8,7 @@
 
 	const user = $derived({
 		isAuthenticated: !!data.user,
-		isPro: data.user?.premiumActive ?? false
+		isPro: data.user?.isPro ?? false
 	});
 
 	let billingCycleYearly = $state(false);

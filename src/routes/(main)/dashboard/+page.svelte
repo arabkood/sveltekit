@@ -20,7 +20,7 @@
 		<Welcome
 			userTracks={data.userTracks!}
 			name={data.user!.username}
-			is_user_premium={data.user?.premiumActive ?? false}
+			is_user_premium={data.user?.isPro ?? false}
 		/>
 		<div class="mb-8 grid gap-6 lg:grid-cols-3">
 			<CardXp totalXp={data.userStats!.totalXp} />
@@ -32,10 +32,10 @@
 			<UserTracks
 				userTracks={data.userTracks!}
 				courses={data.courses!}
-				is_user_premium={data.user?.premiumActive || false}
+				is_user_premium={data.user?.isPro || false}
 			/>
 		</div>
-		{#if !data.user?.premiumActive}
+		{#if !data.user?.isPro}
 			<BannerPremium />
 		{/if}
 	</div>

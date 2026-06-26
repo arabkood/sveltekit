@@ -19,7 +19,7 @@
 				window.posthog?.identify(data.user.email, {
 					email: data.user.email,
 					username: data.user.username,
-					premium: data.user.premiumActive,
+					premium: data.user.isPro,
 					dbid: data.user.id
 				});
 			}

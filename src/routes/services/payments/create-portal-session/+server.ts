@@ -1,19 +1,26 @@
 import type { RequestHandler } from './$types';
 import Stripe from 'stripe';
 import { SITE } from '$config';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { privateEnv } from '$secrets';
+import { subscriptionRepository } from '$lib/server/db/repos/subscription';
 
-const stripe = new Stripe(privateEnv.STRIPE_SECRET_KEY);
+export const POST: RequestHandler = async ({ locals }) => {
+	const user = locals.user;
+	if (!user) {
+		redirect(303, '/signin');
+	}
 
-export const POST: RequestHandler = async ({ url }) => {
-	const session_id = url.searchParams.get('id')!;
+	const subscription = await subscriptionRepository.getByUserId(user.id);
+	if (!subscription?.stripeCustomerId) {
+		error(400, 'no billing account found');
+	}
 
-	const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
+	const stripe = new Stripe(privateEnv.STRIPE_SECRET_KEY);
 
 	const portalSession = await stripe.billingPortal.sessions.create({
-		customer: String(checkoutSession.customer),
-		return_url: SITE
+		customer: subscription.stripeCustomerId,
+		return_url: `${SITE}/settings`
 	});
 
 	redirect(303, portalSession.url);

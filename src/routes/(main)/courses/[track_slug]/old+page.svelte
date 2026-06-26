@@ -8,7 +8,7 @@
 
 	let { data }: { data: LayoutServerData } = $props();
 
-	const isPremium = $derived(data.user?.premiumActive);
+	const isPremium = $derived(data.user?.isPro);
 	const track = $derived(data?.track);
 	const modules = $derived(data?.modules);
 

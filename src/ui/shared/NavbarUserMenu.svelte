@@ -107,7 +107,7 @@
 			</Button>
 		</li>
 
-		{#if !user.premiumActive}
+		{#if !user.isPro}
 			<li>
 				<Button
 					variant="link-pill"
@@ -170,7 +170,7 @@
 				fallback={user.username}
 				size="md"
 			/>
-			{#if user.premiumActive}
+			{#if user.isPro}
 				<span class="absolute -bottom-3 -left-3">
 					<IconPng name="premium" size={32} alt="Premium" />
 				</span>
@@ -222,7 +222,7 @@
 
 					<li class="my-1 h-px bg-gray-100 dark:bg-gray-800" role="separator"></li>
 
-					{#if !user.premiumActive}
+					{#if !user.isPro}
 						<li>
 							<button
 								onclick={() => upgrade()}

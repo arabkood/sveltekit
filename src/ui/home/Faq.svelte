@@ -16,6 +16,11 @@
 			question: 'هل الخطة المجانية كافية للبدء؟',
 			answer:
 				'بالتأكيد. الخطة المجانية تمنحك وصولاً لوحدات تمهيدية أساسية ومسار "كيف يعمل الإنترنت" بالكامل، وهي طريقة ممتازة لتجربة منصتنا والبدء في رحلتك البرمجية.'
+		},
+		{
+			question: 'من يقف خلف أكود؟',
+			answer:
+				'أكود من تطوير <a href="https://lubab.dev/ar" target="_blank" class="font-medium text-emerald-600 hover:underline dark:text-emerald-400">Lubab</a>.'
 		}
 	];
 </script>
@@ -59,7 +64,8 @@
 						</span>
 					</summary>
 					<p class="mt-4 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-						{faq.answer}
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -- answers are static, hardcoded content -->
+						{@html faq.answer}
 					</p>
 				</details>
 			{/each}

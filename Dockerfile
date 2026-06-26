@@ -11,7 +11,7 @@ COPY . .
 
 RUN pnpm run build
 
-FROM node:24-alpine AS runtime
+FROM --platform=linux/amd64 node:24-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/pnpm-lock.yaml ./

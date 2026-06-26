@@ -15,7 +15,7 @@
 		{ label: i18n.t('settings.account.title'), href: '/settings/account' }
 		// { label: i18n.t('settings.billing.title'), href: '/settings/billing' }
 	];
-	if (data.user?.polarCustomerId) {
+	if (data.user?.hasBilling) {
 		tabs.push({ label: i18n.t('settings.billing.title'), href: '/services/portal' });
 	}
 </script>

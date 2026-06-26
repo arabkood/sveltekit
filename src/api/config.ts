@@ -19,7 +19,7 @@ export const API_ENDPOINTS = {
 		}
 	},
 	internal: {
-		polarSync: API_BASE_URL + '/internal/user/polarsync'
+		stripeSync: API_BASE_URL + '/internal/user/stripesync'
 	},
 	tracks: {
 		start: API_BASE_URL + '/track/start'

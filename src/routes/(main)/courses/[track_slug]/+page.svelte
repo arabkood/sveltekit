@@ -105,7 +105,7 @@
 				{i18n.t('common.track_content')}
 			</h2>
 			<Track
-				isPremium={data.user?.premiumActive}
+				isPremium={data.user?.isPro}
 				modules={data.modules}
 				nextItem={nextItem?.item}
 				track={data.track}
@@ -129,7 +129,7 @@
 			<TabPanel index={0} transition="slide">
 				<main class="p-4">
 					<Track
-						isPremium={data.user?.premiumActive}
+						isPremium={data.user?.isPro}
 						modules={data.modules}
 						nextItem={nextItem?.item}
 						track={data.track}

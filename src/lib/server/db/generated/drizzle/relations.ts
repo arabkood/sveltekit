@@ -12,7 +12,8 @@ import {
 	xpEventsInUsers,
 	dailyStatsInUsers,
 	oneTimeTokensInAuth,
-	trackInUsers
+	trackInUsers,
+	userSubscriptionsInAuth
 } from './schema';
 
 export const sessionTokensInAuthRelations = relations(sessionTokensInAuth, ({ one }) => ({
@@ -22,7 +23,7 @@ export const sessionTokensInAuthRelations = relations(sessionTokensInAuth, ({ on
 	})
 }));
 
-export const usersInAuthRelations = relations(usersInAuth, ({ many }) => ({
+export const usersInAuthRelations = relations(usersInAuth, ({ one, many }) => ({
 	sessionTokensInAuths: many(sessionTokensInAuth),
 	auditLogsInAuths: many(auditLogsInAuth),
 	statsInUsers: many(statsInUsers),
@@ -30,7 +31,15 @@ export const usersInAuthRelations = relations(usersInAuth, ({ many }) => ({
 	xpEventsInUsers: many(xpEventsInUsers),
 	dailyStatsInUsers: many(dailyStatsInUsers),
 	oneTimeTokensInAuths: many(oneTimeTokensInAuth),
-	trackInUsers: many(trackInUsers)
+	trackInUsers: many(trackInUsers),
+	userSubscriptionsInAuth: one(userSubscriptionsInAuth)
+}));
+
+export const userSubscriptionsInAuthRelations = relations(userSubscriptionsInAuth, ({ one }) => ({
+	usersInAuth: one(usersInAuth, {
+		fields: [userSubscriptionsInAuth.userId],
+		references: [usersInAuth.id]
+	})
 }));
 
 export const tracksInClassRelations = relations(tracksInClass, ({ one, many }) => ({

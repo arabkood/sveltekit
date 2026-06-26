@@ -12,7 +12,7 @@
 		user,
 		userStats
 	}: {
-		user: Partial<User> & { avatar?: string };
+		user: Partial<User> & { avatar?: string; isPro?: boolean };
 		userStats: UserStats;
 	} = $props();
 
@@ -94,7 +94,7 @@
 							>
 								{user.username}
 							</h1>
-							{#if user.premiumActive}
+							{#if user.isPro}
 								<IconPng name="premium" size={24} class="shrink-0" />
 							{/if}
 						</div>

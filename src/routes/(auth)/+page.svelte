@@ -37,6 +37,17 @@
 				'@type': 'ContactPoint',
 				contactType: 'customer service',
 				availableLanguage: 'Arabic'
+			},
+			parentOrganization: {
+				'@type': 'Organization',
+				name: 'Lubab LTD',
+				url: 'https://lubab.dev',
+				founder: {
+					'@type': 'Person',
+					name: 'Lubab',
+					jobTitle: 'Software Engineer',
+					url: 'https://lubab.dev'
+				}
 			}
 		},
 		// Website schema

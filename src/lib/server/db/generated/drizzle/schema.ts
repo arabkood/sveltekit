@@ -37,6 +37,8 @@ export const oneTimeTokenTypeInAuth = auth.enum('one_time_token_type', [
 	'password_change',
 	'password_recovery'
 ]);
+export const planTypeInAuth = auth.enum('plan_type', ['free', 'pro', 'past_due']);
+export const planIntervalInAuth = auth.enum('plan_interval', ['monthly', 'yearly']);
 
 export const sessionTokensInAuth = auth.table(
 	'session_tokens',
@@ -161,6 +163,34 @@ export const usersInAuth = auth.table(
 		index('users_active_username_lower_idx').using('btree', sql`lower((username)::text)`),
 		unique('users_email_key').on(table.email),
 		unique('users_username_key').on(table.username)
+	]
+);
+
+export const userSubscriptionsInAuth = auth.table(
+	'user_subscriptions',
+	{
+		userId: uuid('user_id').primaryKey().notNull(),
+		stripeCustomerId: text('stripe_customer_id').notNull(),
+		stripeSubscriptionId: text('stripe_subscription_id'),
+		plan: planTypeInAuth().default('free').notNull(),
+		planInterval: planIntervalInAuth('plan_interval'),
+		proUntil: timestamp('pro_until', { withTimezone: true, mode: 'date' }),
+		cancelAtPeriodEnd: boolean('cancel_at_period_end').default(false).notNull(),
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
+	},
+	(table) => [
+		index('idx_user_subscriptions_stripe_customer').using(
+			'btree',
+			table.stripeCustomerId.asc().nullsLast().op('text_ops')
+		),
+		foreignKey({
+			columns: [table.userId],
+			foreignColumns: [usersInAuth.id],
+			name: 'user_subscriptions_user_id_fkey'
+		}).onDelete('cascade'),
+		unique('user_subscriptions_stripe_customer_id_key').on(table.stripeCustomerId),
+		unique('user_subscriptions_stripe_subscription_id_key').on(table.stripeSubscriptionId)
 	]
 );
 

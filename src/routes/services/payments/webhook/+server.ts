@@ -1,10 +1,64 @@
 import type { RequestHandler } from './$types';
 import Stripe from 'stripe';
 import { privateEnv } from '$secrets';
+import {
+	subscriptionRepository,
+	type PlanInterval,
+	type PlanType,
+	type SubscriptionState
+} from '$lib/server/db/repos/subscription';
 
-const stripe = new Stripe(privateEnv.STRIPE_SECRET_KEY);
+function planFromStatus(status: Stripe.Subscription.Status): PlanType {
+	switch (status) {
+		case 'active':
+		case 'trialing':
+			return 'pro';
+		case 'past_due':
+		case 'unpaid':
+			return 'past_due';
+		default:
+			return 'free';
+	}
+}
+
+function intervalFromSubscription(subscription: Stripe.Subscription): PlanInterval | null {
+	const interval = subscription.items.data[0]?.price.recurring?.interval;
+	if (interval === 'month') return 'monthly';
+	if (interval === 'year') return 'yearly';
+	return null;
+}
+
+function proUntilFromSubscription(subscription: Stripe.Subscription): Date | null {
+	// In recent Stripe API versions the period boundary lives on the line item.
+	const periodEnd = subscription.items.data[0]?.current_period_end;
+	return typeof periodEnd === 'number' ? new Date(periodEnd * 1000) : null;
+}
+
+function customerId(customer: string | { id: string } | null): string | null {
+	if (!customer) return null;
+	return typeof customer === 'string' ? customer : customer.id;
+}
+
+// Translate full subscription state into our DB row, keyed by Stripe customer.
+async function syncSubscription(subscription: Stripe.Subscription): Promise<void> {
+	const cid = customerId(subscription.customer);
+	if (!cid) return;
+
+	const plan = planFromStatus(subscription.status);
+	const state: SubscriptionState = {
+		stripeSubscriptionId: subscription.id,
+		plan,
+		planInterval: plan === 'free' ? null : intervalFromSubscription(subscription),
+		proUntil: plan === 'free' ? null : proUntilFromSubscription(subscription),
+		cancelAtPeriodEnd: subscription.cancel_at_period_end
+	};
+
+	await subscriptionRepository.updateByStripeCustomerId(cid, state);
+}
 
 export const POST: RequestHandler = async ({ request }) => {
+	const stripe = new Stripe(privateEnv.STRIPE_SECRET_KEY);
+
 	const body = await request.text();
 	const signature = request.headers.get('stripe-signature') ?? '';
 
@@ -16,87 +70,102 @@ export const POST: RequestHandler = async ({ request }) => {
 		return new Response(null, { status: 400 });
 	}
 
-	switch (event.type) {
+	try {
+		switch (event.type) {
+			// User completed checkout — this is where we first learn the mapping
+			// between our user (client_reference_id) and the Stripe customer.
+			case 'checkout.session.completed': {
+				const session = event.data.object as Stripe.Checkout.Session;
+				const userId = session.client_reference_id;
+				const cid = customerId(session.customer);
 
-		// User completed checkout — link Stripe customerId to your user in the DB
-		case 'checkout.session.completed': {
-			const session = event.data.object as Stripe.Checkout.Session;
-			// map session.customer → your user via session.client_reference_id or session.customer_email
-			break;
+				if (!userId || !cid) {
+					console.error('checkout.session.completed missing client_reference_id or customer');
+					break;
+				}
+
+				const subscriptionId =
+					typeof session.subscription === 'string'
+						? session.subscription
+						: (session.subscription?.id ?? null);
+
+				await subscriptionRepository.linkUserToCustomer({
+					userId,
+					stripeCustomerId: cid,
+					stripeSubscriptionId: subscriptionId
+				});
+
+				// Sync full subscription state now that the row exists.
+				if (subscriptionId) {
+					const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+					await syncSubscription(subscription);
+				}
+				break;
+			}
+
+			// Subscription created / changed (plan switch, cancel-at-period-end,
+			// renewal) — re-sync the full state from the subscription object.
+			case 'customer.subscription.created':
+			case 'customer.subscription.updated': {
+				const subscription = event.data.object as Stripe.Subscription;
+				await syncSubscription(subscription);
+				break;
+			}
+
+			// Subscription fully ended — revoke pro access.
+			case 'customer.subscription.deleted': {
+				const subscription = event.data.object as Stripe.Subscription;
+				const cid = customerId(subscription.customer);
+				if (cid) {
+					await subscriptionRepository.updateByStripeCustomerId(cid, {
+						plan: 'free',
+						planInterval: null,
+						proUntil: null,
+						cancelAtPeriodEnd: false
+					});
+				}
+				break;
+			}
+
+			// Payment confirmed — grant or extend pro access (fires on signup AND
+			// every renewal). subscription.updated also covers this, but acting on
+			// the invoice keeps pro_until fresh even if events arrive out of order.
+			case 'invoice.payment_succeeded': {
+				const invoice = event.data.object as Stripe.Invoice;
+				const cid = customerId(invoice.customer);
+				const periodEnd = invoice.lines.data[0]?.period?.end;
+				if (cid) {
+					await subscriptionRepository.updateByStripeCustomerId(cid, {
+						plan: 'pro',
+						proUntil: typeof periodEnd === 'number' ? new Date(periodEnd * 1000) : undefined
+					});
+				}
+				break;
+			}
+
+			// Payment failed — start grace period.
+			case 'invoice.payment_failed': {
+				const invoice = event.data.object as Stripe.Invoice;
+				const cid = customerId(invoice.customer);
+				if (cid) {
+					await subscriptionRepository.updateByStripeCustomerId(cid, { plan: 'past_due' });
+				}
+				break;
+			}
+
+			// Trial ending in 3 days — remind user to add a payment method.
+			case 'customer.subscription.trial_will_end': {
+				// TODO: send reminder email
+				break;
+			}
+
+			default:
+				console.warn(`Unhandled event type: ${event.type}`);
 		}
-
-		// Payment confirmed — grant or extend pro access (fires on signup AND every renewal)
-		case 'invoice.payment_succeeded': {
-			const invoice = event.data.object as Stripe.Invoice;
-			// set user.plan = 'pro', update pro_until = invoice.lines.data[0].period.end
-			break;
-		}
-
-		// Payment failed — start grace period and notify user
-		case 'invoice.payment_failed': {
-			const invoice = event.data.object as Stripe.Invoice;
-			// set user.plan = 'past_due', send failed payment email
-			break;
-		}
-
-		// Plan changed (monthly↔yearly) or scheduled to cancel at period end
-		case 'customer.subscription.updated': {
-			const subscription = event.data.object as Stripe.Subscription;
-			// check subscription.cancel_at_period_end → flag "cancels on X date"
-			// check subscription.items for plan interval change
-			break;
-		}
-
-		// Subscription fully ended — revoke pro access
-		case 'customer.subscription.deleted': {
-			const subscription = event.data.object as Stripe.Subscription;
-			// set user.plan = 'free'
-			break;
-		}
-
-		// Trial ending in 3 days — remind user to add a payment method
-		case 'customer.subscription.trial_will_end': {
-			const subscription = event.data.object as Stripe.Subscription;
-			// send reminder email
-			break;
-		}
-
-		// --- FUTURE USE ---
-
-		// User updated their card or billing details
-		// Useful for: confirming payment method is valid, notifying user of card update
-		case 'payment_method.updated':
-
-		// User added a new payment method
-		// Useful for: notifying user, updating default payment method in your DB
-		case 'payment_method.attached':
-
-		// Refund issued — could be triggered manually from Stripe dashboard
-		// Useful for: downgrading user immediately, logging refund in your DB
-		case 'charge.refunded':
-
-		// Invoice finalized but not yet paid — useful for sending custom invoice emails
-		// Useful for: white-label billing, sending your own invoice PDF
-		case 'invoice.finalized':
-
-		// Subscription was paused (if you enable pause functionality)
-		// Useful for: setting user to a 'paused' plan state
-		case 'customer.subscription.paused':
-
-		// Subscription was resumed after a pause
-		// Useful for: restoring pro access after pause
-		case 'customer.subscription.resumed':
-
-		// Customer deleted — e.g. via Stripe dashboard or GDPR erasure
-		// Useful for: cleaning up user data, revoking access
-		case 'customer.deleted':
-
-		// A dispute was opened on a charge (chargeback)
-		// Useful for: flagging account, revoking access until resolved
-		case 'charge.dispute.created':
-
-		default:
-			console.warn(`Unhandled event type: ${event.type}`);
+	} catch (err: any) {
+		console.error(`Error handling Stripe event ${event.type}:`, err);
+		// Return 500 so Stripe retries the webhook.
+		return new Response(null, { status: 500 });
 	}
 
 	return new Response(null, { status: 200 });

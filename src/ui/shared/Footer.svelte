@@ -100,9 +100,21 @@
 		</div>
 
 		<!-- Bottom Bar -->
-		<div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24 dark:border-white/10">
+		<div
+			class="mt-16 flex flex-col gap-2 border-t border-gray-900/10 pt-8 sm:mt-20 sm:flex-row sm:items-center sm:justify-between lg:mt-24 dark:border-white/10"
+		>
 			<p class="text-xs leading-5 text-gray-500 dark:text-gray-400">
-				&copy; {new Date().getFullYear()} أكود. جميع الحقوق محفوظة.
+				&copy; {new Date().getFullYear()} Lubab LTD. جميع الحقوق محفوظة.
+			</p>
+			<p class="text-xs leading-5 text-gray-400 dark:text-gray-500">
+				من
+				<a
+					href="https://lubab.dev"
+					target="_blank"
+					rel="noopener"
+					class="font-medium text-gray-500 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
+					>Lubab</a
+				>
 			</p>
 		</div>
 	</div>

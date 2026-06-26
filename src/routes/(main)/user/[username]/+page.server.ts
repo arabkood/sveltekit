@@ -31,7 +31,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			username: user.username,
 			email: user.email,
 			createdAt: user.createdAt,
-			premiumActive: user.premiumActive
+			isPro: user.isPro
 		},
 		userStats,
 		completedTracks

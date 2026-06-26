@@ -45,7 +45,7 @@ export const load: LayoutServerLoad = async ({ locals, params, url, parent }) =>
 		? await classRepository.getUserSubmissionByItem(locals.user.id, item.id)
 		: null;
 
-	if ((module.premiumOnly || item.premiumOnly) && !locals.user?.premiumActive && !submission) {
+	if ((module.premiumOnly || item.premiumOnly) && !locals.user?.isPro && !submission) {
 		redirect(302, `/pricing`);
 	}
 
