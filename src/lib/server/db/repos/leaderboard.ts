@@ -1,6 +1,10 @@
 import { db } from '..';
 import { desc, gte, sql } from 'drizzle-orm';
-import { dailyStatsInUsers, statsInUsers, usersInAuth } from '../generated/drizzle/schema';
+import {
+	dailyStatsInUsers as dailyStats,
+	statsInUsers as stats,
+	usersInAuth as users
+} from '../schema';
 
 export type LeaderboardEntry = {
 	userId: string;
@@ -21,14 +25,14 @@ export class LeaderboardRepository {
 	): Promise<LeaderboardEntry[]> {
 		const results = await db
 			.select({
-				userId: usersInAuth.id,
-				username: usersInAuth.username,
-				xp: statsInUsers.totalXp
+				userId: users.id,
+				username: users.username,
+				xp: stats.totalXp
 			})
-			.from(statsInUsers)
-			.innerJoin(usersInAuth, sql`${usersInAuth.id} = ${statsInUsers.userId}`)
-			.where(sql`${statsInUsers.totalXp} > 0`)
-			.orderBy(desc(statsInUsers.totalXp))
+			.from(stats)
+			.innerJoin(users, sql`${users.id} = ${stats.userId}`)
+			.where(sql`${stats.totalXp} > 0`)
+			.orderBy(desc(stats.totalXp))
 			.limit(limit)
 			.offset(offset);
 
@@ -54,16 +58,16 @@ export class LeaderboardRepository {
 
 		const results = await db
 			.select({
-				userId: usersInAuth.id,
-				username: usersInAuth.username,
-				xp: sql<number>`SUM(${dailyStatsInUsers.xpEarned})::int`
+				userId: users.id,
+				username: users.username,
+				xp: sql<number>`SUM(${dailyStats.xpEarned})::int`
 			})
-			.from(dailyStatsInUsers)
-			.innerJoin(usersInAuth, sql`${usersInAuth.id} = ${dailyStatsInUsers.userId}`)
-			.where(gte(dailyStatsInUsers.date, sevenDaysAgo))
-			.groupBy(usersInAuth.id, usersInAuth.username)
-			.having(sql`SUM(${dailyStatsInUsers.xpEarned}) > 0`)
-			.orderBy(desc(sql`SUM(${dailyStatsInUsers.xpEarned})`))
+			.from(dailyStats)
+			.innerJoin(users, sql`${users.id} = ${dailyStats.userId}`)
+			.where(gte(dailyStats.date, sevenDaysAgo))
+			.groupBy(users.id, users.username)
+			.having(sql`SUM(${dailyStats.xpEarned}) > 0`)
+			.orderBy(desc(sql`SUM(${dailyStats.xpEarned})`))
 			.limit(limit)
 			.offset(offset);
 

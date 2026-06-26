@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { API_ENDPOINTS } from '$api/config';
 	import { i18n } from '$i18n/i18n';
-	import type { User } from '$lib/server/db/repos/user';
+	import type { User, UserPrivate } from '$lib/server/db/repos/user';
 	import type { ApiError } from '$types/api';
 	import Banner from '$ui/common/Banner.svelte';
 	import Button from '$ui/common/Button.svelte';
@@ -13,7 +13,7 @@
 	let {
 		user
 	}: {
-		user: User;
+		user: UserPrivate;
 	} = $props();
 
 	const schema = z.object({

@@ -1,8 +1,8 @@
 import { db } from '..';
 import { eq } from 'drizzle-orm';
-import { userSubscriptionsInAuth } from '../generated/drizzle/schema';
+import { userSubscriptionsInAuth as userSubscriptions } from '../schema';
 
-export type Subscription = typeof userSubscriptionsInAuth.$inferSelect;
+export type Subscription = typeof userSubscriptions.$inferSelect;
 export type PlanType = Subscription['plan'];
 export type PlanInterval = NonNullable<Subscription['planInterval']>;
 
@@ -18,14 +18,18 @@ export type SubscriptionState = {
 export class SubscriptionRepository {
 	public async getByUserId(userId: string): Promise<Subscription | null> {
 		const sub = await db.query.userSubscriptionsInAuth.findFirst({
-			where: eq(userSubscriptionsInAuth.userId, userId)
+			where: {
+				userId: userId
+			}
 		});
 		return sub ?? null;
 	}
 
 	public async getByStripeCustomerId(stripeCustomerId: string): Promise<Subscription | null> {
 		const sub = await db.query.userSubscriptionsInAuth.findFirst({
-			where: eq(userSubscriptionsInAuth.stripeCustomerId, stripeCustomerId)
+			where: {
+				stripeCustomerId: stripeCustomerId
+			}
 		});
 		return sub ?? null;
 	}
@@ -41,14 +45,14 @@ export class SubscriptionRepository {
 		stripeSubscriptionId?: string | null;
 	}): Promise<void> {
 		await db
-			.insert(userSubscriptionsInAuth)
+			.insert(userSubscriptions)
 			.values({
 				userId: args.userId,
 				stripeCustomerId: args.stripeCustomerId,
 				stripeSubscriptionId: args.stripeSubscriptionId ?? null
 			})
 			.onConflictDoUpdate({
-				target: userSubscriptionsInAuth.userId,
+				target: userSubscriptions.userId,
 				set: {
 					stripeCustomerId: args.stripeCustomerId,
 					stripeSubscriptionId: args.stripeSubscriptionId ?? null,
@@ -67,9 +71,9 @@ export class SubscriptionRepository {
 		state: SubscriptionState
 	): Promise<void> {
 		await db
-			.update(userSubscriptionsInAuth)
+			.update(userSubscriptions)
 			.set({ ...state, updatedAt: new Date() })
-			.where(eq(userSubscriptionsInAuth.stripeCustomerId, stripeCustomerId));
+			.where(eq(userSubscriptions.stripeCustomerId, stripeCustomerId));
 	}
 }
 

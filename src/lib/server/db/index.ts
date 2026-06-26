@@ -1,14 +1,18 @@
-import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
-import pg from 'pg';
-import * as schema from './generated/drizzle/schema';
-import * as relations from './generated/drizzle/relations';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+
 import { privateEnv } from '$secrets';
+import { relations } from './relations';
 
-const combinedSchema = { ...schema, ...relations };
+function createDB(pool: Pool) {
+	return drizzle({
+		client: pool,
+		logger: false,
+		relations
+	});
+}
 
-const { Pool } = pg;
-
-type DB = NodePgDatabase<typeof combinedSchema>;
+export type DB = ReturnType<typeof createDB>;
 
 export let db: DB;
 
@@ -22,29 +26,28 @@ export function initDB(): DB {
 	const dbURL = privateEnv.DATABASE_URL;
 
 	if (!dbURL) {
-		console.error('FATAL: Missing required database environment variables DATABASE_URL');
-		// throw new Error('Database configuration is incomplete.');
+		throw new Error('Missing DATABASE_URL');
 	}
 
-	try {
-		const pool = new Pool({
-			connectionString: dbURL
-		});
+	const pool = new Pool({
+		connectionString: dbURL
+	});
 
-		pool.on('error', (err) => {
-			console.error('Unexpected error on idle database client', err);
-			// Consider strategy: maybe reset dbInstance to null to force re-init on next request?
-			// dbInstance = null;
-		});
+	pool.on('error', (err) => {
+		console.error('Unexpected error on idle database client', err);
+	});
 
-		// Create and store the Drizzle instance
-		db = drizzle(pool, { logger: false, schema: combinedSchema });
+	db = createDB(pool);
 
-		console.log('Database connection initialized successfully.');
-		return db;
-	} catch (error) {
-		console.error('FATAL: Failed to create database pool or Drizzle instance:', error);
-		// Re-throw the error to signal failure
-		throw error;
+	console.log('Database connection initialized successfully.');
+
+	return db;
+}
+
+export function getDB(): DB {
+	if (!db) {
+		return initDB();
 	}
+
+	return db;
 }

@@ -1,20 +1,20 @@
 import { db } from '..';
 import { and, asc, eq, sql } from 'drizzle-orm';
 import {
-	itemsInClass,
-	modulesInClass,
-	submissionInUsers,
-	topicsInClass,
-	trackInUsers,
-	tracksInClass
-} from '../generated/drizzle/schema';
+	itemsInClass as items,
+	modulesInClass as modules,
+	submissionInUsers as submissions,
+	topicsInClass as topics,
+	trackInUsers as userTracks,
+	tracksInClass as tracks
+} from '../schema';
 
-export type Topic = typeof topicsInClass.$inferSelect;
-export type Track = typeof tracksInClass.$inferSelect;
-export type Module = typeof modulesInClass.$inferSelect;
-export type Item = typeof itemsInClass.$inferSelect;
-export type UserSubmission = typeof submissionInUsers.$inferSelect;
-export type UserTrack = typeof trackInUsers.$inferSelect;
+export type Topic = typeof topics.$inferSelect;
+export type Track = typeof tracks.$inferSelect;
+export type Module = typeof modules.$inferSelect;
+export type Item = typeof items.$inferSelect;
+export type UserSubmission = typeof submissions.$inferSelect;
+export type UserTrack = typeof userTracks.$inferSelect;
 
 export type AllCourses = Record<
 	string,
@@ -43,9 +43,9 @@ export class ClassRepository {
 	public async getAllCourses(): Promise<AllCourses> {
 		const rows = await db
 			.select()
-			.from(topicsInClass)
-			.leftJoin(tracksInClass, eq(topicsInClass.id, tracksInClass.topicId))
-			.orderBy(topicsInClass.id, asc(tracksInClass.position));
+			.from(topics)
+			.leftJoin(tracks, eq(topics.id, tracks.topicId))
+			.orderBy(topics.id, asc(tracks.position));
 
 		const result = rows.reduce<Record<string, { topic: Topic; tracks: Track[] }>>((acc, row) => {
 			const topic = row.topics;
@@ -70,28 +70,25 @@ export class ClassRepository {
 	} | null> {
 		const rows = await db
 			.select({
-				tracks: tracksInClass,
-				modules: modulesInClass,
-				items: itemsInClass,
+				tracks: tracks,
+				modules: modules,
+				items: items,
 				submissions: {
-					id: submissionInUsers.id,
-					status: submissionInUsers.status,
-					xp_reward: submissionInUsers.xpReward,
-					attempts: submissionInUsers.attempts,
-					created_at: submissionInUsers.createdAt,
-					updated_at: submissionInUsers.updatedAt
+					id: submissions.id,
+					status: submissions.status,
+					xp_reward: submissions.xpReward,
+					attempts: submissions.attempts,
+					created_at: submissions.createdAt,
+					updated_at: submissions.updatedAt
 				}
 			})
-			.from(tracksInClass)
-			.where(eq(tracksInClass.slug, slug))
-			.leftJoin(modulesInClass, eq(tracksInClass.id, modulesInClass.trackId))
-			.leftJoin(itemsInClass, eq(modulesInClass.id, itemsInClass.moduleId))
+			.from(tracks)
+			.where(eq(tracks.slug, slug))
+			.leftJoin(modules, eq(tracks.id, modules.trackId))
+			.leftJoin(items, eq(modules.id, items.moduleId))
 			.leftJoin(
-				submissionInUsers,
-				and(
-					eq(submissionInUsers.itemId, itemsInClass.id),
-					userId ? eq(submissionInUsers.userId, userId) : sql`false`
-				)
+				submissions,
+				and(eq(submissions.itemId, items.id), userId ? eq(submissions.userId, userId) : sql`false`)
 			);
 
 		if (!rows.length) {
@@ -151,7 +148,10 @@ export class ClassRepository {
 		itemId: string
 	): Promise<UserSubmission | null> {
 		const submission = await db.query.submissionInUsers.findFirst({
-			where: and(eq(submissionInUsers.userId, userId), eq(submissionInUsers.itemId, itemId))
+			where: {
+				userId: userId,
+				itemId: itemId
+			}
 		});
 
 		return submission || null;
@@ -162,7 +162,10 @@ export class ClassRepository {
 		subId: string
 	): Promise<UserSubmission | null> {
 		const submission = await db.query.submissionInUsers.findFirst({
-			where: and(eq(submissionInUsers.userId, userId), eq(submissionInUsers.id, subId))
+			where: {
+				userId: userId,
+				id: subId
+			}
 		});
 
 		return submission || null;
@@ -170,7 +173,9 @@ export class ClassRepository {
 
 	public async getUserTracks(userId: string): Promise<UserTrack[]> {
 		return db.query.trackInUsers.findMany({
-			where: eq(trackInUsers.userId, userId)
+			where: {
+				userId: userId
+			}
 		});
 	}
 }

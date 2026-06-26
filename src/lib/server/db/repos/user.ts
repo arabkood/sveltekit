@@ -1,23 +1,16 @@
 import { db } from '..';
-import { and, desc, eq, gt, gte } from 'drizzle-orm';
 import {
-	dailyStatsInUsers,
-	sessionTokensInAuth,
-	statsInUsers,
-	trackInUsers,
-	usersInAuth
-} from '../generated/drizzle/schema';
+	dailyStatsInUsers as dailyStats,
+	statsInUsers as stats,
+	trackInUsers as userTracks,
+	usersInAuth as users
+} from '../schema';
 
 // Infer types
-export type User = typeof usersInAuth.$inferSelect;
+export type User = typeof users.$inferSelect;
 export type UserPrivate = Pick<
 	User,
-	| 'id'
-	| 'email'
-	| 'username'
-	| 'role'
-	| 'emailVerified'
-	| 'createdAt'
+	'id' | 'email' | 'username' | 'role' | 'emailVerified' | 'createdAt'
 > & {
 	// Derived from auth.user_subscriptions (Stripe).
 	isPro: boolean;
@@ -32,9 +25,9 @@ function isProFromSubscription(sub: SubscriptionColumns): boolean {
 	return true;
 }
 
-export type UserStats = typeof statsInUsers.$inferSelect;
-export type UserDailyStats = typeof dailyStatsInUsers.$inferSelect;
-export type UserTrack = typeof trackInUsers.$inferSelect & {
+export type UserStats = typeof stats.$inferSelect;
+export type UserDailyStats = typeof dailyStats.$inferSelect;
+export type UserTrack = typeof userTracks.$inferSelect & {
 	track?: {
 		id: string;
 		title: string;
@@ -46,10 +39,12 @@ export type UserTrack = typeof trackInUsers.$inferSelect & {
 export class UserRepository {
 	public async getUserBySessionToken(token: string): Promise<UserPrivate | null> {
 		const session = await db.query.sessionTokensInAuth.findFirst({
-			where: and(
-				eq(sessionTokensInAuth.token, token),
-				gt(sessionTokensInAuth.expiresAt, new Date())
-			),
+			where: {
+				token: token,
+				expiresAt: {
+					gt: new Date()
+				}
+			},
 			with: {
 				usersInAuth: {
 					columns: {
@@ -58,10 +53,10 @@ export class UserRepository {
 						username: true,
 						role: true,
 						emailVerified: true,
-						createdAt: true,
+						createdAt: true
 					},
 					with: {
-						userSubscriptionsInAuth: {
+						userSubscriptionsInAuths: {
 							columns: { plan: true, proUntil: true, stripeCustomerId: true }
 						}
 					}
@@ -69,23 +64,25 @@ export class UserRepository {
 			}
 		});
 
-		const user = session?.usersInAuth;
-		if (!user) return null;
+		const userRecord = session?.usersInAuth;
+		if (!userRecord) return null;
 
-		const { userSubscriptionsInAuth: sub, ...rest } = user;
+		const { userSubscriptionsInAuths: sub, ...rest } = userRecord;
 		return {
 			...rest,
-			isPro: isProFromSubscription(sub),
-			hasBilling: !!sub?.stripeCustomerId
+			isPro: isProFromSubscription(sub[0] || null),
+			hasBilling: !!sub[0]?.stripeCustomerId
 		};
 	}
 
 	public async getStats(userId: string): Promise<UserStats | null> {
-		const stats = await db.query.statsInUsers.findFirst({
-			where: eq(statsInUsers.userId, userId)
+		const userStats = await db.query.statsInUsers.findFirst({
+			where: {
+				userId: userId
+			}
 		});
 
-		return stats || null;
+		return userStats || null;
 	}
 
 	public async getDailyStats(userId: string, days: number = 7): Promise<UserDailyStats[] | null> {
@@ -97,42 +94,53 @@ export class UserRepository {
 		fromWhen.setDate(fromWhen.getDate() - days);
 
 		return await db.query.dailyStatsInUsers.findMany({
-			where: and(eq(dailyStatsInUsers.userId, userId), gte(dailyStatsInUsers.date, fromWhen)),
-			orderBy: desc(dailyStatsInUsers.date)
+			where: {
+				userId: userId,
+				date: {
+					gte: fromWhen
+				}
+			},
+			orderBy: {
+				date: 'desc'
+			}
 		});
 	}
 
 	public async findByUsername(username: string): Promise<UserPrivate | null> {
-		const user = await db.query.usersInAuth.findFirst({
-			where: eq(usersInAuth.username, username),
+		const userRecord = await db.query.usersInAuth.findFirst({
+			where: {
+				username: username
+			},
 			columns: {
 				id: true,
 				email: true,
 				username: true,
 				role: true,
 				emailVerified: true,
-				createdAt: true,
+				createdAt: true
 			},
 			with: {
-				userSubscriptionsInAuth: {
+				userSubscriptionsInAuths: {
 					columns: { plan: true, proUntil: true, stripeCustomerId: true }
 				}
 			}
 		});
 
-		if (!user) return null;
+		if (!userRecord) return null;
 
-		const { userSubscriptionsInAuth: sub, ...rest } = user;
+		const { userSubscriptionsInAuths: sub, ...rest } = userRecord;
 		return {
 			...rest,
-			isPro: isProFromSubscription(sub),
-			hasBilling: !!sub?.stripeCustomerId
+			isPro: isProFromSubscription(sub[0] || null),
+			hasBilling: !!sub[0]?.stripeCustomerId
 		};
 	}
 
 	public async getUserTracks(userId: string): Promise<UserTrack[]> {
 		const tracks = await db.query.trackInUsers.findMany({
-			where: eq(trackInUsers.userId, userId),
+			where: {
+				userId: userId
+			},
 			with: {
 				tracksInClass: {
 					columns: {

@@ -2,7 +2,7 @@ import { getS3TopicObjectAsBuffer } from '$lib/server/s3';
 import type { Lesson, LessonInteractive, LessonMarkdown, LessonStep } from '$types/lesson';
 import type { PageServerLoad } from './$types';
 import path from 'node:path';
-import yaml from 'js-yaml';
+import { load as yamlload } from 'js-yaml';
 import AdmZip from 'adm-zip';
 import { error } from '@sveltejs/kit';
 
@@ -44,7 +44,7 @@ export const load: PageServerLoad = async ({ params, parent, locals }) => {
 							return a[1] as LessonMarkdown;
 						}
 						if (a[0].endsWith('.yml') || a[0].endsWith('.yaml')) {
-							return yaml.load(a[1]) as LessonInteractive;
+							return yamlload(a[1]) as LessonInteractive;
 						}
 						return undefined;
 					})
