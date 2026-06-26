@@ -21,7 +21,7 @@ export const load: PageServerLoad = ({ locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ request, locals }) => {
+	verify: async ({ request, locals }) => {
 		const user = locals.user;
 		if (!user) return fail(401, { error: 'unauthorized' });
 
@@ -70,6 +70,6 @@ export const actions: Actions = {
 		const token = await createEmailVerificationToken(user.id);
 		await sendEmailVerification(user.email, token);
 
-		return { success: true };
+		return { resent: true };
 	}
 };

@@ -30,7 +30,7 @@ export const actions: Actions = {
 		if (!parsed.success) {
 			return fail(400, {
 				values: { email: values.email },
-				errors: z.treeifyError(parsed.error).errors
+				errors: z.flattenError(parsed.error).fieldErrors
 			});
 		}
 

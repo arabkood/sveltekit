@@ -28,7 +28,7 @@ export const actions: Actions = {
 		if (!parsed.success) {
 			return fail(400, {
 				values: { identifier: values.identifier },
-				errors: z.treeifyError(parsed.error).errors
+				errors: z.flattenError(parsed.error).fieldErrors
 			});
 		}
 

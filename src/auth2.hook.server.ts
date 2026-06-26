@@ -68,17 +68,15 @@ export const authHandle: Handle = async ({ event, resolve }) => {
 	const isGuestOnly = matchesAny(routeId, GUEST_ONLY_ROUTES);
 	const isAuthenticated = !!event.locals.user;
 
-	// 3. Authenticated user hitting a guest-only route (e.g. /signin) → dashboard
-	if (isAuthenticated && isGuestOnly) {
-		throw redirect(302, '/dashboard');
-	}
-
-	// 4. Unauthenticated user hitting a protected route → signin
+	// 3. Unauthenticated user hitting a protected route → signin
 	if (!isAuthenticated && !isPublic) {
 		throw redirect(302, '/signin');
 	}
 
-	// 5. Authenticated but unverified email → force verification
+	// 4. Authenticated but unverified email → force verification
+	//    Must run BEFORE the guest-only redirect, otherwise an unverified user
+	//    on /signup/verify-email gets bounced to /dashboard (guest-only rule)
+	//    and then back to /signup/verify-email (unverified rule) in a loop.
 	if (isAuthenticated && !event.locals.user!.emailVerified) {
 		const isVerifyPage = routeId === '/(auth)/signup/verify-email';
 		const isAllowedWhileUnverified = matchesAny(routeId, UNVERIFIED_ALLOWED_ROUTES);
@@ -86,6 +84,13 @@ export const authHandle: Handle = async ({ event, resolve }) => {
 		if (!isVerifyPage && !isAllowedWhileUnverified) {
 			throw redirect(302, '/signup/verify-email');
 		}
+		// If they're on the verify page or an allowed route, let them through
+		return resolve(event);
+	}
+
+	// 5. Authenticated user hitting a guest-only route (e.g. /signin) → dashboard
+	if (isAuthenticated && isGuestOnly) {
+		throw redirect(302, '/dashboard');
 	}
 
 	return resolve(event);

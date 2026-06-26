@@ -67,7 +67,7 @@
 						{i18n.t('verifyEmail.description')}
 					</p>
 
-					<form class="space-y-4 md:space-y-6" method="POST" action="?/default" use:enhance={() => {
+					<form class="space-y-4 md:space-y-6" method="POST" action="?/verify" use:enhance={() => {
 						status = 'loading';
 						return async ({ result, update }) => {
 							if (result.type === 'success') {

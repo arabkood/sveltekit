@@ -22,7 +22,7 @@ const publicEnv = shouldValidate
 
 			if (!parsed.success) {
 				console.error('❌ Invalid public environment variables:');
-				console.error(z.treeifyError(parsed.error).errors);
+				console.error(z.flattenError(parsed.error).fieldErrors);
 				throw new Error('Invalid environment configuration');
 			}
 

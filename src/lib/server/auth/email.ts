@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { privateEnv } from '$secrets';
+import { dev } from '$app/environment';
 
 export const transporter = nodemailer.createTransport({
 	host: privateEnv.SMTP_HOST,
@@ -12,6 +13,15 @@ export const transporter = nodemailer.createTransport({
 });
 
 export async function sendEmailVerification(to: string, code: string) {
+	if (dev) {
+		console.log('\n📧 --- DEV MODE EMAIL ---');
+		console.log(`To: ${to}`);
+		console.log(`Subject: Verify your email address`);
+		console.log(`Code: ${code}`);
+		console.log('--------------------------\n');
+		return;
+	}
+
 	if (!privateEnv.SMTP_HOST) {
 		console.warn('SMTP not configured, skipping email verification send. Code:', code);
 		return;
@@ -33,6 +43,15 @@ export async function sendEmailVerification(to: string, code: string) {
 }
 
 export async function sendPasswordReset(to: string, code: string) {
+	if (dev) {
+		console.log('\n📧 --- DEV MODE EMAIL ---');
+		console.log(`To: ${to}`);
+		console.log(`Subject: Reset your password`);
+		console.log(`Code: ${code}`);
+		console.log('--------------------------\n');
+		return;
+	}
+
 	if (!privateEnv.SMTP_HOST) {
 		console.warn('SMTP not configured, skipping password reset send. Code:', code);
 		return;
