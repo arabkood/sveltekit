@@ -57,6 +57,13 @@ export const signupIpLimiter = new RateLimiterRedis({
 	duration: 60 * 60 // 1 hour
 });
 
+export const signupEmailLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:signup:email',
+	points: 3,
+	duration: 60 * 60 // 1 hour
+});
+
 // Verify Email (OTP Submission)
 export const verifyOtpLimiter = new RateLimiterRedis({
 	storeClient: valkey,

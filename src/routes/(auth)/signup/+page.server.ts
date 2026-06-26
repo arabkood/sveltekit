@@ -7,7 +7,7 @@ import { hashPassword } from '$lib/server/auth/password';
 import { createSession } from '$lib/server/auth/session';
 import { createEmailVerificationToken } from '$lib/server/auth/tokens';
 import { sendEmailVerification } from '$lib/server/auth/email';
-import { rateLimiter, signupIpLimiter } from '$lib/server/ratelimit';
+import { rateLimiter, signupIpLimiter, signupEmailLimiter } from '$lib/server/ratelimit';
 import crypto from 'crypto';
 import { z } from 'zod';
 import type { Actions } from './$types';
@@ -55,6 +55,11 @@ export const actions: Actions = {
 		}
 
 		const { email, username, password } = parsed.data;
+		const emailLimitCheck = await rateLimiter.consume(signupEmailLimiter, email.toLowerCase());
+		if (!emailLimitCheck.success) {
+			return fail(429, { error: 'rateLimit.signup', retryAfterSecs: emailLimitCheck.retryAfterSecs });
+		}
+
 		const db = getDB();
 
 		// Check for existing user
