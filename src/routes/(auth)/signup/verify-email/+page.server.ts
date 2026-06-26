@@ -4,6 +4,7 @@ import { usersInAuth } from '$lib/server/db/schema/auth';
 import { eq } from 'drizzle-orm';
 import { validateOneTimeToken, createEmailVerificationToken, deleteOneTimeToken } from '$lib/server/auth/tokens';
 import { sendEmailVerification } from '$lib/server/auth/email';
+import { rateLimiter, verifyOtpLimiter, resendOtpLimiter } from '$lib/server/ratelimit';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = ({ locals }) => {
@@ -24,6 +25,12 @@ export const actions: Actions = {
 		const user = locals.user;
 		if (!user) return fail(401, { error: 'unauthorized' });
 
+		const limitCheck = await rateLimiter.consume(verifyOtpLimiter, user.id, 0);
+		if (!limitCheck.success) {
+			await deleteOneTimeToken(user.id, 'email_confirmation');
+			return fail(429, { error: 'rateLimit.verifyEmailLocked' });
+		}
+
 		const data = await request.formData();
 		const code = data.get('code')?.toString();
 
@@ -34,6 +41,11 @@ export const actions: Actions = {
 		const isValid = await validateOneTimeToken(user.id, 'email_confirmation', code);
 
 		if (!isValid) {
+			const consume = await rateLimiter.consume(verifyOtpLimiter, user.id, 1);
+			if (!consume.success) {
+				await deleteOneTimeToken(user.id, 'email_confirmation');
+				return fail(429, { error: 'rateLimit.verifyEmailLocked' });
+			}
 			return fail(400, { error: 'invalid_code' });
 		}
 
@@ -49,6 +61,11 @@ export const actions: Actions = {
 	resend: async ({ locals }) => {
 		const user = locals.user;
 		if (!user) return fail(401, { error: 'unauthorized' });
+
+		const limit = await rateLimiter.consume(resendOtpLimiter, user.id);
+		if (!limit.success) {
+			return fail(429, { error: 'rateLimit.resendEmail', retryAfterSecs: limit.retryAfterSecs });
+		}
 
 		const token = await createEmailVerificationToken(user.id);
 		await sendEmailVerification(user.email, token);

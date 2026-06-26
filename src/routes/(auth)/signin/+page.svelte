@@ -83,7 +83,7 @@
 
 					{#if form?.error}
 						<div transition:scale={{ duration: 400 }} class="rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
-							{i18n.t(form.error)}
+							{i18n.t(form.error, { retryAfterSecs: String(form?.retryAfterSecs ?? '') })}
 						</div>
 					{/if}
 

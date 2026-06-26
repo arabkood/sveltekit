@@ -103,6 +103,9 @@ export default {
 		confirmPassword: {
 			required: 'الرجاء تأكيد كلمة المرور',
 			match: 'كلمات المرور غير متطابقة'
+		},
+		verificationCode: {
+			incomplete: 'الرجاء إدخال الرمز كاملاً'
 		}
 	},
 	common: {
@@ -393,5 +396,16 @@ export default {
 			browseTracks: 'تصفح المسارات',
 			viewDashboard: 'عرض لوحة التحكم'
 		}
+	},
+	unauthorized: 'غير مصرح لك بالوصول',
+	invalid_code: 'رمز التحقق غير صحيح أو منتهي الصلاحية',
+	invalid_token: 'الرابط غير صحيح أو منتهي الصلاحية',
+	rateLimit: {
+		signin: 'محاولات كثيرة لتسجيل الدخول. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
+		signup: 'تم إنشاء حسابات كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
+		verifyEmailLocked: 'محاولات كثيرة. تم إلغاء الرمز الحالي. اطلب رمزًا جديدًا',
+		resendEmail: 'تم إرسال رسائل كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
+		forgotPassword: 'طلبات كثيرة لإعادة تعيين كلمة المرور. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
+		resetPassword: 'محاولات كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية'
 	}
 } as const;

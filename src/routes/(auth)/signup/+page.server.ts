@@ -7,6 +7,7 @@ import { hashPassword } from '$lib/server/auth/password';
 import { createSession } from '$lib/server/auth/session';
 import { createEmailVerificationToken } from '$lib/server/auth/tokens';
 import { sendEmailVerification } from '$lib/server/auth/email';
+import { rateLimiter, signupIpLimiter } from '$lib/server/ratelimit';
 import crypto from 'crypto';
 import { z } from 'zod';
 import type { Actions } from './$types';
@@ -36,6 +37,12 @@ const signupSchema = z
 
 export const actions: Actions = {
 	default: async ({ request, cookies, getClientAddress }) => {
+		const ip = getClientAddress();
+		const ipLimitCheck = await rateLimiter.consume(signupIpLimiter, ip, 1);
+		if (!ipLimitCheck.success) {
+			return fail(429, { error: 'rateLimit.signup', retryAfterSecs: ipLimitCheck.retryAfterSecs });
+		}
+
 		const formData = await request.formData();
 		const values = Object.fromEntries(formData);
 		const parsed = signupSchema.safeParse(values);
@@ -104,6 +111,7 @@ export const actions: Actions = {
 			}
 			throw err;
 		}
+
 
 		const token = await createEmailVerificationToken(id);
 		await sendEmailVerification(email, token);

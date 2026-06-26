@@ -4,6 +4,7 @@ import { usersInAuth, oneTimeTokensInAuth, sessionTokensInAuth, auditLogsInAuth 
 import { eq, and } from 'drizzle-orm';
 import { hashPassword } from '$lib/server/auth/password';
 import { validateOneTimeToken, deleteOneTimeToken } from '$lib/server/auth/tokens';
+import { rateLimiter, resetPasswordIpLimiter } from '$lib/server/ratelimit';
 import { z } from 'zod';
 import type { Actions } from './$types';
 
@@ -23,6 +24,12 @@ const resetPasswordSchema = z
 
 export const actions: Actions = {
 	default: async ({ request, params, getClientAddress }) => {
+		const ip = getClientAddress();
+		const limit = await rateLimiter.consume(resetPasswordIpLimiter, ip);
+		if (!limit.success) {
+			return fail(429, { error: 'rateLimit.resetPassword', retryAfterSecs: limit.retryAfterSecs });
+		}
+
 		const formData = await request.formData();
 		const values = Object.fromEntries(formData);
 		const parsed = resetPasswordSchema.safeParse(values);
