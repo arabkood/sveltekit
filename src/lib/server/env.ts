@@ -21,7 +21,8 @@ const schema = z.object({
 	SMTP_USER: z.string().optional(),
 	SMTP_PASS: z.string().optional(),
 	SMTP_FROM_EMAIL: z.string().optional(),
-	SMTP_FROM_NAME: z.string().optional()
+	SMTP_FROM_NAME: z.string().optional(),
+	VALKEY_URL: z.string().default('redis://localhost:6379')
 });
 
 const skipValidation = building || import.meta.env.SKIP_ENV_VALIDATION === 'true';

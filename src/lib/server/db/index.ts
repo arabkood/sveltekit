@@ -8,46 +8,33 @@ function createDB(pool: Pool) {
 	return drizzle({
 		client: pool,
 		logger: false,
-		relations: relations
+		relations
 	});
 }
 
 export type DB = ReturnType<typeof createDB>;
 
-export let db: DB;
+const globalForDb = globalThis as unknown as { db: DB; pool: Pool };
 
-export function initDB(): DB {
-	if (db) {
-		return db;
-	}
-
-	console.log('Initializing new database connection...');
-
-	const dbURL = privateEnv.DATABASE_URL;
-
-	if (!dbURL) {
-		throw new Error('Missing DATABASE_URL');
-	}
-
-	const pool = new Pool({
-		connectionString: dbURL
+export const pool =
+	globalForDb.pool ||
+	new Pool({
+		connectionString: privateEnv.DATABASE_URL
 	});
 
+if (!globalForDb.pool) {
 	pool.on('error', (err) => {
 		console.error('Unexpected error on idle database client', err);
 	});
+}
 
-	db = createDB(pool);
+export const db: DB = globalForDb.db || createDB(pool);
 
-	console.log('Database connection initialized successfully.');
-
-	return db;
+if (import.meta.env.DEV) {
+	globalForDb.db = db;
+	globalForDb.pool = pool;
 }
 
 export function getDB(): DB {
-	if (!db) {
-		return initDB();
-	}
-
 	return db;
 }
