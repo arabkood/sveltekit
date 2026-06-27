@@ -1,14 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { getDB } from '$lib/server/db';
-import { usersInAuth, auditLogsInAuth } from '$lib/server/db/schema/auth';
-import { statsInUsers } from '$lib/server/db/schema/users';
-import { eq, or } from 'drizzle-orm';
-import { hashPassword } from '$lib/server/auth/password';
 import { createSession } from '$lib/server/auth/session';
-import { createEmailVerificationToken } from '$lib/server/auth/tokens';
-import { sendEmailVerification } from '$lib/server/auth/email';
-import { rateLimiter, signupIpLimiter, signupEmailLimiter } from '$lib/server/ratelimit';
-import crypto from 'crypto';
+import { AuthService, AuthRateLimitError, AuthValidationError } from '$lib/server/services/auth';
 import { z } from 'zod';
 import type { Actions } from './$types';
 
@@ -37,12 +29,6 @@ const signupSchema = z
 
 export const actions: Actions = {
 	default: async ({ request, cookies, getClientAddress }) => {
-		const ip = getClientAddress();
-		const ipLimitCheck = await rateLimiter.safeConsume(signupIpLimiter, ip, 1);
-		if (!ipLimitCheck.success) {
-			return fail(429, { error: 'rateLimit.signup', retryAfterSecs: ipLimitCheck.retryAfterSecs });
-		}
-
 		const formData = await request.formData();
 		const values = Object.fromEntries(formData);
 		const parsed = signupSchema.safeParse(values);
@@ -55,78 +41,29 @@ export const actions: Actions = {
 		}
 
 		const { email, username, password } = parsed.data;
-		const emailLimitCheck = await rateLimiter.safeConsume(signupEmailLimiter, email.toLowerCase());
-		if (!emailLimitCheck.success) {
-			return fail(429, {
-				error: 'rateLimit.signup',
-				retryAfterSecs: emailLimitCheck.retryAfterSecs
-			});
-		}
-
-		const db = getDB();
-
-		// Check for existing user
-		const existingUser = await db
-			.select()
-			.from(usersInAuth)
-			.where(
-				or(
-					eq(usersInAuth.email, email.toLowerCase()),
-					eq(usersInAuth.username, username.toLowerCase())
-				)
-			)
-			.limit(1);
-
-		if (existingUser.length > 0) {
-			const emailTaken = existingUser[0].email === email.toLowerCase();
-			return fail(400, {
-				values: { email, username },
-				error: emailTaken ? 'validation.email.exists' : 'validation.username.exists'
-			});
-		}
-
-		const encryptedPassword = await hashPassword(password);
-		const id = crypto.randomUUID();
 
 		try {
-			await db.transaction(async (tx) => {
-				await tx.insert(usersInAuth).values({
-					id,
-					email: email.toLowerCase(),
-					username: username.toLowerCase(),
-					encryptedPassword,
-					role: 'user',
-					emailVerified: false
-				});
+			const userId = await AuthService.signup(
+				email,
+				username,
+				password,
+				getClientAddress(),
+				request.headers.get('user-agent') || ''
+			);
 
-				await tx.insert(statsInUsers).values({
-					userId: id
-				});
-
-				await tx.insert(auditLogsInAuth).values({
-					userId: id,
-					type: 'signup',
-					ipAddress: getClientAddress(),
-					userAgent: request.headers.get('user-agent') || ''
-				});
-			});
-		} catch (err: any) {
-			// Unique constraint violation (race condition on email/username)
-			if (err?.code === '23505' || err?.constraint) {
+			await createSession(userId, cookies);
+			redirect(302, '/signup/verify-email');
+		} catch (error) {
+			if (error instanceof AuthRateLimitError) {
+				return fail(429, { error: error.errorKey, retryAfterSecs: error.retryAfterSecs });
+			}
+			if (error instanceof AuthValidationError) {
 				return fail(400, {
 					values: { email, username },
-					error: 'validation.email.exists'
+					error: error.errorKey
 				});
 			}
-			throw err;
+			throw error;
 		}
-
-		const token = await createEmailVerificationToken(id);
-		await sendEmailVerification(email, username, token);
-
-		// Create session
-		await createSession(id, cookies);
-
-		redirect(302, '/signup/verify-email');
 	}
 };

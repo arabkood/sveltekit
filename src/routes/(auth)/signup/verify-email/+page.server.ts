@@ -1,14 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { getDB } from '$lib/server/db';
-import { usersInAuth } from '$lib/server/db/schema/auth';
-import { eq } from 'drizzle-orm';
-import {
-	validateOneTimeToken,
-	createEmailVerificationToken,
-	deleteOneTimeToken
-} from '$lib/server/auth/tokens';
-import { sendEmailVerification } from '$lib/server/auth/email';
-import { rateLimiter, verifyOtpLimiter, resendOtpLimiter } from '$lib/server/ratelimit';
+import { AuthService, AuthRateLimitError, AuthValidationError } from '$lib/server/services/auth';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = ({ locals }) => {
@@ -29,15 +20,6 @@ export const actions: Actions = {
 		const user = locals.user;
 		if (!user) return fail(401, { error: 'unauthorized' });
 
-		const limitCheck = await rateLimiter.safeConsume(verifyOtpLimiter, user.id, 0);
-		if (!limitCheck.success) {
-			await deleteOneTimeToken(user.id, 'email_confirmation');
-			return fail(429, {
-				error: 'rateLimit.verifyEmailLocked',
-				retryAfterSecs: limitCheck.retryAfterSecs
-			});
-		}
-
 		const data = await request.formData();
 		const code = data.get('code')?.toString();
 
@@ -45,42 +27,34 @@ export const actions: Actions = {
 			return fail(400, { error: 'validation.verificationCode.incomplete' });
 		}
 
-		const isValid = await validateOneTimeToken(user.id, 'email_confirmation', code);
-
-		if (!isValid) {
-			const consume = await rateLimiter.safeConsume(verifyOtpLimiter, user.id, 1);
-			if (!consume.success) {
-				await deleteOneTimeToken(user.id, 'email_confirmation');
+		try {
+			await AuthService.verifyEmail(user.id, code);
+			return { success: true };
+		} catch (error) {
+			if (error instanceof AuthRateLimitError) {
 				return fail(429, {
-					error: 'rateLimit.verifyEmailLocked',
-					retryAfterSecs: consume.retryAfterSecs
+					error: error.errorKey,
+					retryAfterSecs: error.retryAfterSecs
 				});
 			}
-			return fail(400, { error: 'invalid_code' });
+			if (error instanceof AuthValidationError) {
+				return fail(400, { error: error.errorKey });
+			}
+			throw error;
 		}
-
-		const db = getDB();
-		await db
-			.update(usersInAuth)
-			.set({ emailVerified: true, emailVerifiedAt: new Date() })
-			.where(eq(usersInAuth.id, user.id));
-
-		await deleteOneTimeToken(user.id, 'email_confirmation');
-
-		return { success: true };
 	},
 	resend: async ({ locals }) => {
 		const user = locals.user;
 		if (!user) return fail(401, { error: 'unauthorized' });
 
-		const limit = await rateLimiter.safeConsume(resendOtpLimiter, user.id);
-		if (!limit.success) {
-			return fail(429, { error: 'rateLimit.resendEmail', retryAfterSecs: limit.retryAfterSecs });
+		try {
+			await AuthService.resendVerificationEmail(user.id, user.email, user.username || '');
+			return { resent: true };
+		} catch (error) {
+			if (error instanceof AuthRateLimitError) {
+				return fail(429, { error: error.errorKey, retryAfterSecs: error.retryAfterSecs });
+			}
+			throw error;
 		}
-
-		const token = await createEmailVerificationToken(user.id);
-		await sendEmailVerification(user.email, user.username || '', token);
-
-		return { resent: true };
 	}
 };

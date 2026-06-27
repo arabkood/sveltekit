@@ -102,3 +102,14 @@ export async function deleteOneTimeToken(
 		.delete(oneTimeTokensInAuth)
 		.where(and(eq(oneTimeTokensInAuth.userId, userId), eq(oneTimeTokensInAuth.type, type)));
 }
+
+export async function getTokenRecord(
+	token: string,
+	type: 'email_confirmation' | 'password_recovery'
+) {
+	const db = getDB();
+	const record = await db.query.oneTimeTokensInAuth.findFirst({
+		where: { type, token }
+	});
+	return record || null;
+}

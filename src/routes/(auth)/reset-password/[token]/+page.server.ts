@@ -1,15 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { getDB } from '$lib/server/db';
-import {
-	usersInAuth,
-	oneTimeTokensInAuth,
-	sessionTokensInAuth,
-	auditLogsInAuth
-} from '$lib/server/db/schema/auth';
-import { eq, and } from 'drizzle-orm';
-import { hashPassword } from '$lib/server/auth/password';
-import { validateOneTimeToken, deleteOneTimeToken } from '$lib/server/auth/tokens';
-import { rateLimiter, resetPasswordIpLimiter } from '$lib/server/ratelimit';
+import { AuthService, AuthRateLimitError, AuthValidationError } from '$lib/server/services/auth';
 import { z } from 'zod';
 import type { Actions } from './$types';
 
@@ -29,12 +19,6 @@ const resetPasswordSchema = z
 
 export const actions: Actions = {
 	default: async ({ request, params, getClientAddress }) => {
-		const ip = getClientAddress();
-		const limit = await rateLimiter.safeConsume(resetPasswordIpLimiter, ip);
-		if (!limit.success) {
-			return fail(429, { error: 'rateLimit.resetPassword', retryAfterSecs: limit.retryAfterSecs });
-		}
-
 		const formData = await request.formData();
 		const values = Object.fromEntries(formData);
 		const parsed = resetPasswordSchema.safeParse(values);
@@ -52,42 +36,22 @@ export const actions: Actions = {
 
 		const { password } = parsed.data;
 
-		const db = getDB();
-		const tokenRecord = await db
-			.select()
-			.from(oneTimeTokensInAuth)
-			.where(
-				and(eq(oneTimeTokensInAuth.type, 'password_recovery'), eq(oneTimeTokensInAuth.token, token))
-			)
-			.limit(1);
-
-		if (tokenRecord.length === 0) {
-			return fail(400, { error: 'invalid_token' });
+		try {
+			await AuthService.resetPassword(
+				token,
+				password,
+				getClientAddress(),
+				request.headers.get('user-agent') || ''
+			);
+			return { success: true };
+		} catch (error) {
+			if (error instanceof AuthRateLimitError) {
+				return fail(429, { error: error.errorKey, retryAfterSecs: error.retryAfterSecs });
+			}
+			if (error instanceof AuthValidationError) {
+				return fail(400, { error: error.errorKey });
+			}
+			throw error;
 		}
-
-		const userId = tokenRecord[0].userId;
-		const isValid = await validateOneTimeToken(userId, 'password_recovery', token);
-
-		if (!isValid) {
-			return fail(400, { error: 'invalid_token' });
-		}
-
-		const encryptedPassword = await hashPassword(password);
-
-		await db.update(usersInAuth).set({ encryptedPassword }).where(eq(usersInAuth.id, userId));
-
-		// Invalidate all existing sessions for security
-		await db.delete(sessionTokensInAuth).where(eq(sessionTokensInAuth.userId, userId));
-
-		await deleteOneTimeToken(userId, 'password_recovery');
-
-		await db.insert(auditLogsInAuth).values({
-			userId,
-			type: 'password_change',
-			ipAddress: getClientAddress(),
-			userAgent: request.headers.get('user-agent') || ''
-		});
-
-		return { success: true };
 	}
 };

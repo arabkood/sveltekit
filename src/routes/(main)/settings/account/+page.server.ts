@@ -1,10 +1,7 @@
 import { fail } from '@sveltejs/kit';
-import { getDB } from '$lib/server/db';
-import { usersInAuth, sessionTokensInAuth, auditLogsInAuth } from '$lib/server/db/schema/auth';
-import { eq } from 'drizzle-orm';
-import { verifyPassword, hashPassword } from '$lib/server/auth/password';
 import { createSession } from '$lib/server/auth/session';
-import { rateLimiter, changePasswordLimiter, changeAccountLimiter, changeAccountSuccessLimiter } from '$lib/server/ratelimit';
+import { AuthService, AuthRateLimitError, AuthValidationError } from '$lib/server/services/auth';
+import { UserService, UserRateLimitError, UserValidationError } from '$lib/server/services/user';
 import { z } from 'zod';
 import type { Actions } from './$types';
 
@@ -40,15 +37,6 @@ export const actions: Actions = {
 		const user = locals.user;
 		if (!user) return fail(401, { action: 'changeAccount', error: 'unauthorized' });
 
-		const limit = await rateLimiter.safeConsume(changeAccountLimiter, user.id);
-		if (!limit.success) {
-			return fail(429, {
-				action: 'changeAccount',
-				error: 'rateLimit.changeAccount',
-				retryAfterSecs: limit.retryAfterSecs
-			});
-		}
-
 		const formData = await request.formData();
 		const values = Object.fromEntries(formData);
 		const parsed = changeAccountSchema.safeParse(values);
@@ -63,66 +51,39 @@ export const actions: Actions = {
 
 		const { username } = parsed.data;
 
-		if (username === user.username) {
-			return { action: 'changeAccount', success: true };
-		}
-
-		const db = getDB();
-
-		// Check success limiter before touching the DB (don't consume yet)
-		const successLimiterState = await changeAccountSuccessLimiter.get(user.id).catch(() => null);
-		const remainingPoints = successLimiterState === null
-			? changeAccountSuccessLimiter.points
-			: successLimiterState.remainingPoints;
-		if (remainingPoints <= 0) {
-			const retryAfterSecs = Math.ceil((successLimiterState?.msBeforeNext ?? 3600000) / 1000);
-			return fail(429, {
-				action: 'changeAccount',
-				error: 'rateLimit.changeAccount',
-				retryAfterSecs
-			});
-		}
-
 		try {
-			await db.update(usersInAuth)
-				.set({ username })
-				.where(eq(usersInAuth.id, user.id));
-		} catch (error: any) {
-			if (error.code === '23505') {
+			await UserService.changeUsername(
+				user.id,
+				user.username || '',
+				username,
+				getClientAddress(),
+				request.headers.get('user-agent') || ''
+			);
+
+			return { action: 'changeAccount', success: true };
+		} catch (error) {
+			if (error instanceof UserRateLimitError) {
+				return fail(429, {
+					action: 'changeAccount',
+					error: error.errorKey,
+					retryAfterSecs: error.retryAfterSecs
+				});
+			}
+			if (error instanceof UserValidationError) {
 				return fail(400, {
 					action: 'changeAccount',
 					values: { username },
-					errors: { username: ['validation.username.exists'] }
+					errors: { username: [error.errorKey] }
 				});
 			}
+			console.error('Unhandled error in changeAccount:', error);
 			return fail(500, { action: 'changeAccount', error: 'errors.INTERNAL_ERROR' });
 		}
-
-		// Consume the success point only after a real username change
-		await rateLimiter.safeConsume(changeAccountSuccessLimiter, user.id);
-
-		await db.insert(auditLogsInAuth).values({
-			userId: user.id,
-			type: 'username_change',
-			ipAddress: getClientAddress(),
-			userAgent: request.headers.get('user-agent') || ''
-		});
-
-		return { action: 'changeAccount', success: true };
 	},
 
 	changePassword: async ({ request, locals, cookies, getClientAddress }) => {
 		const user = locals.user;
 		if (!user) return fail(401, { action: 'changePassword', error: 'unauthorized' });
-
-		const limit = await rateLimiter.safeConsume(changePasswordLimiter, user.id);
-		if (!limit.success) {
-			return fail(429, {
-				action: 'changePassword',
-				error: 'rateLimit.changePassword',
-				retryAfterSecs: limit.retryAfterSecs
-			});
-		}
 
 		const formData = await request.formData();
 		const values = Object.fromEntries(formData);
@@ -137,38 +98,30 @@ export const actions: Actions = {
 
 		const { currentPassword, newPassword } = parsed.data;
 
-		const db = getDB();
-		const result = await db.select().from(usersInAuth).where(eq(usersInAuth.id, user.id)).limit(1);
+		try {
+			await AuthService.changePassword(
+				user.id,
+				currentPassword,
+				newPassword,
+				getClientAddress(),
+				request.headers.get('user-agent') || ''
+			);
 
-		if (result.length === 0) {
-			return fail(401, { action: 'changePassword', error: 'unauthorized' });
+			await createSession(user.id, cookies);
+			return { action: 'changePassword', success: true };
+		} catch (error) {
+			if (error instanceof AuthRateLimitError) {
+				return fail(429, {
+					action: 'changePassword',
+					error: error.errorKey,
+					retryAfterSecs: error.retryAfterSecs
+				});
+			}
+			if (error instanceof AuthValidationError) {
+				return fail(400, { action: 'changePassword', error: error.errorKey });
+			}
+			console.error('Unhandled error in changePassword:', error);
+			return fail(500, { action: 'changePassword', error: 'errors.INTERNAL_ERROR' });
 		}
-
-		const userRecord = result[0];
-		const isValid = await verifyPassword(currentPassword, userRecord.encryptedPassword);
-
-		if (!isValid) {
-			return fail(400, { action: 'changePassword', error: 'validation.password.wrongCurrent' });
-		}
-
-		const encryptedPassword = await hashPassword(newPassword);
-
-		await db.update(usersInAuth)
-			.set({ encryptedPassword })
-			.where(eq(usersInAuth.id, user.id));
-
-		// Kill all sessions globally
-		await db.delete(sessionTokensInAuth).where(eq(sessionTokensInAuth.userId, user.id));
-		// Instantly re-authenticate the current browser
-		await createSession(user.id, cookies);
-
-		await db.insert(auditLogsInAuth).values({
-			userId: user.id,
-			type: 'password_change',
-			ipAddress: getClientAddress(),
-			userAgent: request.headers.get('user-agent') || ''
-		});
-
-		return { action: 'changePassword', success: true };
 	}
 };

@@ -1,14 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { getDB } from '$lib/server/db';
-import { usersInAuth } from '$lib/server/db/schema/auth';
-import { eq } from 'drizzle-orm';
-import { createPasswordResetToken } from '$lib/server/auth/tokens';
-import { sendPasswordReset } from '$lib/server/auth/email';
-import {
-	rateLimiter,
-	forgotPasswordIpLimiter,
-	forgotPasswordEmailLimiter
-} from '$lib/server/ratelimit';
+import { AuthService, AuthRateLimitError } from '$lib/server/services/auth';
 import { z } from 'zod';
 import type { Actions } from './$types';
 
@@ -21,15 +12,6 @@ const forgotPasswordSchema = z.object({
 
 export const actions: Actions = {
 	default: async ({ request, getClientAddress, url }) => {
-		const ip = getClientAddress();
-		const ipLimit = await rateLimiter.safeConsume(forgotPasswordIpLimiter, ip);
-		if (!ipLimit.success) {
-			return fail(429, {
-				error: 'rateLimit.forgotPassword',
-				retryAfterSecs: ipLimit.retryAfterSecs
-			});
-		}
-
 		const formData = await request.formData();
 		const values = Object.fromEntries(formData);
 		const parsed = forgotPasswordSchema.safeParse(values);
@@ -41,27 +23,21 @@ export const actions: Actions = {
 			});
 		}
 
-		const email = parsed.data.email.toLowerCase().trim();
-		const emailLimit = await rateLimiter.safeConsume(forgotPasswordEmailLimiter, email);
-		if (!emailLimit.success) {
-			return fail(429, {
-				error: 'rateLimit.forgotPassword',
-				retryAfterSecs: emailLimit.retryAfterSecs
-			});
-		}
-
-		const db = getDB();
-		const result = await db.select().from(usersInAuth).where(eq(usersInAuth.email, email)).limit(1);
-
-		if (result.length === 0) {
-			// To prevent email enumeration attacks, always return success
+		try {
+			await AuthService.requestPasswordReset(
+				parsed.data.email,
+				getClientAddress(),
+				url.origin
+			);
 			return { success: true };
+		} catch (error) {
+			if (error instanceof AuthRateLimitError) {
+				return fail(429, {
+					error: error.errorKey,
+					retryAfterSecs: error.retryAfterSecs
+				});
+			}
+			throw error;
 		}
-
-		const user = result[0];
-		const token = await createPasswordResetToken(user.id);
-		await sendPasswordReset(user.email, user.username || '', token, url.origin);
-
-		return { success: true };
 	}
 };
