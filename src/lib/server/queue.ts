@@ -1,4 +1,5 @@
 import { nats } from '$lib/server/nats';
+import { RetentionPolicy, StorageType } from '@nats-io/jetstream';
 
 export interface CodeExecutionPayload {
 	task_id: string; // UUID of the submission
@@ -11,6 +12,34 @@ export interface CodeExecutionPayload {
 }
 
 export class QueueService {
+	/**
+	 * Provisions the JetStream queues automatically on app startup.
+	 */
+	static async initQueue() {
+		const { jsm } = await nats;
+		
+		const config = {
+			name: 'CODE_EXECUTIONS',
+			subjects: ['code.execute.>'],
+			retention: RetentionPolicy.Workqueue,
+			storage: StorageType.File,
+			max_age: 1000 * 60 * 5 // 5 minutes max
+		};
+
+		try {
+			await jsm.streams.info(config.name);
+			await jsm.streams.update(config.name, config);
+			console.log(`[Queue] Stream ${config.name} updated.`);
+		} catch (err: any) {
+			if (err.message === 'stream not found' || err.code === '404') {
+				await jsm.streams.add(config);
+				console.log(`[Queue] Stream ${config.name} created.`);
+			} else {
+				console.warn(`[Queue] Failed to provision stream: ${err.message}`);
+			}
+		}
+	}
+
 	/**
 	 * Enqueues a code execution job into NATS JetStream.
 	 *

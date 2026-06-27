@@ -1,5 +1,5 @@
 import { connect, type NatsConnection } from '@nats-io/transport-node';
-import { jetstream, jetstreamManager, type JetStreamClient, type JetStreamManager } from '@nats-io/jetstream';
+import { jetstream, jetstreamManager, RetentionPolicy, StorageType, type JetStreamClient, type JetStreamManager } from '@nats-io/jetstream';
 import { privateEnv } from './env';
 import { dev } from '$app/environment';
 
@@ -21,6 +21,19 @@ async function initNats() {
 	const nc = await connect(opts);
 	const js = jetstream(nc);
 	const jsm = await jetstreamManager(nc);
+
+	try {
+		await jsm.streams.add({
+			name: 'CODE_EXECUTIONS',
+			subjects: ['code_executions'],
+			retention: RetentionPolicy.Workqueue,
+			storage: StorageType.File,
+			max_age: 1000 * 60 * 5 // 5 minutes max
+		});
+		console.log('[NATS] JetStream stream CODE_EXECUTIONS provisioned.');
+	} catch (e: any) {
+		console.warn('[NATS] Failed to provision stream:', e.message);
+	}
 
 	return { nc, js, jsm };
 }

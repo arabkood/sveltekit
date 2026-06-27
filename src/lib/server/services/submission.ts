@@ -1,8 +1,9 @@
 import { db } from '$lib/server/db';
-import { trackInUsers, submissionInUsers } from '$lib/server/db/schema/users';
+import { trackInUsers, submissionInUsers, xpEventsInUsers } from '$lib/server/db/schema/users';
 import { itemsInClass, modulesInClass } from '$lib/server/db/schema/class';
-import { eq } from 'drizzle-orm';
+import { eq, sql, and } from 'drizzle-orm';
 import { QueueService } from '$lib/server/queue';
+import { nats } from '$lib/server/nats';
 
 const MAX_FILE_SIZE = 20 * 1024; // 20KB
 const MAX_TOTAL_SIZE = 512 * 1024; // 0.5MB
@@ -132,5 +133,76 @@ export class SubmissionService {
 		]);
 
 		return { taskId, ack };
+	}
+
+	/**
+	 * Handles the webhook callback from the Go Invoker.
+	 * Updates the DB, assigns XP, and publishes to NATS to close the SSE stream.
+	 */
+	static async handleWebhookResult(payload: any) {
+		const { id: taskId, result: runnerResult, job: jobResult } = payload;
+
+		if (!taskId) throw new Error('Missing task ID');
+
+		let submissionStatus = 'error';
+		let resultsPayload = null;
+
+		if (runnerResult) {
+			submissionStatus = runnerResult.status;
+			resultsPayload = runnerResult;
+		}
+
+		// 1. Update the submission table
+		const updatedSubmission = await db
+			.update(submissionInUsers)
+			.set({
+				status: submissionStatus,
+				results: resultsPayload,
+				metadata: jobResult
+					? sql`jsonb_set(COALESCE(metadata, '{}'::jsonb), '{job}', ${JSON.stringify(jobResult)}::jsonb, true)`
+					: undefined,
+				attempts: sql`attempts + 1`,
+				updatedAt: new Date()
+			})
+			.where(eq(submissionInUsers.id, taskId))
+			.returning()
+			.then((res) => res[0]);
+
+		// We don't throw if not found because Run operations aren't in the DB!
+		// Wait, if it's a Run operation, updatedSubmission will be undefined.
+		
+		// 2. Award XP if this is a passing submission that hasn't been awarded yet
+		if (updatedSubmission && runnerResult && submissionStatus === 'pass' && updatedSubmission.xpReward === 0) {
+			const item = await db
+				.select({ baseXp: itemsInClass.baseXp, type: itemsInClass.type, id: itemsInClass.id })
+				.from(itemsInClass)
+				.where(eq(itemsInClass.id, updatedSubmission.itemId))
+				.limit(1)
+				.then((res) => res[0]);
+
+			if (item && item.baseXp) {
+				// Atomically set xpReward to prevent double-awarding on race conditions
+				const xpUpdated = await db
+					.update(submissionInUsers)
+					.set({ xpReward: item.baseXp })
+					.where(and(eq(submissionInUsers.id, taskId), eq(submissionInUsers.xpReward, 0)))
+					.returning()
+					.then((res) => res[0]);
+
+				if (xpUpdated) {
+					// Insert the XP event ledger entry
+					await db.insert(xpEventsInUsers).values({
+						userId: updatedSubmission.userId,
+						xpAmount: item.baseXp,
+						sourceType: `item/${item.type}`,
+						sourceId: item.id
+					});
+				}
+			}
+		}
+
+		// 3. Publish to ephemeral NATS Core to resolve the user's SSE stream instantly
+		const { nc } = await nats;
+		nc.publish(`results.${taskId}`, JSON.stringify(payload));
 	}
 }
