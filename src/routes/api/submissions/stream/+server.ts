@@ -30,8 +30,16 @@ export const GET: RequestHandler = async ({ request, url, locals }) => {
 				controller.enqueue('event: ping\ndata: {}\n\n');
 			}, 15000);
 
+			// Automatically timeout after 2 minutes (120000 ms) to prevent hanging UI
+			const timeout = setTimeout(() => {
+				controller.enqueue(`data: {"status":"timeout", "error":"Execution timed out or dropped"}\n\n`);
+				cleanup();
+				controller.close();
+			}, 120000);
+
 			// Helper function to safely clean up resources
 			const cleanup = () => {
+				clearTimeout(timeout);
 				clearInterval(keepAlive);
 				if (!sub.isClosed()) {
 					sub.unsubscribe();
@@ -49,7 +57,7 @@ export const GET: RequestHandler = async ({ request, url, locals }) => {
 					try {
 						const parsed = JSON.parse(strData);
 						// If we receive a terminal state, we can safely close the connection
-						if (parsed.status === 'pass' || parsed.status === 'fail' || parsed.status === 'internal') {
+						if (parsed.status === 'pass' || parsed.status === 'fail' || parsed.status === 'internal' || parsed.status === 'timeout') {
 							cleanup();
 							controller.close();
 							break;

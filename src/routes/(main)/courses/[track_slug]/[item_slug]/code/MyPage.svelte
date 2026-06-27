@@ -5,7 +5,7 @@
 	// Components
 
 	// Services
-	import { submissionService } from './submission.service';
+	import { submissionService, RateLimitError } from './submission.service';
 	import Header from './Header.svelte';
 	import DesktopLayout from './DesktopLayout.svelte';
 	import MobileLayout from './MobileLayout.svelte';
@@ -30,8 +30,8 @@
 	);
 
 	const COOLDOWN_SECONDS = {
-		run: 10,
-		submit: 30
+		run: 5,
+		submit: 10
 	};
 
 	// --- State ---
@@ -161,13 +161,18 @@
 			);
 			setRun('result', result.results);
 			setRun('status', 'success');
-		} catch (e) {
+			setRun('cooldown', COOLDOWN_SECONDS.run);
+		} catch (e: any) {
 			console.error('Run failed:', e);
-			setRun('error', (e as Error).message || 'Failed to run code');
+			setRun('error', e.message || 'Failed to run code');
 			setRun('status', 'error');
+			if (e instanceof RateLimitError) {
+				setRun('cooldown', e.retryAfter);
+			} else {
+				setRun('cooldown', COOLDOWN_SECONDS.run);
+			}
 		} finally {
 			setRun('status', 'idle');
-			setRun('cooldown', COOLDOWN_SECONDS.run);
 		}
 	}
 
@@ -188,6 +193,7 @@
 
 			newSubmission = result;
 			setSubmit('status', 'success');
+			setSubmit('cooldown', COOLDOWN_SECONDS.submit);
 
 			const allTestsPassed =
 				result.results?.tests?.every((test: any) => test.status === 'pass') ?? false;
@@ -195,17 +201,22 @@
 			if (allTestsPassed) {
 				showSuccessPopup = true;
 			}
-		} catch (e) {
+		} catch (e: any) {
 			console.error('Submission failed:', e);
-			setSubmit('error', (e as Error).message || 'Failed to submit tests');
+			setSubmit('error', e.message || 'Failed to submit tests');
 			setSubmit('status', 'error');
+			if (e instanceof RateLimitError) {
+				setSubmit('cooldown', e.retryAfter);
+			} else {
+				setSubmit('cooldown', COOLDOWN_SECONDS.submit);
+			}
 		} finally {
 			setSubmit('status', 'idle');
-			setSubmit('cooldown', COOLDOWN_SECONDS.submit);
 		}
 	}
 
 	const runOutput = $derived.by(() => {
+		if (run.error) return `Error:\n${run.error}`;
 		let out = '';
 		if (run.result?.stdout && run.result?.stdout.length > 0) {
 			out += run.result.stdout;

@@ -29,6 +29,14 @@
 	// Show cooldown text when button is disabled due to cooldown
 	const showRunCooldown = $derived(runStatus !== 'loading' && runCooldownDuration > 0);
 	const showSubmitCooldown = $derived(submitStatus !== 'loading' && submitCooldownDuration > 0);
+
+	function formatCooldown(seconds: number) {
+		if (seconds < 60) return `${seconds}s`;
+		const m = Math.floor(seconds / 60);
+		if (m < 60) return `${m}m`;
+		const h = Math.floor(m / 60);
+		return `${h}h`;
+	}
 </script>
 
 <footer
@@ -42,7 +50,7 @@
 			variant="friendly"
 			loading={submitStatus === 'loading'}
 		>
-			{showSubmitCooldown ? `تصحيح الإجابة (${submitCooldownDuration}s)` : 'تصحيح الإجابة'}
+			{showSubmitCooldown ? `تصحيح الإجابة (${formatCooldown(submitCooldownDuration)})` : 'تصحيح الإجابة'}
 		</Button>
 
 		<Button
@@ -53,7 +61,7 @@
 			startIcon="play"
 			loading={runStatus === 'loading'}
 		>
-			{showRunCooldown ? `تشغيل (${runCooldownDuration}s)` : 'تشغيل'}
+			{showRunCooldown ? `تشغيل (${formatCooldown(runCooldownDuration)})` : 'تشغيل'}
 		</Button>
 	</div>
 

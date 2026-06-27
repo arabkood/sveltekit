@@ -202,11 +202,17 @@ export default {
 		INVALID_INPUT: 'البيانات المدخلة غير صحيحة',
 		UNAUTHORIZED: 'غير مصرح لك بالوصول',
 		MISSING_PAYLOAD: 'بيانات غير مكتملة',
+		TOO_FAST: 'لقد قمت بذلك بسرعة كبيرة، يرجى الانتظار قليلاً',
+		QUOTA_EXCEEDED: 'لقد تجاوزت الحد المسموح به، يرجى المحاولة لاحقاً',
 		TOO_MANY_FILES: 'عدد الملفات المدخلة كبير جداً',
 		FILE_TOO_LARGE: 'حجم الملف كبير جداً (الحد الأقصى 20KB)',
 		PAYLOAD_TOO_LARGE: 'حجم الملفات الإجمالي كبير جداً',
 		ITEM_NOT_FOUND: 'لم يتم العثور على التمرين',
-		NOT_ENROLLED: 'أنت غير مسجل في هذا المسار'
+		NOT_ENROLLED: 'أنت غير مسجل في هذا المسار',
+		EXECUTION_TIMEOUT: 'فشل التنفيذ أو انتهى الوقت المخصص',
+		STREAM_LOST: 'تم فقدان الاتصال بالخادم أثناء التنفيذ',
+		FAILED_RUN: 'فشل تنفيذ الكود',
+		FAILED_SUBMIT: 'فشل تصحيح الإجابة'
 	},
 	navigation: {
 		dashboard: 'لوحة التحكم ',

@@ -1,5 +1,14 @@
 import { i18n } from '$i18n/i18n';
 
+export class RateLimitError extends Error {
+	public retryAfter: number;
+	constructor(message: string, retryAfter: number) {
+		super(message);
+		this.retryAfter = retryAfter;
+		this.name = 'RateLimitError';
+	}
+}
+
 export class SubmissionService {
 	constructor() {}
 
@@ -17,7 +26,10 @@ export class SubmissionService {
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(i18n.error(error.error) || 'Failed to run code');
+			if (response.status === 429 && error.retryAfter) {
+				throw new RateLimitError(i18n.error(error.error) || i18n.error('TOO_FAST'), error.retryAfter);
+			}
+			throw new Error(i18n.error(error.error) || i18n.error('FAILED_RUN'));
 		}
 
 		const { task_id } = await response.json();
@@ -37,7 +49,10 @@ export class SubmissionService {
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(i18n.error(error.error) || 'Failed to submit solution');
+			if (response.status === 429 && error.retryAfter) {
+				throw new RateLimitError(i18n.error(error.error) || i18n.error('TOO_FAST'), error.retryAfter);
+			}
+			throw new Error(i18n.error(error.error) || i18n.error('FAILED_SUBMIT'));
 		}
 
 		const { submission } = await response.json();
@@ -59,6 +74,10 @@ export class SubmissionService {
 					if (data.status === 'pass' || data.status === 'fail' || data.status === 'internal') {
 						eventSource.close();
 						resolve(data);
+					} else if (data.status === 'timeout' || data.status === 'error') {
+						eventSource.close();
+						// Attempt to translate the backend error code, otherwise fallback to generic timeout
+						reject(new Error(data.error ? (i18n.error(data.error) || data.error) : i18n.error('EXECUTION_TIMEOUT')));
 					}
 				} catch (e) {
 					// Ignore parse errors, keep listening
@@ -67,7 +86,7 @@ export class SubmissionService {
 
 			eventSource.onerror = (error) => {
 				eventSource.close();
-				reject(new Error('Connection to execution stream lost'));
+				reject(new Error(i18n.error('STREAM_LOST')));
 			};
 		});
 	}

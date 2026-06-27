@@ -129,3 +129,32 @@ export const changeAccountSuccessLimiter = new RateLimiterRedis({
 	points: 1,
 	duration: 60 * 60 // 1 hour
 });
+
+// Submissions & Code Execution
+export const runCooldownLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:run:cooldown',
+	points: 1,
+	duration: 5 // 5 seconds
+});
+
+export const runQuotaLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:run:quota',
+	points: 100,
+	duration: 60 * 60 // 1 hour
+});
+
+export const submitCooldownLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:submit:cooldown',
+	points: 1,
+	duration: 10 // 10 seconds
+});
+
+export const submitQuotaLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:submit:quota',
+	points: 30,
+	duration: 60 * 60 // 1 hour
+});

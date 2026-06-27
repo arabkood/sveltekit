@@ -202,7 +202,12 @@ export class SubmissionService {
 		}
 
 		// 3. Publish to ephemeral NATS Core to resolve the user's SSE stream instantly
+		const ssePayload = {
+			...payload,
+			status: submissionStatus,
+			results: resultsPayload
+		};
 		const { nc } = await nats;
-		nc.publish(`results.${taskId}`, JSON.stringify(payload));
+		nc.publish(`results.${taskId}`, JSON.stringify(ssePayload));
 	}
 }

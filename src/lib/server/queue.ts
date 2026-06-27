@@ -17,13 +17,14 @@ export class QueueService {
 	 */
 	static async initQueue() {
 		const { jsm } = await nats;
-		
+
 		const config = {
 			name: 'CODE_EXECUTIONS',
 			subjects: ['code.execute.>'],
 			retention: RetentionPolicy.Workqueue,
 			storage: StorageType.File,
-			max_age: 1000 * 60 * 5 // 5 minutes max
+			max_age: 5 * 60 * 1_000_000_000, // 5 minutes in nanoseconds
+			allow_direct: true
 		};
 
 		try {
