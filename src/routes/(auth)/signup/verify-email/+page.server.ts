@@ -68,7 +68,7 @@ export const actions: Actions = {
 		}
 
 		const token = await createEmailVerificationToken(user.id);
-		await sendEmailVerification(user.email, token);
+		await sendEmailVerification(user.email, user.username || '', token);
 
 		return { resent: true };
 	}

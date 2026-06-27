@@ -16,7 +16,7 @@ const forgotPasswordSchema = z.object({
 });
 
 export const actions: Actions = {
-	default: async ({ request, getClientAddress }) => {
+	default: async ({ request, getClientAddress, url }) => {
 		const ip = getClientAddress();
 		const ipLimit = await rateLimiter.consume(forgotPasswordIpLimiter, ip);
 		if (!ipLimit.success) {
@@ -54,7 +54,7 @@ export const actions: Actions = {
 
 		const user = result[0];
 		const token = await createPasswordResetToken(user.id);
-		await sendPasswordReset(user.email, token);
+		await sendPasswordReset(user.email, user.username || '', token, url.origin);
 
 		return { success: true };
 	}

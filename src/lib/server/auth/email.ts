@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { privateEnv } from '$secrets';
 import { dev } from '$app/environment';
+import { getVerificationEmailHtml, getPasswordResetEmailHtml } from './emailTemplates';
 
 export const transporter = nodemailer.createTransport({
 	host: privateEnv.SMTP_HOST,
@@ -12,7 +13,7 @@ export const transporter = nodemailer.createTransport({
 	}
 });
 
-export async function sendEmailVerification(to: string, code: string) {
+export async function sendEmailVerification(to: string, username: string, code: string) {
 	if (dev) {
 		console.log('\n📧 --- DEV MODE EMAIL ---');
 		console.log(`To: ${to}`);
@@ -31,8 +32,8 @@ export async function sendEmailVerification(to: string, code: string) {
 	const mailOptions = {
 		from,
 		to,
-		subject: 'Verify your email address',
-		html: `<p>Your email verification code is: <strong>${code}</strong></p>`
+		subject: 'تأكيد عنوان البريد الإلكتروني',
+		html: getVerificationEmailHtml(username, code)
 	};
 
 	try {
@@ -42,12 +43,13 @@ export async function sendEmailVerification(to: string, code: string) {
 	}
 }
 
-export async function sendPasswordReset(to: string, code: string) {
+export async function sendPasswordReset(to: string, username: string, code: string, baseUrl: string) {
 	if (dev) {
 		console.log('\n📧 --- DEV MODE EMAIL ---');
 		console.log(`To: ${to}`);
 		console.log(`Subject: Reset your password`);
 		console.log(`Code: ${code}`);
+		console.log(`Link: ${baseUrl}/reset-password/${code}`);
 		console.log('--------------------------\n');
 		return;
 	}
@@ -61,8 +63,8 @@ export async function sendPasswordReset(to: string, code: string) {
 	const mailOptions = {
 		from,
 		to,
-		subject: 'Reset your password',
-		html: `<p>Your password reset code is: <strong>${code}</strong></p>`
+		subject: 'إعادة تعيين كلمة المرور',
+		html: getPasswordResetEmailHtml(username, code, baseUrl)
 	};
 
 	try {

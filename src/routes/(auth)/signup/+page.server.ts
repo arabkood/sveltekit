@@ -119,7 +119,7 @@ export const actions: Actions = {
 
 
 		const token = await createEmailVerificationToken(id);
-		await sendEmailVerification(email, token);
+		await sendEmailVerification(email, username, token);
 
 		// Create session
 		await createSession(id, cookies);
