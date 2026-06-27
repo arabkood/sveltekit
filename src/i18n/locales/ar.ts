@@ -199,7 +199,14 @@ export default {
 	errors: {
 		INTERNAL_ERROR: 'حدث خطأ داخلي',
 		SOMETHING_WENT_WRONG: 'حدث خطأ ما',
-		INVALID_INPUT: 'البيانات المدخلة غير صحيحة'
+		INVALID_INPUT: 'البيانات المدخلة غير صحيحة',
+		UNAUTHORIZED: 'غير مصرح لك بالوصول',
+		MISSING_PAYLOAD: 'بيانات غير مكتملة',
+		TOO_MANY_FILES: 'عدد الملفات المدخلة كبير جداً',
+		FILE_TOO_LARGE: 'حجم الملف كبير جداً (الحد الأقصى 20KB)',
+		PAYLOAD_TOO_LARGE: 'حجم الملفات الإجمالي كبير جداً',
+		ITEM_NOT_FOUND: 'لم يتم العثور على التمرين',
+		NOT_ENROLLED: 'أنت غير مسجل في هذا المسار'
 	},
 	navigation: {
 		dashboard: 'لوحة التحكم ',
@@ -409,6 +416,8 @@ export default {
 		resendEmail: 'تم إرسال رسائل كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
 		forgotPassword:
 			'طلبات كثيرة لإعادة تعيين كلمة المرور. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
-		resetPassword: 'محاولات كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية'
+		resetPassword: 'محاولات كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
+		changePassword: 'محاولات كثيرة لتغيير كلمة المرور. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
+		changeAccount: 'طلبات كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية'
 	}
 } as const;

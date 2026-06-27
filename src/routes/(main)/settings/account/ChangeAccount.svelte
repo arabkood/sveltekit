@@ -64,17 +64,17 @@
 				dir="ltr"
 				class="placeholder-rtl"
 				name="username"
-				value={form?.data?.username ?? user.username}
-				error={form?.errors?.username ? i18n.t(form.errors.username[0]) : undefined}
+				value={form?.values?.username ?? user.username}
+				error={status === 'idle' && form?.errors?.username ? i18n.t(form.errors.username[0]) : undefined}
 			/>
 		</div>
 	</div>
 
-	{#if form?.error && !form?.success && form?.action === '?/changeAccount'}
-		<Banner variant="error" class="mb-4" message={i18n.error(form.error)} />
+	{#if form?.error && form?.action === 'changeAccount'}
+		<Banner variant="error" class="mb-4" message={i18n.t(form.error, { retryAfterSecs: String(form?.retryAfterSecs ?? '') })} />
 	{/if}
 
-	{#if form?.success && form?.action === '?/changeAccount' || status === 'success'}
+	{#if (form?.success && form?.action === 'changeAccount') || status === 'success'}
 		<Banner
 			variant="success"
 			class="mb-4"

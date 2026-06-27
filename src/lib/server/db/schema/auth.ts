@@ -28,7 +28,8 @@ export const auditLogTypeInAuth = auth.enum('audit_log_type', [
 	'signout',
 	'password_change',
 	'email_change',
-	'session_token'
+	'session_token',
+	'username_change'
 ]);
 export const planTypeInAuth = auth.enum('plan_type', ['free', 'pro', 'past_due']);
 export const planIntervalInAuth = auth.enum('plan_interval', ['monthly', 'yearly']);

@@ -15,9 +15,6 @@
 	return async ({ result, update }) => {
 		if (result.type === 'success') {
 			status = 'success';
-			setTimeout(() => {
-				location.href = '/';
-			}, 2000);
 		} else {
 			status = 'idle';
 		}
@@ -38,7 +35,7 @@
 				dir="ltr"
 				class="placeholder-rtl"
 				name="currentPassword"
-				error={form?.errors?.currentPassword ? i18n.t(form.errors.currentPassword[0]) : undefined}
+				error={status === 'idle' && form?.errors?.currentPassword ? i18n.t(form.errors.currentPassword[0]) : undefined}
 			/>
 		</div>
 		<div class="w-full">
@@ -52,7 +49,7 @@
 				dir="ltr"
 				class="placeholder-rtl"
 				name="newPassword"
-				error={form?.errors?.newPassword ? i18n.t(form.errors.newPassword[0]) : undefined}
+				error={status === 'idle' && form?.errors?.newPassword ? i18n.t(form.errors.newPassword[0]) : undefined}
 			/>
 		</div>
 		<div class="w-full">
@@ -66,16 +63,16 @@
 				dir="ltr"
 				class="placeholder-rtl"
 				name="confirmPassword"
-				error={form?.errors?.confirmPassword ? i18n.t(form.errors.confirmPassword[0]) : undefined}
+				error={status === 'idle' && form?.errors?.confirmPassword ? i18n.t(form.errors.confirmPassword[0]) : undefined}
 			/>
 		</div>
 	</div>
 
-	{#if form?.error}
-		<Banner variant="error" class="mb-4" message={i18n.t(form.error)} />
+	{#if form?.error && form?.action === 'changePassword'}
+		<Banner variant="error" class="mb-4" message={i18n.t(form.error, { retryAfterSecs: String(form?.retryAfterSecs ?? '') })} />
 	{/if}
 
-	{#if form?.success || status === 'success'}
+	{#if (form?.success && form?.action === 'changePassword') || status === 'success'}
 		<Banner
 			variant="success"
 			class="mb-4"

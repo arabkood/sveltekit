@@ -1,0 +1,1 @@
+ALTER TYPE "auth"."audit_log_type" ADD VALUE 'username_change';

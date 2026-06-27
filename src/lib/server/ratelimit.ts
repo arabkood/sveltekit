@@ -105,3 +105,27 @@ export const resetPasswordIpLimiter = new RateLimiterRedis({
 	points: 5,
 	duration: 15 * 60 // 15 minutes
 });
+
+// Settings - Change Password (per user, brute-force protection)
+export const changePasswordLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:settings:password',
+	points: 5,
+	duration: 15 * 60 // 15 minutes
+});
+
+// Settings - Change Account attempts (per user)
+export const changeAccountLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:settings:account',
+	points: 10,
+	duration: 60 * 60 // 1 hour
+});
+
+// Settings - Change Account success (per user, 1 username change per hour)
+export const changeAccountSuccessLimiter = new RateLimiterRedis({
+	storeClient: valkey,
+	keyPrefix: 'rl:settings:account:success',
+	points: 1,
+	duration: 60 * 60 // 1 hour
+});
