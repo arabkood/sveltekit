@@ -4,12 +4,13 @@ import { env } from '$env/dynamic/private';
 
 export const POST = async ({ request, getClientAddress }) => {
 	// 1. IP Subnet Defense-in-Depth
-	// Only accept requests from the internal Hetzner subnet
+	// Only accept requests from the internal Hetzner subnet or local Docker networks
 	const clientIp = getClientAddress();
 	const isLocalhost = clientIp.includes('127.0.0.1') || clientIp === '::1';
 	const isHetznerInternal = clientIp.startsWith('10.');
+	const isDockerNetwork = clientIp.startsWith('172.') || clientIp.startsWith('192.168.');
 
-	if (!isLocalhost && !isHetznerInternal) {
+	if (!isLocalhost && !isHetznerInternal && !isDockerNetwork) {
 		console.warn(`[Webhook] Blocked execution result from unauthorized IP: ${clientIp}`);
 		return json({ error: 'Unauthorized IP' }, { status: 403 });
 	}
