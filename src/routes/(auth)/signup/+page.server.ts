@@ -38,7 +38,7 @@ const signupSchema = z
 export const actions: Actions = {
 	default: async ({ request, cookies, getClientAddress }) => {
 		const ip = getClientAddress();
-		const ipLimitCheck = await rateLimiter.consume(signupIpLimiter, ip, 1);
+		const ipLimitCheck = await rateLimiter.safeConsume(signupIpLimiter, ip, 1);
 		if (!ipLimitCheck.success) {
 			return fail(429, { error: 'rateLimit.signup', retryAfterSecs: ipLimitCheck.retryAfterSecs });
 		}
@@ -55,9 +55,12 @@ export const actions: Actions = {
 		}
 
 		const { email, username, password } = parsed.data;
-		const emailLimitCheck = await rateLimiter.consume(signupEmailLimiter, email.toLowerCase());
+		const emailLimitCheck = await rateLimiter.safeConsume(signupEmailLimiter, email.toLowerCase());
 		if (!emailLimitCheck.success) {
-			return fail(429, { error: 'rateLimit.signup', retryAfterSecs: emailLimitCheck.retryAfterSecs });
+			return fail(429, {
+				error: 'rateLimit.signup',
+				retryAfterSecs: emailLimitCheck.retryAfterSecs
+			});
 		}
 
 		const db = getDB();
@@ -116,7 +119,6 @@ export const actions: Actions = {
 			}
 			throw err;
 		}
-
 
 		const token = await createEmailVerificationToken(id);
 		await sendEmailVerification(email, username, token);

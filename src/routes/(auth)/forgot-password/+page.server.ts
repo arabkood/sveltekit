@@ -4,7 +4,11 @@ import { usersInAuth } from '$lib/server/db/schema/auth';
 import { eq } from 'drizzle-orm';
 import { createPasswordResetToken } from '$lib/server/auth/tokens';
 import { sendPasswordReset } from '$lib/server/auth/email';
-import { rateLimiter, forgotPasswordIpLimiter, forgotPasswordEmailLimiter } from '$lib/server/ratelimit';
+import {
+	rateLimiter,
+	forgotPasswordIpLimiter,
+	forgotPasswordEmailLimiter
+} from '$lib/server/ratelimit';
 import { z } from 'zod';
 import type { Actions } from './$types';
 
@@ -18,9 +22,12 @@ const forgotPasswordSchema = z.object({
 export const actions: Actions = {
 	default: async ({ request, getClientAddress, url }) => {
 		const ip = getClientAddress();
-		const ipLimit = await rateLimiter.consume(forgotPasswordIpLimiter, ip);
+		const ipLimit = await rateLimiter.safeConsume(forgotPasswordIpLimiter, ip);
 		if (!ipLimit.success) {
-			return fail(429, { error: 'rateLimit.forgotPassword', retryAfterSecs: ipLimit.retryAfterSecs });
+			return fail(429, {
+				error: 'rateLimit.forgotPassword',
+				retryAfterSecs: ipLimit.retryAfterSecs
+			});
 		}
 
 		const formData = await request.formData();
@@ -35,17 +42,16 @@ export const actions: Actions = {
 		}
 
 		const email = parsed.data.email.toLowerCase().trim();
-		const emailLimit = await rateLimiter.consume(forgotPasswordEmailLimiter, email);
+		const emailLimit = await rateLimiter.safeConsume(forgotPasswordEmailLimiter, email);
 		if (!emailLimit.success) {
-			return fail(429, { error: 'rateLimit.forgotPassword', retryAfterSecs: emailLimit.retryAfterSecs });
+			return fail(429, {
+				error: 'rateLimit.forgotPassword',
+				retryAfterSecs: emailLimit.retryAfterSecs
+			});
 		}
 
 		const db = getDB();
-		const result = await db
-			.select()
-			.from(usersInAuth)
-			.where(eq(usersInAuth.email, email))
-			.limit(1);
+		const result = await db.select().from(usersInAuth).where(eq(usersInAuth.email, email)).limit(1);
 
 		if (result.length === 0) {
 			// To prevent email enumeration attacks, always return success

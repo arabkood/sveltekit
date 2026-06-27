@@ -1,15 +1,18 @@
 import { RateLimiterRedis } from 'rate-limiter-flexible';
 import { valkey } from './valkey';
 
-// A wrapper to handle the fail-open logic so ValKey outages don't break auth
 type ConsumeResult = { success: true } | { success: false; retryAfterSecs: number };
 
-async function safeConsume(limiter: RateLimiterRedis, key: string, points = 1): Promise<ConsumeResult> {
+// A wrapper to handle the fail-open logic so ValKey outages don't break auth
+async function safeConsume(
+	limiter: RateLimiterRedis,
+	key: string,
+	points = 1
+): Promise<ConsumeResult> {
 	try {
 		await limiter.consume(key, points);
 		return { success: true };
 	} catch (rejRes: any) {
-		// rate-limiter-flexible throws an object with remainingPoints, msBeforeNext, etc. on rate limit
 		if (rejRes instanceof Error) {
 			// This is a true connection/redis error, fail-open
 			console.error('RateLimiterRedis connection error (Failing Open):', rejRes);
@@ -21,7 +24,7 @@ async function safeConsume(limiter: RateLimiterRedis, key: string, points = 1): 
 	}
 }
 
-async function safeReset(limiter: RateLimiterRedis, key: string): Promise<void> {
+async function reset(limiter: RateLimiterRedis, key: string): Promise<void> {
 	try {
 		await limiter.delete(key);
 	} catch (err) {
@@ -30,8 +33,8 @@ async function safeReset(limiter: RateLimiterRedis, key: string): Promise<void> 
 }
 
 export const rateLimiter = {
-	consume: safeConsume,
-	reset: safeReset
+	safeConsume: safeConsume,
+	reset: reset
 };
 
 // Sign In

@@ -16,7 +16,7 @@ const signinSchema = z.object({
 export const actions: Actions = {
 	default: async ({ request, cookies, getClientAddress }) => {
 		const ip = getClientAddress();
-		const ipLimit = await rateLimiter.consume(signinIpLimiter, ip);
+		const ipLimit = await rateLimiter.safeConsume(signinIpLimiter, ip);
 		if (!ipLimit.success) {
 			return fail(429, { error: 'rateLimit.signin', retryAfterSecs: ipLimit.retryAfterSecs });
 		}
@@ -34,29 +34,28 @@ export const actions: Actions = {
 
 		const { identifier, password } = parsed.data;
 		const identifierLower = identifier.toLowerCase().trim();
-		const emailLimit = await rateLimiter.consume(signinEmailLimiter, identifierLower);
+		const emailLimit = await rateLimiter.safeConsume(signinEmailLimiter, identifierLower);
 		if (!emailLimit.success) {
-			return fail(429, { 
+			return fail(429, {
 				values: { identifier },
-				error: 'rateLimit.signin', 
-				retryAfterSecs: emailLimit.retryAfterSecs 
+				error: 'rateLimit.signin',
+				retryAfterSecs: emailLimit.retryAfterSecs
 			});
 		}
 
 		const db = getDB();
-		const result = await db.select().from(usersInAuth).where(
-			or(
-				eq(usersInAuth.email, identifierLower),
-				eq(usersInAuth.username, identifierLower)
-			)
-		).limit(1);
+		const result = await db
+			.select()
+			.from(usersInAuth)
+			.where(or(eq(usersInAuth.email, identifierLower), eq(usersInAuth.username, identifierLower)))
+			.limit(1);
 
 		if (result.length === 0) {
 			// Prevent timing attacks by burning the exact same CPU cycles a real verify would take
 			await hashPassword(password);
-			return fail(400, { 
+			return fail(400, {
 				values: { identifier },
-				error: 'signin.invalidCredentials' 
+				error: 'signin.invalidCredentials'
 			});
 		}
 
@@ -64,9 +63,9 @@ export const actions: Actions = {
 		const isValid = await verifyPassword(password, user.encryptedPassword);
 
 		if (!isValid) {
-			return fail(400, { 
+			return fail(400, {
 				values: { identifier },
-				error: 'signin.invalidCredentials' 
+				error: 'signin.invalidCredentials'
 			});
 		}
 

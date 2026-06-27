@@ -1,6 +1,11 @@
 import { fail } from '@sveltejs/kit';
 import { getDB } from '$lib/server/db';
-import { usersInAuth, oneTimeTokensInAuth, sessionTokensInAuth, auditLogsInAuth } from '$lib/server/db/schema/auth';
+import {
+	usersInAuth,
+	oneTimeTokensInAuth,
+	sessionTokensInAuth,
+	auditLogsInAuth
+} from '$lib/server/db/schema/auth';
 import { eq, and } from 'drizzle-orm';
 import { hashPassword } from '$lib/server/auth/password';
 import { validateOneTimeToken, deleteOneTimeToken } from '$lib/server/auth/tokens';
@@ -25,7 +30,7 @@ const resetPasswordSchema = z
 export const actions: Actions = {
 	default: async ({ request, params, getClientAddress }) => {
 		const ip = getClientAddress();
-		const limit = await rateLimiter.consume(resetPasswordIpLimiter, ip);
+		const limit = await rateLimiter.safeConsume(resetPasswordIpLimiter, ip);
 		if (!limit.success) {
 			return fail(429, { error: 'rateLimit.resetPassword', retryAfterSecs: limit.retryAfterSecs });
 		}
@@ -48,12 +53,13 @@ export const actions: Actions = {
 		const { password } = parsed.data;
 
 		const db = getDB();
-		const tokenRecord = await db.select().from(oneTimeTokensInAuth).where(
-			and(
-				eq(oneTimeTokensInAuth.type, 'password_recovery'),
-				eq(oneTimeTokensInAuth.token, token)
+		const tokenRecord = await db
+			.select()
+			.from(oneTimeTokensInAuth)
+			.where(
+				and(eq(oneTimeTokensInAuth.type, 'password_recovery'), eq(oneTimeTokensInAuth.token, token))
 			)
-		).limit(1);
+			.limit(1);
 
 		if (tokenRecord.length === 0) {
 			return fail(400, { error: 'invalid_token' });
@@ -68,9 +74,7 @@ export const actions: Actions = {
 
 		const encryptedPassword = await hashPassword(password);
 
-		await db.update(usersInAuth)
-			.set({ encryptedPassword })
-			.where(eq(usersInAuth.id, userId));
+		await db.update(usersInAuth).set({ encryptedPassword }).where(eq(usersInAuth.id, userId));
 
 		// Invalidate all existing sessions for security
 		await db.delete(sessionTokensInAuth).where(eq(sessionTokensInAuth.userId, userId));
