@@ -7,6 +7,6 @@
 </script>
 
 <div class="flex flex-1 flex-col gap-4">
-	<ChangeAccount user={data.user!} />
+	<ChangeAccount user={data.user!} form={form} />
 	<ChangePassword form={form} />
 </div>

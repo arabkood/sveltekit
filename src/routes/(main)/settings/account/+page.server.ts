@@ -26,7 +26,51 @@ const changePasswordSchema = z
 		path: ['confirmPassword']
 	});
 
+const changeAccountSchema = z.object({
+	username: z
+		.string()
+		.min(4, 'validation.username.minLength')
+		.max(40, 'validation.username.maxLength')
+		.regex(/^[a-zA-Z0-9_-]+$/, 'validation.username.pattern')
+});
+
 export const actions: Actions = {
+	changeAccount: async ({ request, locals }) => {
+		const user = locals.user;
+		if (!user) return fail(401, { error: 'unauthorized' });
+
+		const formData = await request.formData();
+		const values = Object.fromEntries(formData);
+		const parsed = changeAccountSchema.safeParse(values);
+
+		if (!parsed.success) {
+			return fail(400, {
+				errors: z.flattenError(parsed.error).fieldErrors
+			});
+		}
+
+		const { username } = parsed.data;
+
+		if (username === user.username) {
+			return { success: true };
+		}
+
+		const db = getDB();
+
+		try {
+			await db.update(usersInAuth)
+				.set({ username })
+				.where(eq(usersInAuth.id, user.id));
+		} catch (error: any) {
+			if (error.code === '23505') {
+				return fail(400, { errors: { username: ['validation.username.exists'] } });
+			}
+			return fail(500, { error: 'INTERNAL_ERROR' });
+		}
+
+		return { success: true };
+	},
+
 	changePassword: async ({ request, locals, cookies, getClientAddress }) => {
 		const user = locals.user;
 		if (!user) return fail(401, { error: 'unauthorized' });
