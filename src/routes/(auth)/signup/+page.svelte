@@ -66,7 +66,9 @@
 						required={true}
 						dir="ltr"
 						value={form?.values?.username ?? ''}
-						error={form?.errors?.username ? i18n.t(form.errors.username[0]) : undefined}
+						error={status === 'idle' && form?.errors?.username
+							? i18n.t(form.errors.username[0])
+							: undefined}
 						disabled={status === 'loading'}
 					/>
 
@@ -79,7 +81,9 @@
 						required={true}
 						dir="ltr"
 						value={form?.values?.email ?? ''}
-						error={form?.errors?.email ? i18n.t(form.errors.email[0]) : undefined}
+						error={status === 'idle' && form?.errors?.email
+							? i18n.t(form.errors.email[0])
+							: undefined}
 						disabled={status === 'loading'}
 					/>
 
@@ -91,7 +95,9 @@
 						placeholder="••••••••"
 						required={true}
 						dir="ltr"
-						error={form?.errors?.password ? i18n.t(form.errors.password[0]) : undefined}
+						error={status === 'idle' && form?.errors?.password
+							? i18n.t(form.errors.password[0])
+							: undefined}
 						disabled={status === 'loading'}
 					/>
 
@@ -103,7 +109,7 @@
 						placeholder="••••••••"
 						required={true}
 						dir="ltr"
-						error={form?.errors?.confirmPassword
+						error={status === 'idle' && form?.errors?.confirmPassword
 							? i18n.t(form.errors.confirmPassword[0])
 							: undefined}
 						disabled={status === 'loading'}

@@ -15,14 +15,19 @@ const signinSchema = z.object({
 
 export const actions: Actions = {
 	default: async ({ request, cookies, getClientAddress }) => {
+		const formData = await request.formData();
+		const values = Object.fromEntries(formData);
+
 		const ip = getClientAddress();
 		const ipLimit = await rateLimiter.safeConsume(signinIpLimiter, ip);
 		if (!ipLimit.success) {
-			return fail(429, { error: 'rateLimit.signin', retryAfterSecs: ipLimit.retryAfterSecs });
+			return fail(429, {
+				values: { identifier: values.identifier },
+				error: 'rateLimit.signin',
+				retryAfterSecs: ipLimit.retryAfterSecs
+			});
 		}
 
-		const formData = await request.formData();
-		const values = Object.fromEntries(formData);
 		const parsed = signinSchema.safeParse(values);
 
 		if (!parsed.success) {

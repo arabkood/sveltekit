@@ -78,9 +78,10 @@ export const actions: Actions = {
 			.limit(1);
 
 		if (existingUser.length > 0) {
+			const emailTaken = existingUser[0].email === email.toLowerCase();
 			return fail(400, {
 				values: { email, username },
-				error: 'validation.email.exists'
+				error: emailTaken ? 'validation.email.exists' : 'validation.username.exists'
 			});
 		}
 

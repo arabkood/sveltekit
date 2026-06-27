@@ -7,17 +7,19 @@
 	import type { PageData } from './$types';
 	import Button from '$ui/common/Button.svelte';
 	import { enhance } from '$app/forms';
+	import { SITE_NAME_AR } from '$config';
+	import Seo from '$ui/others/SEO.svelte';
 
 	let status = $state('idle');
 	let verificationCode = $state<string[]>(Array(6).fill(''));
 
-	const { data, form }: { data: PageData, form: any } = $props();
+	const { data, form }: { data: PageData; form: any } = $props();
 	const { user } = data;
 
 	if (!user || user.emailVerified || !user.email) {
 		location.href = '/';
 	}
-	
+
 	let cooldown = $state<number>(30);
 
 	onMount(() => {
@@ -35,7 +37,12 @@
 	const handleCodeChange = (code: string[]) => {
 		verificationCode = code;
 	};
+
+	const pageTitle = `تحقق من بريدك الإلكتروني | ${SITE_NAME_AR}`;
+	const pageDescription = `أدخل رمز التحقق المكون من 6 أرقام المرسل إلى بريدك الإلكتروني لتفعيل حسابك في ${SITE_NAME_AR}.`;
 </script>
+
+<Seo title={pageTitle} description={pageDescription} lang="ar" />
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
 	<div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col items-center justify-center">
@@ -67,21 +74,27 @@
 						{i18n.t('verifyEmail.description')}
 					</p>
 
-					<form class="space-y-4 md:space-y-6" method="POST" action="?/verify" use:enhance={() => {
-						status = 'loading';
-						return async ({ result, update }) => {
-							if (result.type === 'success') {
-								status = 'success';
-								window.posthog?.capture('email_verification_completed', { email: user?.email });
-								setTimeout(() => {
-									location.href = '/dashboard';
-								}, 1500);
-							} else {
-								status = 'idle';
-							}
-							await update();
-						};
-					}}>
+					<form
+						class="space-y-4 md:space-y-6"
+						method="POST"
+						action="?/verify"
+						use:enhance={() => {
+							status = 'loading';
+							return async ({ result, update }) => {
+								if (result.type === 'success') {
+									status = 'success';
+									window.posthog?.capture('email_verification_completed', { email: user?.email });
+									setTimeout(() => {
+										location.href = '/dashboard';
+									}, 1500);
+								} else {
+									status = 'idle';
+									verificationCode = Array(6).fill('');
+								}
+								await update();
+							};
+						}}
+					>
 						<input type="hidden" name="code" value={verificationCode.join('')} />
 						<CodeInput
 							length={6}
@@ -106,14 +119,18 @@
 						</Button>
 					</form>
 
-					<form method="POST" action="?/resend" use:enhance={() => {
-						return async ({ result, update }) => {
-							if (result.type === 'success') {
-								cooldown = 60;
-							}
-							await update();
-						};
-					}}>
+					<form
+						method="POST"
+						action="?/resend"
+						use:enhance={() => {
+							return async ({ result, update }) => {
+								if (result.type === 'success') {
+									cooldown = 60;
+								}
+								await update();
+							};
+						}}
+					>
 						<p class="text-center text-sm font-light text-gray-500 dark:text-gray-400 mt-4">
 							{i18n.t('verifyEmail.noCode')}
 							<button

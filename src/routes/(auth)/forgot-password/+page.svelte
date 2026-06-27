@@ -4,12 +4,19 @@
 	import Input from '$ui/common/Input.svelte';
 	import Icon from '$ui/common/Icon.svelte';
 	import Button from '$ui/common/Button.svelte';
+	import { SITE_NAME_AR } from '$config';
+	import Seo from '$ui/others/SEO.svelte';
 	import { enhance } from '$app/forms';
 
 	let { form } = $props();
 
 	let status = $state('idle');
+
+	const pageTitle = `إعادة تعيين كلمة المرور | ${SITE_NAME_AR}`;
+	const pageDescription = `استعد الوصول إلى حسابك في ${SITE_NAME_AR}. أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور.`;
 </script>
+
+<Seo title={pageTitle} description={pageDescription} lang="ar" />
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
 	<div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col items-center justify-center">
@@ -25,6 +32,11 @@
 			>
 				<Icon name="check-circle" class="me-2 inline h-7 w-7" />
 				{i18n.t('forgotPassword.success')}
+				<p class="mt-4 text-sm">
+					<a href="/signin" class="font-medium hover:underline">
+						{i18n.t('forgotPassword.signinHere')}
+					</a>
+				</p>
 			</div>
 		{:else}
 			<div
@@ -41,17 +53,21 @@
 						{i18n.t('forgotPassword.description')}
 					</p>
 
-					<form class="space-y-4 md:space-y-6" method="POST" use:enhance={() => {
-						status = 'loading';
-						return async ({ result, update }) => {
-							if (result.type === 'success') {
-								status = 'success';
-							} else {
-								status = 'idle';
-							}
-							await update();
-						};
-					}}>
+					<form
+						class="space-y-4 md:space-y-6"
+						method="POST"
+						use:enhance={() => {
+							status = 'loading';
+							return async ({ result, update }) => {
+								if (result.type === 'success') {
+									status = 'success';
+								} else {
+									status = 'idle';
+								}
+								await update();
+							};
+						}}
+					>
 						<Input
 							label={i18n.t('common.email')}
 							icon="email"
@@ -74,11 +90,7 @@
 							</div>
 						{/if}
 
-						<Button
-							type="submit"
-							fullWidth={true}
-							disabled={status === 'loading'}
-						>
+						<Button type="submit" fullWidth={true} disabled={status === 'loading'}>
 							{status === 'loading'
 								? i18n.t('forgotPassword.submiting')
 								: i18n.t('forgotPassword.submit')}

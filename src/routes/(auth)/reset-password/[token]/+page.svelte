@@ -4,12 +4,19 @@
 	import Input from '$ui/common/Input.svelte';
 	import Icon from '$ui/common/Icon.svelte';
 	import Button from '$ui/common/Button.svelte';
+	import { SITE_NAME_AR } from '$config';
+	import Seo from '$ui/others/SEO.svelte';
 	import { enhance } from '$app/forms';
 
 	let { form } = $props();
 
 	let status = $state('idle');
+
+	const pageTitle = `إعادة تعيين كلمة المرور | ${SITE_NAME_AR}`;
+	const pageDescription = `اختر كلمة مرور جديدة لحسابك في ${SITE_NAME_AR} وواصل رحلتك في تعلم البرمجة.`;
 </script>
+
+<Seo title={pageTitle} description={pageDescription} lang="ar" />
 
 <section class="bg-page min-h-screen px-4 py-8 sm:px-6 lg:px-8">
 	<div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col items-center justify-center">
@@ -25,6 +32,11 @@
 			>
 				<Icon name="check-circle" class="me-2 inline h-7 w-7" />
 				{i18n.t('resetPassword.success')}
+				<p class="mt-4 text-sm">
+					<a href="/signin" class="font-medium hover:underline">
+						{i18n.t('resetPassword.signinHere')}
+					</a>
+				</p>
 			</div>
 		{:else}
 			<div
@@ -41,20 +53,21 @@
 						{i18n.t('resetPassword.description')}
 					</p>
 
-					<form class="space-y-4 md:space-y-6" method="POST" use:enhance={() => {
-						status = 'loading';
-						return async ({ result, update }) => {
-							if (result.type === 'success') {
-								status = 'success';
-								setTimeout(() => {
-									location.href = '/signin';
-								}, 1500);
-							} else {
-								status = 'idle';
-							}
-							await update();
-						};
-					}}>
+					<form
+						class="space-y-4 md:space-y-6"
+						method="POST"
+						use:enhance={() => {
+							status = 'loading';
+							return async ({ result, update }) => {
+								if (result.type === 'success') {
+									status = 'success';
+								} else {
+									status = 'idle';
+								}
+								await update();
+							};
+						}}
+					>
 						<Input
 							label={i18n.t('common.password')}
 							icon="password"
@@ -63,7 +76,9 @@
 							placeholder="••••••••"
 							required={true}
 							dir="ltr"
-							error={form?.errors?.password ? i18n.t(form.errors.password[0]) : undefined}
+							error={status === 'idle' && form?.errors?.password
+								? i18n.t(form.errors.password[0])
+								: undefined}
 							disabled={status === 'loading'}
 						/>
 
@@ -75,7 +90,9 @@
 							placeholder="••••••••"
 							required={true}
 							dir="ltr"
-							error={form?.errors?.confirmPassword ? i18n.t(form.errors.confirmPassword[0]) : undefined}
+							error={status === 'idle' && form?.errors?.confirmPassword
+								? i18n.t(form.errors.confirmPassword[0])
+								: undefined}
 							disabled={status === 'loading'}
 						/>
 
@@ -85,14 +102,15 @@
 								class="rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200"
 							>
 								{i18n.t(form.error, { retryAfterSecs: String(form?.retryAfterSecs ?? '') })}
+								{#if form.error === 'invalid_token'}
+									<a href="/forgot-password" class="mt-1 block font-medium hover:underline">
+										{i18n.t('resetPassword.requestNewLink')}
+									</a>
+								{/if}
 							</div>
 						{/if}
 
-						<Button
-							type="submit"
-							fullWidth={true}
-							disabled={status === 'loading'}
-						>
+						<Button type="submit" fullWidth={true} disabled={status === 'loading'}>
 							{status === 'loading'
 								? i18n.t('resetPassword.submiting')
 								: i18n.t('resetPassword.submit')}

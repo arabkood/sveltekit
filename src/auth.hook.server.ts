@@ -9,6 +9,8 @@ import { redirect, type Handle } from '@sveltejs/kit';
 const PUBLIC_ROUTES: string[] = [
 	// Auth flows (signin, signup, forgot-password, reset-password)
 	'/(auth)',
+	// Sign out (server-side action) must be reachable in any auth state
+	'/signout',
 	// Public content pages
 	'/(main)/blog',
 	'/(main)/courses',
@@ -30,6 +32,8 @@ const GUEST_ONLY_ROUTES: string[] = ['/(auth)'];
  */
 const UNVERIFIED_ALLOWED_ROUTES: string[] = [
 	'/(auth)',
+	// Allow unverified users to sign out
+	'/signout',
 	'/(main)/blog',
 	'/(main)/courses',
 	'/(main)/leaderboard',

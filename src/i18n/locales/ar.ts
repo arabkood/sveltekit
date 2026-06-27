@@ -35,7 +35,8 @@ export default {
 		submiting: 'جاري إعادة التعيين...',
 		submit: 'إعادة تعيين كلمة المرور',
 		rememberPassword: 'تتذكر كلمة المرور؟',
-		signinHere: 'تسجيل الدخول هنا'
+		signinHere: 'تسجيل الدخول هنا',
+		requestNewLink: 'طلب رابط جديد'
 	},
 	site: {
 		logo: 'أكود',
@@ -403,9 +404,11 @@ export default {
 	rateLimit: {
 		signin: 'محاولات كثيرة لتسجيل الدخول. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
 		signup: 'تم إنشاء حسابات كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
-		verifyEmailLocked: 'محاولات كثيرة. تم إلغاء الرمز الحالي. اطلب رمزًا جديدًا',
+		verifyEmailLocked:
+			'محاولات كثيرة. تم إلغاء الرمز الحالي. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
 		resendEmail: 'تم إرسال رسائل كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
-		forgotPassword: 'طلبات كثيرة لإعادة تعيين كلمة المرور. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
+		forgotPassword:
+			'طلبات كثيرة لإعادة تعيين كلمة المرور. حاول مرة أخرى بعد {retryAfterSecs} ثانية',
 		resetPassword: 'محاولات كثيرة. حاول مرة أخرى بعد {retryAfterSecs} ثانية'
 	}
 } as const;

@@ -32,7 +32,10 @@ export const actions: Actions = {
 		const limitCheck = await rateLimiter.safeConsume(verifyOtpLimiter, user.id, 0);
 		if (!limitCheck.success) {
 			await deleteOneTimeToken(user.id, 'email_confirmation');
-			return fail(429, { error: 'rateLimit.verifyEmailLocked' });
+			return fail(429, {
+				error: 'rateLimit.verifyEmailLocked',
+				retryAfterSecs: limitCheck.retryAfterSecs
+			});
 		}
 
 		const data = await request.formData();
@@ -48,7 +51,10 @@ export const actions: Actions = {
 			const consume = await rateLimiter.safeConsume(verifyOtpLimiter, user.id, 1);
 			if (!consume.success) {
 				await deleteOneTimeToken(user.id, 'email_confirmation');
-				return fail(429, { error: 'rateLimit.verifyEmailLocked' });
+				return fail(429, {
+					error: 'rateLimit.verifyEmailLocked',
+					retryAfterSecs: consume.retryAfterSecs
+				});
 			}
 			return fail(400, { error: 'invalid_code' });
 		}

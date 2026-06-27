@@ -29,7 +29,6 @@
 		}
 	}
 
-	const signOut = async () => goto(resolve('/signout'));
 	const upgrade = async () => {
 		goto(resolve('/(main)/pricing'));
 		showMenu = false;
@@ -138,17 +137,19 @@
 		</li>
 
 		<li>
-			<Button
-				variant="link-pill"
-				size="sm"
-				class="w-full justify-start py-5"
-				rounded={false}
-				onclick={() => signOut()}
-				startIcon="exit"
-				iconSize={20}
-			>
-				{i18n.t('navigation.signout')}
-			</Button>
+			<form method="POST" action="/signout" class="w-full">
+				<Button
+					type="submit"
+					variant="link-pill"
+					size="sm"
+					class="w-full justify-start py-5"
+					rounded={false}
+					startIcon="exit"
+					iconSize={20}
+				>
+					{i18n.t('navigation.signout')}
+				</Button>
+			</form>
 		</li>
 	</ul>
 {:else}
@@ -249,13 +250,15 @@
 					<li class="my-1 h-px bg-gray-100 dark:bg-gray-800" role="separator"></li>
 
 					<li>
-						<button
-							onclick={() => signOut()}
-							class="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-gray-500 transition-colors duration-100 hover:bg-gray-100 hover:text-rose-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-rose-400"
-						>
-							<Icon name="exit" size={15} class="shrink-0 text-gray-400 dark:text-gray-500" />
-							{i18n.t('navigation.signout')}
-						</button>
+						<form method="POST" action="/signout">
+							<button
+								type="submit"
+								class="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-gray-500 transition-colors duration-100 hover:bg-gray-100 hover:text-rose-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-rose-400"
+							>
+								<Icon name="exit" size={15} class="shrink-0 text-gray-400 dark:text-gray-500" />
+								{i18n.t('navigation.signout')}
+							</button>
+						</form>
 					</li>
 				</ul>
 			</div>
