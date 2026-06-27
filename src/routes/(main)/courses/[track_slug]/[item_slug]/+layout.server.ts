@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { classRepository, type Item, type Module } from '$lib/server/db/repos/class';
+import { CourseService, CourseNotFoundError, CourseRedirectError, PremiumRestrictionError } from '$lib/server/services/course';
 
 export const load: LayoutServerLoad = async ({ locals, params, url, parent }) => {
 	if (!params.track_slug || !params.item_slug) {
@@ -9,52 +9,34 @@ export const load: LayoutServerLoad = async ({ locals, params, url, parent }) =>
 
 	const parentData = await parent();
 
-	let module: (Module & { items: Item[] }) | null = null;
-	let item: Item | null = null;
-	let prevItemIdx: number | null = null;
-	let nextItemIdx: number | null = null;
+	try {
+		const accessData = await CourseService.resolveItemAccess(
+			parentData.modules,
+			params.item_slug,
+			parentData.track.slug,
+			url.pathname,
+			locals.user?.id,
+			locals.user?.isPro
+		);
 
-	for (const mod of parentData.modules) {
-		for (const [i, it] of mod.items.entries()) {
-			if (it.slug === params.item_slug) {
-				item = it;
-				module = mod;
-				if (i >= 1) {
-					prevItemIdx = i - 1;
-				}
-				if (i < mod.items.length - 1) {
-					nextItemIdx = i + 1;
-				}
-				break;
-			}
+		return {
+			item: accessData.item,
+			module: accessData.module,
+			submission: accessData.submission,
+			prevItemIdx: accessData.prevItemIdx,
+			nextItemIdx: accessData.nextItemIdx,
+			user: locals.user
+		};
+	} catch (e) {
+		if (e instanceof CourseNotFoundError) {
+			throw error(404, { message: e.message });
 		}
-		if (item) break;
+		if (e instanceof CourseRedirectError) {
+			throw redirect(e.statusCode, e.destination);
+		}
+		if (e instanceof PremiumRestrictionError) {
+			throw redirect(302, `/pricing`);
+		}
+		throw e;
 	}
-
-	if (!module || !item) {
-		error(404, 'Not found');
-	}
-
-	const lastPart = url.pathname.split('/').filter(Boolean).pop();
-
-	if (lastPart !== item.type) {
-		redirect(308, `/courses/${parentData.track.slug}/${item.slug}/${item.type}`);
-	}
-
-	const submission = locals.user
-		? await classRepository.getUserSubmissionByItem(locals.user.id, item.id)
-		: null;
-
-	if ((module.premiumOnly || item.premiumOnly) && !locals.user?.isPro && !submission) {
-		redirect(302, `/pricing`);
-	}
-
-	return {
-		item,
-		module,
-		submission,
-		prevItemIdx,
-		nextItemIdx,
-		user: locals.user
-	};
 };
