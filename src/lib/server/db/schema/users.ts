@@ -9,6 +9,7 @@ import {
 	timestamp,
 	integer,
 	jsonb,
+	index,
 	primaryKey,
 	unique
 } from 'drizzle-orm/pg-core';
@@ -33,19 +34,23 @@ export const dailyStatsInUsers = users.table(
 	(table) => [primaryKey({ columns: [table.userId, table.date], name: 'daily_stats_pkey' })]
 );
 
-export const statsInUsers = users.table('stats', {
-	userId: uuid('user_id')
-		.primaryKey()
-		.references(() => usersInAuth.id, { onDelete: 'cascade' }),
-	totalXp: bigint('total_xp', { mode: 'number' }).default(0).notNull(),
-	completedItems: integer('completed_items').default(0).notNull(),
-	longestStreak: integer('longest_streak').default(0).notNull(),
-	lastActiveAt: timestamp('last_active_at', { withTimezone: true }),
-	currentStreak: integer('current_streak').default(0).notNull(),
-	lastActiveDate: date('last_active_date', { mode: 'date' })
-		.default(sql`CURRENT_DATE`)
-		.notNull()
-});
+export const statsInUsers = users.table(
+	'stats',
+	{
+		userId: uuid('user_id')
+			.primaryKey()
+			.references(() => usersInAuth.id, { onDelete: 'cascade' }),
+		totalXp: bigint('total_xp', { mode: 'number' }).default(0).notNull(),
+		completedItems: integer('completed_items').default(0).notNull(),
+		longestStreak: integer('longest_streak').default(0).notNull(),
+		lastActiveAt: timestamp('last_active_at', { withTimezone: true }),
+		currentStreak: integer('current_streak').default(0).notNull(),
+		lastActiveDate: date('last_active_date', { mode: 'date' })
+			.default(sql`CURRENT_DATE`)
+			.notNull()
+	},
+	(table) => [index('idx_stats_total_xp').using('btree', table.totalXp.desc().nullsLast())]
+);
 
 export const submissionInUsers = users.table(
 	'submission',
