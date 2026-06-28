@@ -2,7 +2,7 @@
 	import BannerPremium from '$ui/dashboard/BannerPremium.svelte';
 	import UserTracks from '$ui/dashboard/UserTracks.svelte';
 	import Welcome from '$ui/dashboard/Welcome.svelte';
-	import type { PageData } from '../settings/$types';
+	import type { PageData } from './$types';
 	import Footer from '$ui/shared/Footer.svelte';
 	import CardXp from '$ui/dashboard/CardXP.svelte';
 	import CardStreak from '$ui/dashboard/CardStreak.svelte';
@@ -25,7 +25,7 @@
 
 		<div class="mb-8 grid gap-6 lg:grid-cols-3">
 			<CardXp totalXp={data.userStats!.totalXp} />
-			<CardStreak dailyStats={data.dailyStats} userStats={data.userStats!} />
+			<CardStreak dailyStats={data.dailyStats ?? []} userStats={data.userStats!} />
 			<CardRank userRank={data.userRank} />
 		</div>
 
