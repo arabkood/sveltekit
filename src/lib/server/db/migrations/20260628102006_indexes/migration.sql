@@ -1,0 +1,1 @@
+CREATE INDEX "idx_daily_stats_date_user_xp" ON "users"."daily_stats" ("date","user_id","xp_earned");

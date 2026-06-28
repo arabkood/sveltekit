@@ -31,7 +31,15 @@ export const dailyStatsInUsers = users.table(
 		xpEarned: bigint('xp_earned', { mode: 'number' }).default(0).notNull(),
 		itemsCompleted: integer('items_completed').default(0).notNull()
 	},
-	(table) => [primaryKey({ columns: [table.userId, table.date], name: 'daily_stats_pkey' })]
+	(table) => [
+		primaryKey({ columns: [table.userId, table.date], name: 'daily_stats_pkey' }),
+		index('idx_daily_stats_date_user_xp').using(
+			'btree',
+			table.date.asc(),
+			table.userId.asc(),
+			table.xpEarned.asc()
+		)
+	]
 );
 
 export const statsInUsers = users.table(
