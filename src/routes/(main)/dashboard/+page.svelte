@@ -18,23 +18,20 @@
 <div class="bg-page min-h-screen">
 	<div class="mx-auto max-w-7xl p-6 lg:p-8">
 		<Welcome
-			userTracks={data.userTracks!}
+			userTracks={data.userTracks}
 			name={data.user!.username}
 			is_user_premium={data.user?.isPro ?? false}
 		/>
+
 		<div class="mb-8 grid gap-6 lg:grid-cols-3">
 			<CardXp totalXp={data.userStats!.totalXp} />
-			<CardStreak dailyStats={data.dailyStats!} userStats={data.userStats!} />
-			{#await data.userRank}
-				<CardRank userRank={null} loading={true} />
-			{:then rank}
-				<CardRank userRank={rank} />
-			{/await}
+			<CardStreak dailyStats={data.dailyStats} userStats={data.userStats!} />
+			<CardRank userRank={data.userRank} />
 		</div>
 
 		<div class="mb-12">
 			<UserTracks
-				userTracks={data.userTracks!}
+				userTracks={data.userTracks}
 				courses={data.courses!}
 				is_user_premium={data.user?.isPro || false}
 			/>

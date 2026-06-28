@@ -8,17 +8,13 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 			courses: await classRepository.getAllCourses()
 		};
 	}
-	const [courses, userStats, userTracks, dailyStats] = await Promise.all([
+	const [courses, userStats] = await Promise.all([
 		classRepository.getAllCourses(),
-		userRepository.getStats(locals.user.id),
-		classRepository.getUserTracks(locals.user.id),
-		userRepository.getDailyStats(locals.user.id, 7)
+		userRepository.getStats(locals.user.id)
 	]);
 	return {
 		user: locals.user,
 		courses,
-		userStats,
-		userTracks,
-		dailyStats
+		userStats
 	};
 };

@@ -4,11 +4,9 @@
 	import IconPng from '$ui/common/IconPng.svelte';
 
 	let {
-		userRank,
-		loading = false
+		userRank
 	}: {
 		userRank: { rank: number; xp: number; totalUsers?: number } | null;
-		loading?: boolean;
 	} = $props();
 
 	// Calculate percentile (top X%)
@@ -17,18 +15,7 @@
 	);
 </script>
 
-{#if loading}
-	<div
-		class="mt-auto flex h-[230px] animate-pulse flex-col overflow-hidden rounded-2xl border border-gray-200 bg-gray-50/50 p-6 dark:border-gray-700 dark:bg-gray-900/50"
-	>
-		<div class="mb-auto h-4 w-24 rounded bg-gray-200 dark:bg-gray-700"></div>
-		<div class="my-auto flex flex-col items-center gap-3">
-			<div class="h-12 w-20 rounded bg-gray-200 dark:bg-gray-700"></div>
-			<div class="h-6 w-24 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-		</div>
-		<div class="mt-auto h-4 w-32 self-center rounded bg-gray-200 dark:bg-gray-700"></div>
-	</div>
-{:else if userRank}
+{#if userRank}
 	<!-- Rank Card - Unique minimal design -->
 	<a
 		href="/leaderboard"
