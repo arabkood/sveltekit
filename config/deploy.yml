@@ -15,7 +15,7 @@ servers:
     # invoker's private IP.
     options:
       publish:
-        - "10.0.0.5:3000:3000"
+        - '10.0.0.3:3000:3000'
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
@@ -138,7 +138,7 @@ accessories:
     host: akood-prod-main
     port:
       # Map to host so external VPS Invokers can connect via private network
-      - '10.0.0.5:37310:4222'
+      - '10.0.0.3:37310:4222'
     env:
       secret:
         - NATS_USER
