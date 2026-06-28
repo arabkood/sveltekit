@@ -1,4 +1,3 @@
-/*
 -- Current sql file was generated after introspecting the database
 -- If you want to run this migration please uncomment this code before executing migrations
 CREATE SCHEMA "auth";
@@ -190,4 +189,3 @@ ALTER TABLE "users"."submission" ADD CONSTRAINT "submission_item_id_fkey" FOREIG
 ALTER TABLE "users"."submission" ADD CONSTRAINT "submission_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "users"."xp_events" ADD CONSTRAINT "xp_events_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "auth"."user_subscriptions" ADD CONSTRAINT "user_subscriptions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
-*/
