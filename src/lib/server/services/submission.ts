@@ -10,6 +10,7 @@ import { itemsInClass, modulesInClass } from '$lib/server/db/schema/class';
 import { eq, sql, and } from 'drizzle-orm';
 import { QueueService } from '$lib/server/queue';
 import { nats } from '$lib/server/nats';
+import { cacheDelete } from '$lib/server/cache';
 
 const MAX_FILE_SIZE = 20 * 1024; // 20KB
 const MAX_TOTAL_SIZE = 512 * 1024; // 0.5MB
@@ -69,6 +70,8 @@ export class SubmissionService {
 			.onConflictDoNothing({
 				target: [trackInUsers.userId, trackInUsers.trackId]
 			});
+
+		await cacheDelete(`user:tracks:${userId}`);
 
 		return itemWithModule;
 	}
@@ -250,6 +253,11 @@ export class SubmissionService {
 					});
 
 					awardedXp = xpAmount;
+
+					await Promise.all([
+						cacheDelete(`user:stats:${userId}`),
+						cacheDelete(`user:daily-stats:${userId}:7`)
+					]);
 				}
 			}
 		}
@@ -394,6 +402,13 @@ export class SubmissionService {
 					});
 			}
 		});
+
+		if (status === 'pass' && xpReward > 0) {
+			await Promise.all([
+				cacheDelete(`user:stats:${userId}`),
+				cacheDelete(`user:daily-stats:${userId}:7`)
+			]);
+		}
 
 		return { status, xpReward, submissionId };
 	}

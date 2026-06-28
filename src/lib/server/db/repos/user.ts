@@ -8,6 +8,7 @@ import {
 	sessionTokensInAuth as sessionTokens
 } from '../schema';
 import { eq, or } from 'drizzle-orm';
+import { cacheGet, cacheSet } from '$lib/server/cache';
 
 // Infer types
 export type User = typeof users.$inferSelect;
@@ -42,34 +43,37 @@ export type UserTrack = typeof userTracks.$inferSelect & {
 export class UserRepository {
 
 	public async getStats(userId: string): Promise<UserStats | null> {
+		const cached = await cacheGet<UserStats>(`user:stats:${userId}`);
+		if (cached) return cached;
+
 		const userStats = await db.query.statsInUsers.findFirst({
-			where: {
-				userId: userId
-			}
+			where: { userId }
 		});
 
-		return userStats || null;
+		const result = userStats || null;
+		if (result) await cacheSet(`user:stats:${userId}`, result, 600);
+		return result;
 	}
 
 	public async getDailyStats(userId: string, days: number = 7): Promise<UserDailyStats[] | null> {
-		if (days < 1) {
-			return null;
-		}
+		if (days < 1) return null;
+
+		const cached = await cacheGet<UserDailyStats[]>(`user:daily-stats:${userId}:${days}`);
+		if (cached) return cached;
 
 		const fromWhen = new Date();
 		fromWhen.setDate(fromWhen.getDate() - days);
 
-		return await db.query.dailyStatsInUsers.findMany({
+		const result = await db.query.dailyStatsInUsers.findMany({
 			where: {
-				userId: userId,
-				date: {
-					gte: fromWhen
-				}
+				userId,
+				date: { gte: fromWhen }
 			},
-			orderBy: {
-				date: 'desc'
-			}
+			orderBy: { date: 'desc' }
 		});
+
+		await cacheSet(`user:daily-stats:${userId}:${days}`, result, 600);
+		return result;
 	}
 
 	public async findByUsername(username: string): Promise<UserPrivate | null> {

@@ -15,3 +15,7 @@ export async function cacheGet<T>(key: string): Promise<T | null> {
 export async function cacheSet<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
 	await valkey.set(PREFIX + key, JSON.stringify(value), 'EX', ttlSeconds);
 }
+
+export async function cacheDelete(key: string): Promise<void> {
+	await valkey.del(PREFIX + key);
+}

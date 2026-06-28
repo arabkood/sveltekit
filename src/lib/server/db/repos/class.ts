@@ -178,11 +178,15 @@ export class ClassRepository {
 	}
 
 	public async getUserTracks(userId: string): Promise<UserTrack[]> {
-		return db.query.trackInUsers.findMany({
-			where: {
-				userId: userId
-			}
+		const cached = await cacheGet<UserTrack[]>(`user:tracks:${userId}`);
+		if (cached) return cached;
+
+		const result = await db.query.trackInUsers.findMany({
+			where: { userId }
 		});
+
+		await cacheSet(`user:tracks:${userId}`, result, 600);
+		return result;
 	}
 }
 
