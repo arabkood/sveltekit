@@ -1,0 +1,1 @@
+CREATE INDEX "idx_session_tokens_user_id" ON "auth"."session_tokens" ("user_id");

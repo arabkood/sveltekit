@@ -88,7 +88,10 @@ export const sessionTokensInAuth = auth.table(
 			.notNull(),
 		expiresAt: timestamp('expires_at', { withTimezone: true }).notNull()
 	},
-	(table) => [check('session_tokens_token_check', sql`(char_length(token) > 0)`)]
+	(table) => [
+		check('session_tokens_token_check', sql`(char_length(token) > 0)`),
+		index('idx_session_tokens_user_id').using('btree', table.userId.asc().nullsLast())
+	]
 );
 
 export const userSubscriptionsInAuth = auth.table(
