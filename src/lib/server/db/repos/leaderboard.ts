@@ -1,5 +1,5 @@
 import { db } from '..';
-import { desc, gte, sql } from 'drizzle-orm';
+import { count, desc, eq, gt, gte, sql } from 'drizzle-orm';
 import {
 	dailyStatsInUsers as dailyStats,
 	statsInUsers as stats,
@@ -87,27 +87,24 @@ export class LeaderboardRepository {
 	public async getUserAllTimeRank(
 		userId: string
 	): Promise<{ rank: number; xp: number; totalUsers: number } | null> {
-		const result = await db.execute<{ rank: number; xp: number; total_users: number }>(sql`
-			WITH ranked_users AS (
-				SELECT
-					s.user_id,
-					s.total_xp,
-					ROW_NUMBER() OVER (ORDER BY s.total_xp DESC) as rank,
-					COUNT(*) OVER () as total_users
-				FROM users.stats s
-				WHERE s.total_xp > 0
-			)
-			SELECT rank::int, total_xp::int as xp, total_users::int
-			FROM ranked_users
-			WHERE user_id = ${userId}
-		`);
+		const userRow = await db
+			.select({ totalXp: stats.totalXp })
+			.from(stats)
+			.where(eq(stats.userId, userId))
+			.limit(1);
 
-		if (!result.rows[0]) return null;
+		const userXp = userRow[0]?.totalXp;
+		if (!userXp) return null;
+
+		const [above, total] = await Promise.all([
+			db.select({ count: count() }).from(stats).where(gt(stats.totalXp, userXp)),
+			db.select({ count: count() }).from(stats).where(gt(stats.totalXp, 0))
+		]);
 
 		return {
-			rank: result.rows[0].rank,
-			xp: result.rows[0].xp,
-			totalUsers: result.rows[0].total_users
+			rank: (above[0].count ?? 0) + 1,
+			xp: userXp,
+			totalUsers: total[0].count ?? 0
 		};
 	}
 

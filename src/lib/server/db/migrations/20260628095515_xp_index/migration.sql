@@ -1,0 +1,1 @@
+CREATE INDEX "idx_stats_total_xp" ON "users"."stats" ("total_xp" DESC NULLS LAST);
