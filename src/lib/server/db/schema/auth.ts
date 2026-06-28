@@ -86,8 +86,7 @@ export const sessionTokensInAuth = auth.table(
 		createdAt: timestamp('created_at', { withTimezone: true })
 			.default(sql`now()`)
 			.notNull(),
-		expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-		lastUsedAt: timestamp('last_used_at', { withTimezone: true })
+		expiresAt: timestamp('expires_at', { withTimezone: true }).notNull()
 	},
 	(table) => [check('session_tokens_token_check', sql`(char_length(token) > 0)`)]
 );
