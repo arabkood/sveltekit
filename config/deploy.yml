@@ -1,0 +1,150 @@
+# Name of your application. Used to uniquely configure containers.
+service: akood
+
+# Name of the container image.
+image: arabkood/sveltekit
+
+# Deploy to these servers.
+servers:
+  web:
+    hosts:
+      - akood-prod-main
+    # Publish the app port on the PRIVATE interface (bound to the private IP, not
+    # 0.0.0.0 — never public) so the invoker on the other VPS can POST submission
+    # results directly, bypassing kamal-proxy/TLS. Firewall restricts it to the
+    # invoker's private IP.
+    options:
+      publish:
+        - "10.0.0.5:3000:3000"
+
+# Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
+# Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
+#
+# Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
+proxy:
+  ssl: true
+  host: akood.com
+  app_port: 3000
+
+# Credentials for your image host.
+registry:
+  server: ghcr.io
+  username: TheLubab
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Configure builder setup.
+builder:
+  arch: amd64
+  # Pass in additional build args needed for your Dockerfile.
+  # args:
+  #   RUBY_VERSION: <%= ENV["RBENV_VERSION"] || ENV["rvm_ruby_string"] || "#{RUBY_ENGINE}-#{RUBY_ENGINE_VERSION}" %>
+
+# Inject ENV variables into containers (secrets come from .kamal/secrets).
+#
+env:
+  clear:
+    S3_ENDPOINT: fsn1.your-objectstorage.com
+    S3_PV_BUCKET_NAME: akood-pv
+    S3_BLOG_BUCKET_NAME: akood-pv
+    S3_REGION: eu-central
+    NATS_URL: nats://akood-nats:4222
+    AUTH_SESSION_COOKIE_NAME: akood_session_token
+    AUTH_SESSION_TOKEN_EXPIRY_HOURS: 720
+    AUTH_EMAIL_VERIFICATION_EXPIRY_MINUTES: 1440
+    AUTH_PASSWORD_RESET_EXPIRY_MINUTES: 60
+    ADDRESS_HEADER: CF-Connecting-IP
+    SMTP_HOST: localhost
+    SMTP_PORT: 1025
+    SMTP_FROM_EMAIL: noreply@akood.com
+    SMTP_FROM_NAME: Akood
+    PUBLIC_APP_ENV: production
+    PUBLIC_S3_PATH: https://akood.com/s3
+    PUBLIC_SESSION_COOKIE_NAME: akood_session_token
+    PUBLIC_SITE_NAME_EN: Akood
+    PUBLIC_SITE_NAME_AR: أكود
+    PUBLIC_SITE_NAME_FULL: أكود - Akood
+    PUBLIC_SITE: https://akood.com
+  secret:
+    - DATABASE_URL
+    - S3_ACCESS_KEY_ID
+    - S3_SECRET_ACCESS_KEY
+    - NATS_USER
+    - NATS_PASSWORD
+    - WEBHOOK_SECRET
+    - VALKEY_URL
+    - STRIPE_SECRET_KEY
+    - STRIPE_WEBHOOK_SECRET
+    - SMTP_USER
+    - SMTP_PASS
+
+# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
+# "bin/kamal app logs -r job" will tail logs from the first server in the job section.
+#
+aliases:
+  shell: app exec --interactive --reuse "bash"
+
+# Use a different ssh user than root
+#
+# ssh:
+#   user: app
+
+# Use a persistent storage volume.
+#
+# volumes:
+#   - "app_storage:/app/storage"
+
+# Bridge fingerprinted assets, like JS and CSS, between versions to avoid
+# hitting 404 on in-flight requests. Combines all files from new and old
+# version inside the asset_path.
+#
+# asset_path: /app/public/assets
+
+# Configure rolling deploys by setting a wait time between batches of restarts.
+#
+# boot:
+#   limit: 10 # Can also specify as a percentage of total hosts, such as "25%"
+#   wait: 2
+
+# Use accessory services (secrets come from .kamal/secrets).
+#
+accessories:
+  pg:
+    image: postgres:18
+    host: akood-prod-main
+    env:
+      secret:
+        - POSTGRES_USER
+        - POSTGRES_PASSWORD
+        - POSTGRES_DB
+    directories:
+      - postgres-data:/var/lib/postgresql/data
+  valkey:
+    image: valkey/valkey:8.1-alpine
+    host: akood-prod-main
+    env:
+      secret:
+        - VALKEY_PASSWORD
+    files:
+      - config/valkey.conf:/valkey.conf:ro
+    directories:
+      - local: valkey-data
+        remote: /data
+        mode: '0755'
+        owner: 'valkey:valkey'
+    command: sh -c 'valkey-server /valkey.conf --requirepass "$VALKEY_PASSWORD"'
+  nats:
+    image: nats:2.14.2-scratch
+    host: akood-prod-main
+    port:
+      # Map to host so external VPS Invokers can connect via private network
+      - '10.0.0.5:37310:4222'
+    env:
+      secret:
+        - NATS_USER
+        - NATS_PASSWORD
+    files:
+      - config/nats.conf:/nats.conf:ro
+    directories:
+      - nats-data:/data
+    command: '-c /nats.conf'

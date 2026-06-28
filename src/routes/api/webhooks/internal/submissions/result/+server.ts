@@ -1,24 +1,22 @@
 import { json } from '@sveltejs/kit';
+import { timingSafeEqual } from 'node:crypto';
 import { SubmissionService } from '$lib/server/services/submission';
-import { env } from '$env/dynamic/private';
+import { privateEnv } from '$lib/server/env';
 
-export const POST = async ({ request, getClientAddress }) => {
-	// 1. IP Subnet Defense-in-Depth
-	// Only accept requests from the internal Hetzner subnet or local Docker networks
-	const clientIp = getClientAddress();
-	const isLocalhost = clientIp.includes('127.0.0.1') || clientIp === '::1';
-	const isHetznerInternal = clientIp.startsWith('10.');
-	const isDockerNetwork = clientIp.startsWith('172.') || clientIp.startsWith('192.168.');
+// Auth is the shared secret only. The source-IP restriction (only the invoker's
+// private IP may reach this port) is enforced at the Hetzner firewall — not here:
+// the request arrives directly over the private network, so there's no trustworthy
+// in-app IP signal (getClientAddress is bound to CF-Connecting-IP, absent here).
+function validSecret(provided: string | null): boolean {
+	if (!provided) return false;
+	const a = Buffer.from(provided);
+	const b = Buffer.from(privateEnv.WEBHOOK_SECRET);
+	return a.length === b.length && timingSafeEqual(a, b);
+}
 
-	if (!isLocalhost && !isHetznerInternal && !isDockerNetwork) {
-		console.warn(`[Webhook] Blocked execution result from unauthorized IP: ${clientIp}`);
-		return json({ error: 'Unauthorized IP' }, { status: 403 });
-	}
-
-	// 2. Secret Token Authentication
-	const secret = request.headers.get('x-internal-secret');
-	if (!secret || secret !== env.INTERNAL_API_SECRET) {
-		console.warn(`[Webhook] Blocked execution result due to invalid secret token`);
+export const POST = async ({ request }) => {
+	if (!validSecret(request.headers.get('x-internal-secret'))) {
+		console.warn('[Webhook] Blocked execution result due to invalid secret token');
 		return json({ error: 'Unauthorized Token' }, { status: 401 });
 	}
 

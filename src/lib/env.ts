@@ -6,7 +6,6 @@ const schema = z.object({
 
 	PUBLIC_S3_PATH: z.string().default('https://akood.com/s3'),
 	PUBLIC_SESSION_COOKIE_NAME: z.string().optional().default('akood_session_token'),
-	PUBLIC_API_PATH: z.url().default('https://akood.com/api/v1'),
 
 	PUBLIC_SITE_NAME_EN: z.string().optional().default('Akood'),
 	PUBLIC_SITE_NAME_AR: z.string().optional().default('أكود'),
