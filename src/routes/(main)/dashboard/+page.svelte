@@ -25,7 +25,11 @@
 		<div class="mb-8 grid gap-6 lg:grid-cols-3">
 			<CardXp totalXp={data.userStats!.totalXp} />
 			<CardStreak dailyStats={data.dailyStats!} userStats={data.userStats!} />
-			<CardRank userRank={data.userRank ?? null} />
+			{#await data.userRank}
+				<CardRank userRank={null} loading={true} />
+			{:then rank}
+				<CardRank userRank={rank} />
+			{/await}
 		</div>
 
 		<div class="mb-12">
