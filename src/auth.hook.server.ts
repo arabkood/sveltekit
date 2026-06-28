@@ -17,7 +17,9 @@ const PUBLIC_ROUTES: string[] = [
 	'/(main)/leaderboard',
 	'/(main)/pages',
 	'/(main)/pricing',
-	'/(main)/user'
+	'/(main)/user',
+	// Webhooks handle their own authentication (Secret/IP)
+	'/api/webhooks'
 ];
 
 /**

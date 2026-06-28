@@ -5,7 +5,7 @@
 	import SuccessPopup from '$ui/popup/SuccessPopup.svelte';
 	import FailPopup from '$ui/popup/FailPopup.svelte';
 	import SignupPopup from '$ui/popup/SignupPopup.svelte';
-	import { API_ENDPOINTS } from '$api/config';
+
 	import type { ApiError } from '$types/api';
 	import { beforeNavigate, goto } from '$app/navigation';
 	import { onMount } from 'svelte';
@@ -223,7 +223,7 @@
 			_$: btoa(Math.round(percentCorrect * 69).toString()),
 			answers
 		};
-		const response = await fetch(API_ENDPOINTS.item.submit(data.item.id), {
+		const response = await fetch(`/api/submissions/lesson/${data.item.id}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ data: dataToSend }),

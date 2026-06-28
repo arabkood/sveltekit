@@ -1,5 +1,11 @@
 import { db } from '$lib/server/db';
-import { trackInUsers, submissionInUsers, xpEventsInUsers } from '$lib/server/db/schema/users';
+import {
+	trackInUsers,
+	submissionInUsers,
+	xpEventsInUsers,
+	statsInUsers,
+	dailyStatsInUsers
+} from '$lib/server/db/schema/users';
 import { itemsInClass, modulesInClass } from '$lib/server/db/schema/class';
 import { eq, sql, and } from 'drizzle-orm';
 import { QueueService } from '$lib/server/queue';
@@ -146,6 +152,8 @@ export class SubmissionService {
 
 		let submissionStatus = 'error';
 		let resultsPayload = null;
+		// XP awarded by this result, surfaced in the SSE payload for the popup.
+		let awardedXp = 0;
 
 		if (runnerResult) {
 			submissionStatus = runnerResult.status;
@@ -170,9 +178,14 @@ export class SubmissionService {
 
 		// We don't throw if not found because Run operations aren't in the DB!
 		// Wait, if it's a Run operation, updatedSubmission will be undefined.
-		
+
 		// 2. Award XP if this is a passing submission that hasn't been awarded yet
-		if (updatedSubmission && runnerResult && submissionStatus === 'pass' && updatedSubmission.xpReward === 0) {
+		if (
+			updatedSubmission &&
+			runnerResult &&
+			submissionStatus === 'pass' &&
+			updatedSubmission.xpReward === 0
+		) {
 			const item = await db
 				.select({ baseXp: itemsInClass.baseXp, type: itemsInClass.type, id: itemsInClass.id })
 				.from(itemsInClass)
@@ -190,13 +203,53 @@ export class SubmissionService {
 					.then((res) => res[0]);
 
 				if (xpUpdated) {
-					// Insert the XP event ledger entry
-					await db.insert(xpEventsInUsers).values({
-						userId: updatedSubmission.userId,
-						xpAmount: item.baseXp,
-						sourceType: `item/${item.type}`,
-						sourceId: item.id
+					const userId = updatedSubmission.userId;
+					const xpAmount = item.baseXp;
+
+					// Mirror the legacy Go AddXP: write the ledger entry AND roll the
+					// amount up into the aggregate stats the dashboard/leaderboard read.
+					// Inserting the ledger row alone leaves users.stats.total_xp at 0.
+					await db.transaction(async (tx) => {
+						// 1. XP event ledger entry
+						await tx.insert(xpEventsInUsers).values({
+							userId,
+							xpAmount,
+							sourceType: `item/${item.type}`,
+							sourceId: item.id
+						});
+
+						// 2. Roll up into the user's total XP (source for the dashboard)
+						await tx
+							.insert(statsInUsers)
+							.values({
+								userId,
+								totalXp: xpAmount,
+								lastActiveAt: new Date()
+							})
+							.onConflictDoUpdate({
+								target: statsInUsers.userId,
+								set: {
+									totalXp: sql`${statsInUsers.totalXp} + ${xpAmount}`,
+									lastActiveAt: new Date()
+								}
+							});
+
+						// 3. Roll up into today's daily stats (also fires the streak trigger)
+						await tx
+							.insert(dailyStatsInUsers)
+							.values({
+								userId,
+								xpEarned: xpAmount
+							})
+							.onConflictDoUpdate({
+								target: [dailyStatsInUsers.userId, dailyStatsInUsers.date],
+								set: {
+									xpEarned: sql`${dailyStatsInUsers.xpEarned} + ${xpAmount}`
+								}
+							});
 					});
+
+					awardedXp = xpAmount;
 				}
 			}
 		}
@@ -205,9 +258,143 @@ export class SubmissionService {
 		const ssePayload = {
 			...payload,
 			status: submissionStatus,
-			results: resultsPayload
+			results: resultsPayload,
+			// The client popup reads xpReward off the stream result.
+			xpReward: awardedXp
 		};
 		const { nc } = await nats;
-		nc.publish(`results.${taskId}`, JSON.stringify(ssePayload));
+		nc.publish(`results.${taskId}`, new TextEncoder().encode(JSON.stringify(ssePayload)));
+	}
+
+	/**
+	 * Handles a lesson submission synchronously without queuing.
+	 */
+	static async handleLesson(userId: string, itemId: string, data: Record<string, any>) {
+		const itemInfo = await this.ensureEnrollment(userId, itemId);
+
+		// Extract obfuscated data
+		const encoded = data['_$'];
+		if (typeof encoded !== 'string') {
+			throw new Error('INVALID_PAYLOAD');
+		}
+
+		// Decode base64
+		let decodedStr;
+		try {
+			decodedStr = Buffer.from(encoded, 'base64').toString('utf-8');
+		} catch (e) {
+			throw new Error('INVALID_PAYLOAD');
+		}
+
+		const raw = parseInt(decodedStr, 10);
+		if (isNaN(raw)) {
+			throw new Error('INVALID_PAYLOAD');
+		}
+
+		let percent = Math.floor(raw / 69); // Salt is 69
+		if (percent > 100) percent = 100;
+		if (percent < 0) percent = 0;
+
+		const status = percent > 50 ? 'pass' : 'fail';
+		
+		// Check for previous submission to prevent re-awarding XP
+		const existingSubmission = await db
+			.select()
+			.from(submissionInUsers)
+			.where(and(eq(submissionInUsers.userId, userId), eq(submissionInUsers.itemId, itemId)))
+			.limit(1)
+			.then((res) => res[0]);
+
+		if (existingSubmission && existingSubmission.status === 'pass') {
+			// Already passed, return as is to prevent XP abuse.
+			return { status: 'pass', xpReward: existingSubmission.xpReward, submissionId: existingSubmission.id };
+		}
+
+		const item = await db
+			.select({ baseXp: itemsInClass.baseXp, type: itemsInClass.type, id: itemsInClass.id })
+			.from(itemsInClass)
+			.where(eq(itemsInClass.id, itemId))
+			.limit(1)
+			.then((res) => res[0]);
+
+		if (!item) {
+			throw new Error('ITEM_NOT_FOUND');
+		}
+
+		let xpReward = 0;
+		if (status === 'pass' && item.baseXp) {
+			xpReward = Math.floor(item.baseXp * (percent / 100));
+		}
+
+		const submissionId = existingSubmission ? existingSubmission.id : crypto.randomUUID();
+
+		await db.transaction(async (tx) => {
+			// 1. Upsert submission
+			await tx
+				.insert(submissionInUsers)
+				.values({
+					id: submissionId,
+					userId,
+					itemId,
+					status,
+					xpReward,
+					data,
+					attempts: existingSubmission ? existingSubmission.attempts + 1 : 1
+				})
+				.onConflictDoUpdate({
+					target: [submissionInUsers.userId, submissionInUsers.itemId],
+					set: {
+						status,
+						xpReward,
+						data,
+						attempts: sql`${submissionInUsers.attempts} + 1`,
+						updatedAt: new Date(),
+						id: submissionId
+					}
+				});
+
+			// 2. Ledger & Stats if passed and xp > 0
+			if (status === 'pass' && xpReward > 0) {
+				// Ledger
+				await tx.insert(xpEventsInUsers).values({
+					userId,
+					xpAmount: xpReward,
+					sourceType: `item/${item.type}`,
+					sourceId: item.id
+				});
+
+				// Total XP
+				await tx
+					.insert(statsInUsers)
+					.values({
+						userId,
+						totalXp: xpReward,
+						lastActiveAt: new Date()
+					})
+					.onConflictDoUpdate({
+						target: statsInUsers.userId,
+						set: {
+							totalXp: sql`${statsInUsers.totalXp} + ${xpReward}`,
+							lastActiveAt: new Date()
+						}
+					});
+
+				// Daily XP
+				await tx
+					.insert(dailyStatsInUsers)
+					.values({
+						userId,
+						xpEarned: xpReward
+					})
+					.onConflictDoUpdate({
+						target: [dailyStatsInUsers.userId, dailyStatsInUsers.date],
+						set: {
+							xpEarned: sql`${dailyStatsInUsers.xpEarned} + ${xpReward}`
+						}
+					});
+			}
+		});
+
+		return { status, xpReward, submissionId };
 	}
 }

@@ -19,7 +19,8 @@ const globalForDb = globalThis as unknown as { db: DB; pool: Pool };
 export const pool =
 	globalForDb.pool ||
 	new Pool({
-		connectionString: privateEnv.DATABASE_URL
+		connectionString: privateEnv.DATABASE_URL,
+		min: 1
 	});
 
 if (!globalForDb.pool) {
