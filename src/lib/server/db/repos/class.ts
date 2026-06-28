@@ -1,5 +1,6 @@
 import { db } from '..';
 import { and, asc, eq, sql } from 'drizzle-orm';
+import { cacheGet, cacheSet } from '$lib/server/cache';
 import {
 	itemsInClass as items,
 	modulesInClass as modules,
@@ -41,6 +42,9 @@ export type ModuleWithItems = Module & {
 
 export class ClassRepository {
 	public async getAllCourses(): Promise<AllCourses> {
+		const cached = await cacheGet<AllCourses>('courses:all');
+		if (cached) return cached;
+
 		const rows = await db
 			.select()
 			.from(topics)
@@ -58,6 +62,8 @@ export class ClassRepository {
 			}
 			return acc;
 		}, {});
+
+		await cacheSet('courses:all', result, 24 * 60 * 60);
 		return result;
 	}
 
