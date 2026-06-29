@@ -9,6 +9,8 @@ COPY pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
 
+ENV UV_USE_IO_URING=0
+
 RUN pnpm run build
 
 FROM --platform=linux/amd64 node:24-slim AS runtime
