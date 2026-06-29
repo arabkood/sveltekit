@@ -3,6 +3,7 @@ import { Pool } from 'pg';
 
 import { privateEnv } from '$secrets';
 import { relations } from './relations';
+import { building } from '$app/environment';
 
 function createDB(pool: Pool) {
 	return drizzle({
@@ -18,18 +19,20 @@ const globalForDb = globalThis as unknown as { db: DB; pool: Pool };
 
 export const pool =
 	globalForDb.pool ||
-	new Pool({
-		connectionString: privateEnv.DATABASE_URL,
-		min: 1
-	});
+	(building
+		? ({} as any as Pool)
+		: new Pool({
+				connectionString: privateEnv.DATABASE_URL,
+				min: 1
+			}));
 
-if (!globalForDb.pool) {
+if (!building && !globalForDb.pool) {
 	pool.on('error', (err) => {
 		console.error('Unexpected error on idle database client', err);
 	});
 }
 
-export const db: DB = globalForDb.db || createDB(pool);
+export const db: DB = globalForDb.db || (building ? ({} as any as DB) : createDB(pool));
 
 if (import.meta.env.DEV) {
 	globalForDb.db = db;
