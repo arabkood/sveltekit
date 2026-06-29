@@ -3,8 +3,11 @@ import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import path from 'node:path';
 import { s3 } from '$secrets';
+import { building } from '$app/environment';
 
-console.log('Initializing S3Client.');
+if (!building) {
+	console.log('Initializing S3Client.');
+}
 
 function ensureUrlHasScheme(url: string) {
 	if (!/^https?:\/\//i.test(url)) {
@@ -22,7 +25,7 @@ const s3Opts = {
 	},
 	forcePathStyle: true
 };
-const s3Client = new S3Client(s3Opts);
+const s3Client = building ? ({} as any as S3Client) : new S3Client(s3Opts);
 
 /**
  * Helper function to convert a Node.js Readable stream to a string.

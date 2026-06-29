@@ -6,7 +6,7 @@ import {
 	type JetStreamManager
 } from '@nats-io/jetstream';
 import { privateEnv } from './env';
-import { dev } from '$app/environment';
+import { dev, building } from '$app/environment';
 
 // Use globalThis to avoid multiple connections in development mode
 const globalForNats = globalThis as unknown as {
@@ -14,6 +14,10 @@ const globalForNats = globalThis as unknown as {
 };
 
 async function initNats() {
+	if (building) {
+		return {} as any;
+	}
+
 	const opts: Parameters<typeof connect>[0] = {
 		servers: privateEnv.NATS_URL
 	};
