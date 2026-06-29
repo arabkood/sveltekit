@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 # Copy the rest of the source files
 COPY . .
 
-# Build the SvelteKit app, ignoring the macOS Docker libuv core dump bug
+# Build the SvelteKit app
 RUN rm -rf build && (pnpm run build || test -d build) && \
 	find build -name "*.map" -delete
 
