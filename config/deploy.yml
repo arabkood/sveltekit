@@ -136,9 +136,7 @@ accessories:
   nats:
     image: nats:2.14.2-scratch
     host: akood-prod-main
-    port:
-      # Map to host so external VPS Invokers can connect via private network
-      - '10.0.0.3:37310:4222'
+    port: '10.0.0.3:37310:4222'
     env:
       secret:
         - NATS_USER
