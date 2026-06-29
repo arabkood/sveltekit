@@ -4,7 +4,7 @@ import { building } from '$app/environment';
 
 const schema = z.object({
 	DATABASE_URL: z.url(),
-	STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
+	STRIPE_SECRET_KEY: z.string(),
 	STRIPE_WEBHOOK_SECRET: z.string(),
 	WEBHOOK_SECRET: z.string().min(1),
 	S3_ENDPOINT: z.string().min(1),
