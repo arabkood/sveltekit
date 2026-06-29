@@ -1,4 +1,4 @@
-FROM node:24-slim AS build
+FROM node:22-slim AS build
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -9,11 +9,9 @@ COPY pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
 
-ENV UV_USE_IO_URING=0
-
 RUN pnpm run build
 
-FROM --platform=linux/amd64 node:24-slim AS runtime
+FROM node:22-slim AS runtime
 WORKDIR /app
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/pnpm-lock.yaml ./
