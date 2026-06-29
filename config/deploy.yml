@@ -134,7 +134,7 @@ accessories:
       - local: valkey-data
         remote: /data
         mode: '0755'
-        owner: 'valkey:valkey'
+        owner: '999:999'
     cmd: sh -c 'valkey-server /valkey.conf --requirepass "$VALKEY_PASSWORD"'
   nats:
     image: nats:2.14.2-scratch
