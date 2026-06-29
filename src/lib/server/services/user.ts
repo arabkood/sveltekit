@@ -17,7 +17,8 @@ export class UserValidationError extends Error {
 
 export class UserService {
 	static async changeUsername(userId: string, currentUsername: string, newUsername: string, ipAddress: string, userAgent: string) {
-		if (currentUsername === newUsername) {
+		const newUsernameTrimmed = newUsername.trim();
+		if (currentUsername === newUsernameTrimmed) {
 			return true;
 		}
 
@@ -38,7 +39,7 @@ export class UserService {
 		}
 
 		try {
-			await userRepository.updateUsernameAndLogAudit(userId, newUsername, ipAddress, userAgent);
+			await userRepository.updateUsernameAndLogAudit(userId, newUsernameTrimmed, ipAddress, userAgent);
 		} catch (error: any) {
 			if (error.code === '23505' || error.constraint) {
 				throw new UserValidationError('validation.username.exists');

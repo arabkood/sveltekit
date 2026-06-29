@@ -7,7 +7,7 @@ import {
 	auditLogsInAuth as auditLogs,
 	sessionTokensInAuth as sessionTokens
 } from '../schema';
-import { eq, or } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { cacheGet, cacheSet } from '$lib/server/cache';
 
 // Infer types
@@ -41,7 +41,6 @@ export type UserTrack = typeof userTracks.$inferSelect & {
 };
 
 export class UserRepository {
-
 	public async getStats(userId: string): Promise<UserStats | null> {
 		const cached = await cacheGet<UserStats>(`user:stats:${userId}`);
 		if (cached) return cached;
@@ -77,9 +76,10 @@ export class UserRepository {
 	}
 
 	public async findByUsername(username: string): Promise<UserPrivate | null> {
+		const lowerUsername = username.toLowerCase().trim();
 		const userRecord = await db.query.usersInAuth.findFirst({
 			where: {
-				username: username
+				RAW: (table) => sql`LOWER(${table.username}) = ${lowerUsername}`
 			},
 			columns: {
 				id: true,
@@ -131,28 +131,35 @@ export class UserRepository {
 
 	public async findByEmailOrUsername(identifier: string): Promise<User | null> {
 		const lowerId = identifier.toLowerCase().trim();
-		const result = await db
-			.select()
-			.from(users)
-			.where(or(eq(users.email, lowerId), eq(users.username, lowerId)))
-			.limit(1);
-		return result.length > 0 ? result[0] : null;
+		const user = await db.query.usersInAuth.findFirst({
+			where: {
+				RAW: (table) => sql`${table.email} = ${lowerId} OR LOWER(${table.username}) = ${lowerId}`
+			}
+		});
+		return user || null;
 	}
 
-	public async checkEmailOrUsernameTaken(email: string, username: string): Promise<'email' | 'username' | null> {
+	public async checkEmailOrUsernameTaken(
+		email: string,
+		username: string
+	): Promise<'email' | 'username' | null> {
 		const lowerEmail = email.toLowerCase().trim();
 		const lowerUsername = username.toLowerCase().trim();
 
-		const result = await db
-			.select({ email: users.email, username: users.username })
-			.from(users)
-			.where(or(eq(users.email, lowerEmail), eq(users.username, lowerUsername)))
-			.limit(1);
+		const user = await db.query.usersInAuth.findFirst({
+			where: {
+				RAW: (table) =>
+					sql`${table.email} = ${lowerEmail} OR LOWER(${table.username}) = ${lowerUsername}`
+			},
+			columns: {
+				email: true,
+				username: true
+			}
+		});
 
-		if (result.length === 0) return null;
-		
-		const existing = result[0];
-		if (existing.email === lowerEmail) return 'email';
+		if (!user) return null;
+
+		if (user.email.toLowerCase() === lowerEmail) return 'email';
 		return 'username';
 	}
 

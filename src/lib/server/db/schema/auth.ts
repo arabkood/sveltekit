@@ -9,6 +9,7 @@ import {
 	jsonb,
 	boolean,
 	index,
+	uniqueIndex,
 	primaryKey,
 	unique,
 	check
@@ -141,9 +142,7 @@ export const usersInAuth = auth.table(
 			.notNull()
 	},
 	(table) => [
-		index('users_active_email_lower_idx').using('btree', sql`lower((email)::text)`),
-		index('users_active_username_lower_idx').using('btree', sql`lower((username)::text)`),
-		unique('users_email_key').on(table.email),
-		unique('users_username_key').on(table.username)
+		uniqueIndex('users_active_email_idx'),
+		uniqueIndex('users_active_username_lower_idx').using('btree', sql`lower(${table.username})`)
 	]
 );

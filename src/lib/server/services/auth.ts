@@ -24,7 +24,10 @@ import {
 import crypto from 'crypto';
 
 export class AuthRateLimitError extends Error {
-	constructor(public errorKey: string, public retryAfterSecs: number) {
+	constructor(
+		public errorKey: string,
+		public retryAfterSecs: number
+	) {
 		super(errorKey);
 		this.name = 'AuthRateLimitError';
 	}
@@ -38,7 +41,13 @@ export class AuthValidationError extends Error {
 }
 
 export class AuthService {
-	static async signup(email: string, username: string, passwordPlain: string, ipAddress: string, userAgent: string) {
+	static async signup(
+		email: string,
+		username: string,
+		passwordPlain: string,
+		ipAddress: string,
+		userAgent: string
+	) {
 		const ipLimitCheck = await rateLimiter.safeConsume(signupIpLimiter, ipAddress, 1);
 		if (!ipLimitCheck.success) {
 			throw new AuthRateLimitError('rateLimit.signup', ipLimitCheck.retryAfterSecs);
@@ -65,7 +74,8 @@ export class AuthService {
 				{
 					id,
 					email: emailLower,
-					username: usernameLower,
+					// preserve username case
+					username: username.trim(),
 					encryptedPassword,
 					role: 'user',
 					emailVerified: false
@@ -86,7 +96,12 @@ export class AuthService {
 		return id;
 	}
 
-	static async signin(identifier: string, passwordPlain: string, ipAddress: string, userAgent: string) {
+	static async signin(
+		identifier: string,
+		passwordPlain: string,
+		ipAddress: string,
+		userAgent: string
+	) {
 		const ipLimit = await rateLimiter.safeConsume(signinIpLimiter, ipAddress);
 		if (!ipLimit.success) {
 			throw new AuthRateLimitError('rateLimit.signin', ipLimit.retryAfterSecs);
@@ -144,7 +159,12 @@ export class AuthService {
 		return true;
 	}
 
-	static async resetPassword(token: string, newPasswordPlain: string, ipAddress: string, userAgent: string) {
+	static async resetPassword(
+		token: string,
+		newPasswordPlain: string,
+		ipAddress: string,
+		userAgent: string
+	) {
 		const ipLimit = await rateLimiter.safeConsume(resetPasswordIpLimiter, ipAddress);
 		if (!ipLimit.success) {
 			throw new AuthRateLimitError('rateLimit.resetPassword', ipLimit.retryAfterSecs);
@@ -165,7 +185,13 @@ export class AuthService {
 
 		const encryptedPassword = await hashPassword(newPasswordPlain);
 
-		await userRepository.updatePasswordAndInvalidateSessions(userId, encryptedPassword, ipAddress, userAgent, 'password_change');
+		await userRepository.updatePasswordAndInvalidateSessions(
+			userId,
+			encryptedPassword,
+			ipAddress,
+			userAgent,
+			'password_change'
+		);
 		await deleteOneTimeToken(userId, 'password_recovery');
 
 		return true;
@@ -207,7 +233,13 @@ export class AuthService {
 		return true;
 	}
 
-	static async changePassword(userId: string, currentPasswordPlain: string, newPasswordPlain: string, ipAddress: string, userAgent: string) {
+	static async changePassword(
+		userId: string,
+		currentPasswordPlain: string,
+		newPasswordPlain: string,
+		ipAddress: string,
+		userAgent: string
+	) {
 		const limit = await rateLimiter.safeConsume(changePasswordLimiter, userId);
 		if (!limit.success) {
 			throw new AuthRateLimitError('rateLimit.changePassword', limit.retryAfterSecs);
@@ -227,7 +259,13 @@ export class AuthService {
 
 		const encryptedPassword = await hashPassword(newPasswordPlain);
 
-		await userRepository.updatePasswordAndInvalidateSessions(userId, encryptedPassword, ipAddress, userAgent, 'password_change');
+		await userRepository.updatePasswordAndInvalidateSessions(
+			userId,
+			encryptedPassword,
+			ipAddress,
+			userAgent,
+			'password_change'
+		);
 
 		return true;
 	}
