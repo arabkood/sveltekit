@@ -86,8 +86,8 @@ aliases:
 
 # Use a different ssh user than root
 #
-# ssh:
-#   user: app
+ssh:
+  user: solo
 
 # Use a persistent storage volume.
 #
