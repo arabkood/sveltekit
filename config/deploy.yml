@@ -88,6 +88,7 @@ aliases:
 #
 ssh:
   user: solo
+  port: 41285
 
 # Use a persistent storage volume.
 #
