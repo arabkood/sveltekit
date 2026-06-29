@@ -132,7 +132,7 @@ accessories:
         remote: /data
         mode: '0755'
         owner: 'valkey:valkey'
-    command: sh -c 'valkey-server /valkey.conf --requirepass "$VALKEY_PASSWORD"'
+    cmd: sh -c 'valkey-server /valkey.conf --requirepass "$VALKEY_PASSWORD"'
   nats:
     image: nats:2.14.2-scratch
     host: akood-prod-main
@@ -147,4 +147,4 @@ accessories:
       - config/nats.conf:/nats.conf:ro
     directories:
       - nats-data:/data
-    command: '-c /nats.conf'
+    cmd: '-c /nats.conf'
