@@ -59,7 +59,8 @@ RUN pnpm install --frozen-lockfile --prod && \
 
 # Copy build artifacts from the builder stage
 COPY --from=builder --chown=node:node /app/build ./build
-# (drizzle folder doesn't exist at root in your repo, but if it did we'd copy it here)
+COPY --from=builder --chown=node:node /app/drizzle.config.ts ./drizzle.config.ts
+COPY --from=builder --chown=node:node /app/src/lib/server/db/migrations ./src/lib/server/db/migrations
 
 # Make extra sure build sourcemaps are deleted
 RUN find build -name "*.map" -delete
