@@ -2,14 +2,18 @@
 
 echo "Deploying database backup cronjob for $KAMAL_SERVICE..."
 
+if [ ! -f "config/db-backup.sh" ]; then
+	echo "Error: config/db-backup.sh not found. Are you running kamal from the right directory?"
+	exit 1
+fi
+
 for host in ${KAMAL_HOSTS//,/ }; do
 	echo "Uploading config/db-backup.sh and config/db-backup.cron to $host..."
 
-	scp -P 41285 config/db-backup.sh config/db-backup.cron "$host:~/"
+	scp -P 41285 config/db-backup.sh config/db-backup.cron "solo@$host:~/"
 
-	# Make script executable and copy cron file to /etc/cron.d
-	ssh -p 41285 "$host" "chmod +x ~/db-backup.sh && sudo cp ~/db-backup.cron /etc/cron.d/akood-db-backup && sudo chown root:root /etc/cron.d/akood-db-backup"
+	ssh -p 41285 "solo@$host" 'chmod +x /home/solo/db-backup.sh && sudo cp /home/solo/db-backup.cron /etc/cron.d/akood-db-backup && sudo chown root:root /etc/cron.d/akood-db-backup'
 
 	echo "Triggering initial backup run on $host to verify it works..."
-	ssh -p 41285 "$host" "$HOME/db-backup.sh"
+	ssh -p 41285 "solo@$host" '/home/solo/db-backup.sh'
 done
