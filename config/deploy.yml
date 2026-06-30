@@ -12,10 +12,7 @@ servers:
     # Publish the app port on the PRIVATE interface (bound to the private IP, not
     # 0.0.0.0 — never public) so the invoker on the other VPS can POST submission
     # results directly, bypassing kamal-proxy/TLS. Firewall restricts it to the
-    # invoker's private IP.
-    options:
-      publish:
-        - '10.0.0.3:3000:3000'
+    # Note: Invoker requests should be sent to http://10.0.0.3:80 with header "Host: akood.com"
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
@@ -23,7 +20,9 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  host: akood.com
+  hosts:
+    - akood.com
+    - www.akood.com
   app_port: 3000
 
 # Credentials for your image host.
@@ -56,8 +55,8 @@ env:
     AUTH_EMAIL_VERIFICATION_EXPIRY_MINUTES: 1440
     AUTH_PASSWORD_RESET_EXPIRY_MINUTES: 60
     ADDRESS_HEADER: CF-Connecting-IP
-    SMTP_HOST: localhost
-    SMTP_PORT: 1025
+    SMTP_HOST: smtp.mailersend.net
+    SMTP_PORT: 587
     SMTP_FROM_EMAIL: noreply@akood.com
     SMTP_FROM_NAME: Akood
     PUBLIC_APP_ENV: production
