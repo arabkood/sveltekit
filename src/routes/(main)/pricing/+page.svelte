@@ -2,6 +2,7 @@
 	import Icon from '$ui/common/Icon.svelte';
 	import IconPng from '$ui/common/IconPng.svelte';
 	import Footer from '$ui/shared/Footer.svelte';
+	import { browser } from '$app/environment';
 	import type { LayoutServerData } from '../$types';
 
 	const { data }: { data: LayoutServerData } = $props();
@@ -74,11 +75,11 @@
 		openFaqIndex = openFaqIndex === i ? null : i;
 	}
 
-	const checkoutUrl = $derived(
-		billingCycleYearly
-			? `/services/checkout?products=customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
-			: `/services/checkout?products=customerExternalId=${data.user?.id}&customerEmail=${data.user?.email}`
-	);
+	$effect(() => {
+		if (browser) {
+			window.posthog?.capture('pricing_page_viewed');
+		}
+	});
 </script>
 
 <svelte:head>
@@ -214,8 +215,12 @@
 									أنت مشترك بالفعل ✓
 								</div>
 							{:else}
-								<form action="/services/payments/create-checkout-session" method="POST">
-									<input type="hidden" name="key" value="pro_monthly" />
+								<form 
+									action="/services/payments/create-checkout-session" 
+									method="POST"
+									onsubmit={() => window.posthog?.capture('checkout_started', { plan: billingCycleYearly ? 'yearly' : 'monthly' })}
+								>
+									<input type="hidden" name="key" value={billingCycleYearly ? 'pro_yearly' : 'pro_monthly'} />
 									<button
 										type="submit"
 										class="cta-btn block w-full rounded-2xl bg-violet-600 py-4 text-center text-sm font-bold tracking-[-0.01em] text-white shadow-lg shadow-violet-700/30 hover:bg-violet-500"

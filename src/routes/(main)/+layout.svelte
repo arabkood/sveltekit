@@ -13,17 +13,15 @@
 		children: Snippet;
 	} = $props();
 
-	onMount(() => {
-		setTimeout(() => {
-			if (data.user && browser) {
-				window.posthog?.identify(data.user.email, {
-					email: data.user.email,
-					username: data.user.username,
-					premium: data.user.isPro,
-					dbid: data.user.id
-				});
-			}
-		}, 500);
+	$effect(() => {
+		if (data.user) {
+			window.posthog?.identify(data.user.email, {
+				email: data.user.email,
+				username: data.user.username,
+				premium: data.user.isPro,
+				dbid: data.user.id
+			});
+		}
 	});
 
 	const hideNavbarFor = new Set([
