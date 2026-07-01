@@ -1,0 +1,38 @@
+name: Deploy
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install Kamal
+        run: gem install kamal
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Install Bitwarden CLI
+        run: npm install -g @bitwarden/cli
+
+      - name: Unlock Bitwarden
+        run: |
+          bw login --apikey
+          echo "BW_SESSION=$(bw unlock --passwordenv BW_PASSWORD --raw)" >> $GITHUB_ENV
+        env:
+          BW_CLIENTID: ${{ secrets.BW_CLIENTID }}
+          BW_CLIENTSECRET: ${{ secrets.BW_CLIENTSECRET }}
+          BW_PASSWORD: ${{ secrets.BW_PASSWORD }}
+
+      - name: Deploy
+        run: kamal deploy
