@@ -1,0 +1,19 @@
+name: Cleanup GHCR
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday
+  workflow_dispatch:
+
+jobs:
+  clean-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: snok/container-retention-policy@v3
+        with:
+          account-type: org
+          org-name: arabkood
+          image-names: sveltekit, sveltekit-build-cache, invoker, invoker-build-cache
+          image-tags: '*'
+          cut-off: 14 days ago
+          keep-at-least: 5
+          token: ${{ secrets.GH_PAT_FOR_PACKAGES }}
