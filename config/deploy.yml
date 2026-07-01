@@ -8,7 +8,7 @@ image: arabkood/sveltekit
 servers:
   web:
     hosts:
-      - akood-prod-main
+      - 157.90.150.50
     # Publish the app port on the PRIVATE interface (bound to the private IP, not
     # 0.0.0.0 — never public) so the invoker on the other VPS can POST submission
     # results directly, bypassing kamal-proxy/TLS. Firewall restricts it to the
@@ -113,7 +113,7 @@ ssh:
 accessories:
   pg:
     image: postgres:18
-    host: akood-prod-main
+    host: 157.90.150.50
     env:
       secret:
         - POSTGRES_USER
@@ -123,7 +123,7 @@ accessories:
       - postgres-data:/var/lib/postgresql
   valkey:
     image: valkey/valkey:8.1-alpine
-    host: akood-prod-main
+    host: 157.90.150.50
     env:
       secret:
         - VALKEY_PASSWORD
@@ -136,7 +136,7 @@ accessories:
     cmd: sh -c 'valkey-server /valkey.conf --requirepass "$VALKEY_PASSWORD"'
   nats:
     image: nats:2.14.2-scratch
-    host: akood-prod-main
+    host: 157.90.150.50
     port: '10.0.0.3:37310:4222'
     env:
       secret:
