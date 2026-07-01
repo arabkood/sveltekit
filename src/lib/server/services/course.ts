@@ -75,7 +75,7 @@ export class CourseService {
 	static async resolveItemAccess(
 		modules: (Module & { items: Item[] })[],
 		itemSlug: string,
-		trackSlug: string,
+		track: { slug: string, premiumOnly?: boolean | null },
 		currentPathname: string,
 		userId?: string,
 		isPro?: boolean
@@ -108,14 +108,14 @@ export class CourseService {
 
 		const lastPart = currentPathname.split('/').filter(Boolean).pop();
 		if (lastPart !== item.type) {
-			throw new CourseRedirectError(308, `/courses/${trackSlug}/${item.slug}/${item.type}`);
+			throw new CourseRedirectError(308, `/courses/${track.slug}/${item.slug}/${item.type}`);
 		}
 
 		const submission = userId
 			? await classRepository.getUserSubmissionByItem(userId, item.id)
 			: null;
 
-		if ((module.premiumOnly || item.premiumOnly) && !isPro && !submission) {
+		if ((track.premiumOnly || module.premiumOnly || item.premiumOnly) && !isPro && !submission) {
 			throw new PremiumRestrictionError();
 		}
 

@@ -19,7 +19,8 @@ const PUBLIC_ROUTES: string[] = [
 	'/(main)/pricing',
 	'/(main)/user',
 	// Webhooks handle their own authentication (Secret/IP)
-	'/api/webhooks'
+	'/api/webhooks',
+	'/services/payments/webhook'
 ];
 
 /**

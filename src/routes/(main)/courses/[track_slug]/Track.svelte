@@ -74,7 +74,7 @@
 			{@const isNextItem = nextItem && nextItem.slug === item.slug}
 			{@const draft = getDraftItem(item.id)}
 			<div class="relative w-full">
-				{#if item.premiumOnly && !isPremium && !item.submission}
+				{#if (track.premiumOnly || module.premiumOnly || item.premiumOnly) && !isPremium && !item.submission}
 					<!-- Locked Item -->
 					<a
 						href="/pricing"
@@ -141,7 +141,7 @@
 											{i18n.t('dashboard.challenge')}
 										</span>
 									{/if}
-									{#if item.premiumOnly}
+									{#if track.premiumOnly || module.premiumOnly || item.premiumOnly}
 										<Icon name="star" size={16} class="flex-shrink-0 text-amber-400" />
 									{/if}
 								</h3>

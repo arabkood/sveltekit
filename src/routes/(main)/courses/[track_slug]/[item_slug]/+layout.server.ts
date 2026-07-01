@@ -13,7 +13,7 @@ export const load: LayoutServerLoad = async ({ locals, params, url, parent }) =>
 		const accessData = await CourseService.resolveItemAccess(
 			parentData.modules,
 			params.item_slug,
-			parentData.track.slug,
+			parentData.track,
 			url.pathname,
 			locals.user?.id,
 			locals.user?.isPro
