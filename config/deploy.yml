@@ -36,6 +36,10 @@ registry:
 builder:
   arch:
     - amd64
+  cache:
+    type: registry
+    image: ghcr.io/arabkood/sveltekit-build-cache
+    options: mode=max
   # remote: ssh://akood-prod-main
   # Pass in additional build args needed for your Dockerfile.
   # args:
