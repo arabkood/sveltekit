@@ -18,9 +18,15 @@ const PUBLIC_ROUTES: string[] = [
 	'/(main)/pages',
 	'/(main)/pricing',
 	'/(main)/user',
+	'/(main)/success',
 	// Webhooks handle their own authentication (Secret/IP)
 	'/api/webhooks',
-	'/services/payments/webhook'
+	'/services/payments/webhook',
+	// Public assets, health checks, and SEO files
+	'/s3',
+	'/up',
+	'/robots.txt',
+	'/sitemap.xml'
 ];
 
 /**
@@ -66,7 +72,7 @@ export const authHandle: Handle = async ({ event, resolve }) => {
 		event.locals.session = null;
 	}
 
-	// 2. Skip route guards for non-page requests (api, health, static, etc.)
+	// 2. Skip route guards for non-page requests (api, static, etc.)
 	if (!routeId) {
 		return resolve(event);
 	}
