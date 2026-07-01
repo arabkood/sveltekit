@@ -27,6 +27,7 @@ jobs:
 
       - name: Unlock Bitwarden
         run: |
+          bw config server https://vault.bitwarden.eu
           bw login --apikey
           echo "BW_SESSION=$(bw unlock --passwordenv BW_PASSWORD --raw)" >> $GITHUB_ENV
         env:
