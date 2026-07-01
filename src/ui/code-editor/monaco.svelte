@@ -29,9 +29,10 @@
 		editor = monaco.editor.create(editorContainer, monacoConfig);
 
 		// set intial theme and watch for changes
-		const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		// const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		const darkModeMediaQuery = { matches: true };
 		editor?.updateOptions({ theme: darkModeMediaQuery.matches ? 'kood-dark' : 'kood-light' });
-		darkModeMediaQuery.addEventListener('change', mediaQueryListener);
+		// darkModeMediaQuery.addEventListener('change', mediaQueryListener);
 		if (!monaco || !editor) return;
 		let filteredfiles = config.files.filter((f) => f.idx >= 0).sort((a, b) => a.idx - b.idx);
 		let file: CodeFileConfig & {
@@ -66,8 +67,9 @@
 	// onDestroy runs both on server and browser
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
-			const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-			darkModeMediaQuery.removeEventListener('change', mediaQueryListener);
+			// const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+			// const darkModeMediaQuery = { matches: true };
+			// darkModeMediaQuery.removeEventListener('change', mediaQueryListener);
 			monaco?.editor.getModels().forEach((model) => model.dispose());
 			editor?.dispose();
 		}

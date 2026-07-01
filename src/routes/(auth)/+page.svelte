@@ -124,10 +124,10 @@
 
 <svelte:body class:overflow-hidden={mobileMenuOpen} />
 
-<div class="bg-white pt-16 selection:bg-emerald-100">
+<div class="bg-gray-950 pt-16 selection:bg-emerald-100">
 	<Navbar logoVariant="withText" />
 
-	<main class="relative w-full border-t border-black/10 dark:border-white/10">
+	<main class="relative w-full border-t dark:border-white/10">
 		<Hero />
 
 		<Demo />

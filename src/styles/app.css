@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
-@import 'highlight.js/styles/github.css' layer(gray);
-
-@import 'highlight.js/styles/github-dark.css' layer(dark) (prefers-color-scheme: dark);
+/* @import 'highlight.js/styles/github.css' layer(gray); */
+/* @import 'highlight.js/styles/github-dark.css' layer(dark) (prefers-color-scheme: dark); */
+@import 'highlight.js/styles/github-dark.css';
 
 @import './markdown.css';
 @import './codeblock.css';
@@ -182,13 +182,13 @@
 }
 
 body {
-	color: var(--color-gray-900);
-	background-color: var(--color-gray-50);
-
-	@media (prefers-color-scheme: dark) {
-		color: var(--color-gray-50);
-		background-color: var(--color-gray-900);
-	}
+	/* color: var(--color-gray-900); */
+	/* background-color: var(--color-gray-50); */
+	/**/
+	/* @media (prefers-color-scheme: dark) { */
+	color: var(--color-gray-50);
+	background-color: var(--color-gray-950);
+	/* } */
 }
 
 html {

@@ -111,8 +111,7 @@
 	}
 
 	type RenderData =
-		| (CommonRenderData & InteractiveData)
-		| { interactive: false; staticHtml: string };
+		(CommonRenderData & InteractiveData) | { interactive: false; staticHtml: string };
 
 	const renderData: RenderData = $derived.by(() => {
 		const isRtl = /^[\u0600-\u06FF]/.test(code);
@@ -232,22 +231,22 @@
 		cursor: not-allowed;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		.cb-input {
-			background-color: rgba(255, 255, 255, 0.1);
-			border: 1px solid rgba(255, 255, 255, 0.2);
-			color: #fff;
-		}
-		.cb-input::placeholder {
-			color: rgba(255, 255, 255, 0.4);
-		}
-		.cb-input.incorrect {
-			border-color: var(--color-red-400);
-			background-color: rgba(255, 77, 77, 0.1);
-		}
-		.cb-input:disabled {
-			background-color: rgba(128, 128, 128, 0.1);
-			border-color: rgba(128, 128, 128, 0.2);
-		}
+	/*@media (prefers-color-scheme: dark) {*/
+	.cb-input {
+		background-color: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: #fff;
 	}
+	.cb-input::placeholder {
+		color: rgba(255, 255, 255, 0.4);
+	}
+	.cb-input.incorrect {
+		border-color: var(--color-red-400);
+		background-color: rgba(255, 77, 77, 0.1);
+	}
+	.cb-input:disabled {
+		background-color: rgba(128, 128, 128, 0.1);
+		border-color: rgba(128, 128, 128, 0.2);
+	}
+	/*}*/
 </style>

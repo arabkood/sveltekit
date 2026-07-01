@@ -197,54 +197,54 @@
 }
 
 /* Dark mode styles */
-@media (prefers-color-scheme: dark) {
-	.markdown-img-load {
-		background: var(--color-gray-600);
-		color: var(--color-gray-600);
-	}
+/* @media (prefers-color-scheme: dark) { */
+.markdown-img-load {
+	background: var(--color-gray-600);
+	color: var(--color-gray-600);
 }
+/*}*/
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-	.markdown-body .code-block {
-		background-color: var(--color-gray-800);
-		border-color: var(--color-gray-700);
-	}
-	.markdown-body .code-header {
-		background-color: var(--color-gray-700);
-		border-bottom-color: var(--color-gray-600);
-	}
-	.markdown-body code:not(pre code) {
-		background-color: var(--color-gray-700);
-		color: var(--color-blue-300);
-	}
-
-	.markdown-body code[data-glossary]:not(pre code) {
-		text-decoration-color: var(--color-blue-400);
-	}
-
-	.markdown-body h6 {
-		color: var(--color-gray-400);
-	}
-
-	.markdown-body a {
-		color: var(--color-blue-400);
-	}
-
-	.markdown-body blockquote {
-		border-inline-start-color: var(--color-gray-600);
-	}
-
-	.markdown-body hr {
-		background-color: var(--color-gray-600);
-		border-bottom-color: var(--color-gray-700);
-	}
-
-	.markdown-body th,
-	.markdown-body td {
-		border-color: var(--color-gray-600);
-	}
+/*@media (prefers-color-scheme: dark) {*/
+.markdown-body .code-block {
+	background-color: var(--color-gray-800);
+	border-color: var(--color-gray-700);
 }
+.markdown-body .code-header {
+	background-color: var(--color-gray-700);
+	border-bottom-color: var(--color-gray-600);
+}
+.markdown-body code:not(pre code) {
+	background-color: var(--color-gray-700);
+	color: var(--color-blue-300);
+}
+
+.markdown-body code[data-glossary]:not(pre code) {
+	text-decoration-color: var(--color-blue-400);
+}
+
+.markdown-body h6 {
+	color: var(--color-gray-400);
+}
+
+.markdown-body a {
+	color: var(--color-blue-400);
+}
+
+.markdown-body blockquote {
+	border-inline-start-color: var(--color-gray-600);
+}
+
+.markdown-body hr {
+	background-color: var(--color-gray-600);
+	border-bottom-color: var(--color-gray-700);
+}
+
+.markdown-body th,
+.markdown-body td {
+	border-color: var(--color-gray-600);
+}
+/*}*/
 
 /* Inline styles */
 .markdown-body.markdown-inline .code-block,
@@ -317,22 +317,22 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-	.markdown-alert-tip {
-		background-color: rgba(120, 53, 15, 0.3);
-		border-left-color: #f59e0b;
-	}
-
-	.markdown-alert-tip .markdown-alert-title {
-		color: #fbbf24;
-	}
-
-	.markdown-alert-next {
-		background-color: rgba(7, 89, 133, 0.3);
-		border-left-color: #0ea5e9;
-	}
-
-	.markdown-alert-next .markdown-alert-title {
-		color: #38bdf8;
-	}
+/*@media (prefers-color-scheme: dark) {*/
+.markdown-alert-tip {
+	background-color: rgba(120, 53, 15, 0.3);
+	border-left-color: #f59e0b;
 }
+
+.markdown-alert-tip .markdown-alert-title {
+	color: #fbbf24;
+}
+
+.markdown-alert-next {
+	background-color: rgba(7, 89, 133, 0.3);
+	border-left-color: #0ea5e9;
+}
+
+.markdown-alert-next .markdown-alert-title {
+	color: #38bdf8;
+}
+/*}*/
