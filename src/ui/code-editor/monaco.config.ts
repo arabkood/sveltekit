@@ -1,7 +1,7 @@
 import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 export const monacoConfig: Monaco.editor.IStandaloneEditorConstructionOptions = {
-	automaticLayout: true,
+	automaticLayout: false,
 	minimap: { enabled: false },
 	fontSize: 16,
 	fontFamily: 'var(--font-mono)',

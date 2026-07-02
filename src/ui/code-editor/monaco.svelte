@@ -16,6 +16,8 @@
 	let editor: Monaco.editor.IStandaloneCodeEditor | undefined = $state();
 	let monaco: typeof Monaco | undefined = $state();
 	let editorContainer: HTMLElement;
+	let parentContainer: HTMLElement;
+	let resizeObserver: ResizeObserver | undefined;
 
 	// Listen for system theme changes
 	const mediaQueryListener = (e: MediaQueryListEvent) => {
@@ -24,9 +26,31 @@
 
 	// onMount will run on browser only
 	onMount(async () => {
-		monaco = (await import('./monaco')).default;
+		const monacoModule = (await import('./monaco')).default;
+		if (!editorContainer || !parentContainer) return;
+
+		monaco = monacoModule;
 		defineMonacoThemes(monaco);
 		editor = monaco.editor.create(editorContainer, monacoConfig);
+
+		// Observe parent container resizes manually in requestAnimationFrame to avoid ResizeObserver loops
+		let lastWidth = 0;
+		let lastHeight = 0;
+		resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				const width = Math.round(entry.contentRect.width);
+				const height = Math.round(entry.contentRect.height);
+				if (width === 0 && height === 0) continue;
+				if (width !== lastWidth || height !== lastHeight) {
+					lastWidth = width;
+					lastHeight = height;
+					requestAnimationFrame(() => {
+						editor?.layout();
+					});
+				}
+			}
+		});
+		resizeObserver.observe(parentContainer);
 
 		// set intial theme and watch for changes
 		// const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -70,6 +94,7 @@
 			// const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 			// const darkModeMediaQuery = { matches: true };
 			// darkModeMediaQuery.removeEventListener('change', mediaQueryListener);
+			resizeObserver?.disconnect();
 			monaco?.editor.getModels().forEach((model) => model.dispose());
 			editor?.dispose();
 		}
@@ -79,8 +104,9 @@
 </script>
 
 <div
+	bind:this={parentContainer}
 	dir="ltr"
-	class="h-full flex-1 overflow-auto bg-gray-100 font-mono dark:bg-gray-800"
+	class="h-full flex-1 overflow-hidden bg-gray-100 font-mono dark:bg-gray-800"
 	class:animate-[pulse_800ms_ease-in-out_0ms_infinite]={loaded}
 >
 	<div class="h-full w-full" bind:this={editorContainer}></div>
