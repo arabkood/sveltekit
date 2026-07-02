@@ -1,4 +1,4 @@
-const LOGO_URL = 'https://www.arabkood.com/icon-32x32.png';
+const LOGO_URL = 'https://akood.com/icon-32x32.png';
 
 export function getVerificationEmailHtml(username: string, token: string): string {
 	return `<!DOCTYPE html>
@@ -97,7 +97,11 @@ export function getVerificationEmailHtml(username: string, token: string): strin
 </html>`;
 }
 
-export function getPasswordResetEmailHtml(username: string, token: string, baseUrl: string): string {
+export function getPasswordResetEmailHtml(
+	username: string,
+	token: string,
+	baseUrl: string
+): string {
 	return `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ar" dir="rtl">
 <head>

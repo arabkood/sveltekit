@@ -28,8 +28,8 @@
 			'@type': 'Organization',
 			name: 'أكود - Akood',
 			alternateName: ['أكود', 'Akood'],
-			url: 'https://www.akood.com',
-			logo: 'https://www.akood.com/images/logo.png',
+			url: 'https://akood.com',
+			logo: 'https://akood.com/images/logo.png',
 			description: seoDescription,
 			foundingDate: '2024',
 			sameAs: ['https://x.com/akood_com', 'https://github.com/arabkood'],
@@ -55,12 +55,12 @@
 			'@context': 'https://schema.org',
 			'@type': 'WebSite',
 			name: 'أكود - منصة تعلم البرمجة',
-			url: 'https://www.akood.com',
+			url: 'https://akood.com',
 			description: seoDescription,
 			inLanguage: 'ar',
 			potentialAction: {
 				'@type': 'SearchAction',
-				target: 'https://www.akood.com/courses?q={search_term_string}',
+				target: 'https://akood.com/courses?q={search_term_string}',
 				'query-input': 'required name=search_term_string'
 			}
 		},
@@ -81,7 +81,7 @@
 						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: 'https://www.akood.com/courses/python-beginner'
+					url: 'https://akood.com/courses/python-beginner'
 				},
 				{
 					'@type': 'Course',
@@ -94,7 +94,7 @@
 						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: 'https://www.akood.com/courses/python-practice'
+					url: 'https://akood.com/courses/python-practice'
 				},
 				{
 					'@type': 'Course',
@@ -106,7 +106,7 @@
 						name: 'أكود - Akood'
 					},
 					educationalLevel: 'مبتدئ',
-					url: 'https://www.akood.com/courses/web-internet'
+					url: 'https://akood.com/courses/web-internet'
 				}
 			]
 		}
