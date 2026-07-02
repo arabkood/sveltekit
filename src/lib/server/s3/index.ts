@@ -4,6 +4,7 @@ import { Readable } from 'node:stream';
 import path from 'node:path';
 import { s3 } from '$secrets';
 import { building } from '$app/environment';
+import { cacheGet, cacheSet } from '$lib/server/cache';
 
 if (!building) {
 	console.log('Initializing S3Client.');
@@ -184,6 +185,9 @@ export const getS3PostObjectStream = (key: string) =>
  */
 export async function getBlogPost(slug: string) {
 	try {
+		const cached = await cacheGet<any>(`blog:post:${slug}`);
+		if (cached) return cached;
+
 		const metadataJson = await getS3PostObjectAsString(`${slug}/metadata.json`);
 		const markdown = await getS3PostObjectAsString(`${slug}/index.md`);
 
@@ -193,11 +197,13 @@ export async function getBlogPost(slug: string) {
 
 		const metadata = JSON.parse(metadataJson);
 
-		return {
+		const result = {
 			...metadata,
 			content: markdown,
 			slug
 		};
+		await cacheSet(`blog:post:${slug}`, result, 3600); // Cache for 1 hour
+		return result;
 	} catch (error) {
 		console.error(`Error fetching blog post ${slug}:`, error);
 		return null;
@@ -209,6 +215,9 @@ export async function getBlogPost(slug: string) {
  * @returns Array of published posts sorted by date (newest first)
  */
 export async function listBlogPosts() {
+	const cached = await cacheGet<any[]>('blog:posts:all');
+	if (cached) return cached;
+
 	const command = new ListObjectsV2Command({
 		Bucket: s3.BlogBucketName,
 		Prefix: 'public/blog/posts/',
@@ -235,9 +244,12 @@ export async function listBlogPosts() {
 		}
 
 		// Filter published posts and sort by date (newest first)
-		return posts
+		const result = posts
 			.filter((post) => post.published === true)
 			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+		await cacheSet('blog:posts:all', result, 3600); // Cache for 1 hour
+		return result;
 	} catch (error) {
 		console.error('Error listing blog posts:', error);
 		return [];
