@@ -1,4 +1,5 @@
 import { getS3TopicObjectAsBuffer } from '$lib/server/s3';
+import { cacheGet, cacheSet } from '$lib/server/cache';
 import type { Lesson, LessonInteractive, LessonMarkdown, LessonStep } from '$types/lesson';
 import type { PageServerLoad } from './$types';
 import path from 'node:path';
@@ -27,31 +28,38 @@ export const load: PageServerLoad = async ({ params, parent, locals }) => {
 
 	let steps: LessonStep[] = [];
 	if (item.s3Path) {
-		const buffs = await Promise.all([
-			getS3TopicObjectAsBuffer(path.join(item.s3Path, 'lesson.bundle.zip'))
-		]);
+		const cached = await cacheGet<LessonStep[]>(`lesson:assets:${item.s3Path}`);
+		if (cached) {
+			steps = cached;
+		} else {
+			const buffs = await Promise.all([
+				getS3TopicObjectAsBuffer(path.join(item.s3Path, 'lesson.bundle.zip'))
+			]);
 
-		if (buffs[0]) {
-			try {
-				steps = Object.entries(unzip(buffs[0]))
-					.sort((a, b) => {
-						const aa = parseInt(a[0].split('_')[0], 10);
-						const bb = parseInt(b[0].split('_')[0], 10);
-						return aa - bb;
-					})
-					.map((a) => {
-						if (a[0].endsWith('.md')) {
-							return a[1] as LessonMarkdown;
-						}
-						if (a[0].endsWith('.yml') || a[0].endsWith('.yaml')) {
-							return yamlload(a[1]) as LessonInteractive;
-						}
-						return undefined;
-					})
-					.filter((x): x is LessonMarkdown | LessonInteractive => x !== undefined);
-			} catch (e) {
-				console.error('bad lesson.bundle.zip at', item.s3Path, e);
-				error(404, 'Not found');
+			if (buffs[0]) {
+				try {
+					steps = Object.entries(unzip(buffs[0]))
+						.sort((a, b) => {
+							const aa = parseInt(a[0].split('_')[0], 10);
+							const bb = parseInt(b[0].split('_')[0], 10);
+							return aa - bb;
+						})
+						.map((a) => {
+							if (a[0].endsWith('.md')) {
+								return a[1] as LessonMarkdown;
+							}
+							if (a[0].endsWith('.yml') || a[0].endsWith('.yaml')) {
+								return yamlload(a[1]) as LessonInteractive;
+							}
+							return undefined;
+						})
+						.filter((x): x is LessonMarkdown | LessonInteractive => x !== undefined);
+
+					await cacheSet(`lesson:assets:${item.s3Path}`, steps, 24 * 60 * 60); // Cache for 24 hours
+				} catch (e) {
+					console.error('bad lesson.bundle.zip at', item.s3Path, e);
+					error(404, 'Not found');
+				}
 			}
 		}
 	}
