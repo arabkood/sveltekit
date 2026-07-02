@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { SITE } from '$config';
 
 	interface SEOProps {
 		title: string;
@@ -12,8 +13,8 @@
 
 	let { title, description, image, keywords, schema, lang = 'ar' }: SEOProps = $props();
 
-	const canonicalUrl = $derived(`${page.url.origin}${page.url.pathname}`);
-	const ogImage = $derived(image || `${page.url.origin}/images/default.jpg`);
+	const canonicalUrl = $derived(`${SITE}${page.url.pathname}`);
+	const ogImage = $derived(image || `${SITE}/images/default.jpg`);
 </script>
 
 <svelte:head>
