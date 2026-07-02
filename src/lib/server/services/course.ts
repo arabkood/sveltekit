@@ -1,5 +1,6 @@
 import { classRepository, type Item, type Module } from '../db/repos/class';
 import { getS3TopicObjectAsBuffer } from '../s3';
+import { cacheGet, cacheSet } from '../cache';
 import path from 'node:path';
 import AdmZip from 'adm-zip';
 import type { Code, CodeConfig, CodeDocs, CodeFiles } from '$types/code';
@@ -129,49 +130,61 @@ export class CourseService {
 	}
 
 	static async getCodeAssets(itemS3Path: string | null): Promise<Code> {
+		if (!itemS3Path) {
+			return {
+				files: {},
+				docs: {},
+				config: null as any
+			};
+		}
+
+		const cached = await cacheGet<Code>(`course:assets:${itemS3Path}`);
+		if (cached) return cached;
+
 		let files: CodeFiles = {};
 		let docs: CodeDocs = {};
 		let cconfig: CodeConfig | null = null;
 
-		if (itemS3Path) {
-			const buffs = await Promise.all([
-				getS3TopicObjectAsBuffer(path.join(itemS3Path, 'files.bundle.zip')),
-				getS3TopicObjectAsBuffer(path.join(itemS3Path, 'docs.bundle.zip'))
-			]);
+		const buffs = await Promise.all([
+			getS3TopicObjectAsBuffer(path.join(itemS3Path, 'files.bundle.zip')),
+			getS3TopicObjectAsBuffer(path.join(itemS3Path, 'docs.bundle.zip'))
+		]);
 
-			if (buffs[0]) {
-				try {
-					files = unzip(buffs[0]);
-					if (!Object.hasOwn(files, '.meta/config.json')) {
-						console.error('.meta/config.json not found at', itemS3Path);
-						throw new CourseNotFoundError();
-					}
-					try {
-						cconfig = JSON.parse(files['.meta/config.json']);
-					} catch {
-						console.error('.meta/config.json invalid at', itemS3Path, files['.meta/config.json']);
-						throw new CourseNotFoundError();
-					}
-				} catch (e: any) {
-					if (e instanceof CourseNotFoundError) throw e;
-					console.error('bad files.bundle.zip at', itemS3Path, e);
+		if (buffs[0]) {
+			try {
+				files = unzip(buffs[0]);
+				if (!Object.hasOwn(files, '.meta/config.json')) {
+					console.error('.meta/config.json not found at', itemS3Path);
 					throw new CourseNotFoundError();
 				}
+				try {
+					cconfig = JSON.parse(files['.meta/config.json']);
+				} catch {
+					console.error('.meta/config.json invalid at', itemS3Path, files['.meta/config.json']);
+					throw new CourseNotFoundError();
+				}
+			} catch (e: any) {
+				if (e instanceof CourseNotFoundError) throw e;
+				console.error('bad files.bundle.zip at', itemS3Path, e);
+				throw new CourseNotFoundError();
 			}
-			if (buffs[1]) {
-				try {
-					docs = unzip(buffs[1]);
-				} catch (e) {
-					console.error('bad docs.bundle.zip at', itemS3Path, e);
-					throw new CourseNotFoundError();
-				}
+		}
+		if (buffs[1]) {
+			try {
+				docs = unzip(buffs[1]);
+			} catch (e) {
+				console.error('bad docs.bundle.zip at', itemS3Path, e);
+				throw new CourseNotFoundError();
 			}
 		}
 
-		return {
+		const result = {
 			files,
 			docs,
 			config: cconfig!
 		};
+
+		await cacheSet(`course:assets:${itemS3Path}`, result, 24 * 60 * 60); // Cache for 24 hours
+		return result;
 	}
 }
