@@ -14,6 +14,6 @@ for host in ${KAMAL_HOSTS//,/ }; do
 
 	ssh -p 41285 "solo@$host" 'chmod +x /home/solo/db-backup.sh && sudo cp /home/solo/db-backup.cron /etc/cron.d/akood-db-backup && sudo chown root:root /etc/cron.d/akood-db-backup'
 
-	echo "Triggering initial backup run on $host to verify it works..."
-	ssh -p 41285 "solo@$host" '/home/solo/db-backup.sh'
+	# echo "Triggering initial backup run on $host to verify it works..."
+	# ssh -p 41285 "solo@$host" '/home/solo/db-backup.sh'
 done
