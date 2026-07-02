@@ -50,8 +50,8 @@ builder:
 env:
   clear:
     S3_ENDPOINT: fsn1.your-objectstorage.com
-    S3_PV_BUCKET_NAME: akood-pv
-    S3_BLOG_BUCKET_NAME: akood-pv
+    S3_PV_BUCKET_NAME: akood-main-prod
+    S3_BLOG_BUCKET_NAME: akood-main-prod
     S3_REGION: eu-central
     NATS_URL: nats://akood-nats:4222
     AUTH_SESSION_COOKIE_NAME: akood_session_token
@@ -64,7 +64,7 @@ env:
     SMTP_FROM_EMAIL: noreply@akood.com
     SMTP_FROM_NAME: Akood
     PUBLIC_APP_ENV: production
-    PUBLIC_S3_PATH: https://akood.com/s3
+    PUBLIC_S3_PATH: https://akood-main-prod.fsn1.your-objectstorage.com/public
     PUBLIC_SESSION_COOKIE_NAME: akood_session_token
     PUBLIC_SITE_NAME_EN: Akood
     PUBLIC_SITE_NAME_AR: أكود
