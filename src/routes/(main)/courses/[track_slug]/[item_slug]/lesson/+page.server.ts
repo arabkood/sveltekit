@@ -58,8 +58,11 @@ export const load: PageServerLoad = async ({ params, parent, locals }) => {
 					await cacheSet(`lesson:assets:${item.s3Path}`, steps, 24 * 60 * 60); // Cache for 24 hours
 				} catch (e) {
 					console.error('bad lesson.bundle.zip at', item.s3Path, e);
-					error(404, 'Not found');
+					throw error(404, 'Not found');
 				}
+			} else {
+				console.error('lesson.bundle.zip missing from S3 at', item.s3Path);
+				throw error(404, 'Lesson content not found');
 			}
 		}
 	}

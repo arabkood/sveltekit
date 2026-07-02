@@ -168,6 +168,9 @@ export class CourseService {
 				console.error('bad files.bundle.zip at', itemS3Path, e);
 				throw new CourseNotFoundError();
 			}
+		} else {
+			console.error('files.bundle.zip missing from S3 at', itemS3Path);
+			throw new CourseNotFoundError();
 		}
 		if (buffs[1]) {
 			try {
