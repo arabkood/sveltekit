@@ -61,7 +61,7 @@ env:
     ADDRESS_HEADER: CF-Connecting-IP
     SMTP_HOST: smtp.mailersend.net
     SMTP_PORT: 587
-    SMTP_FROM_EMAIL: noreply@akood.com
+    SMTP_FROM_EMAIL: noreply@lubab.dev
     SMTP_FROM_NAME: Akood
     PUBLIC_APP_ENV: production
     PUBLIC_S3_PATH: https://akood-main-prod.fsn1.your-objectstorage.com/public
